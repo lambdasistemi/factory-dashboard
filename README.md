@@ -1,28 +1,32 @@
 # Factory Dashboard
 
-This repository records the product direction for an operator-facing view of factory work. The intended experience should help an operator answer three questions: where am I needed, what moved forward, and why is this happening?
+## Story: See the whole factory
 
-## Story: Find the next useful place to look
+As a factory operator, I open a connected graph and understand the work, its ownership and its recorded communication without losing the global view.
 
-As a factory operator, I want a clear route from the questions I have to the product stories and unresolved choices, so I can understand what this project intends before implementation begins.
-
-The diagram shows that reading route through this repository. It does not describe a running dashboard.
+Factory Dashboard is a public project for a privately configured factory. Its first milestone reads GitHub work records and explicitly configured local communication files. The graph is the main interface; selecting a node or connection reveals existing context, attention signals and other information derivable from the approved records. The first release is read-only.
 
 ```mermaid
+%%{init: {'flowchart': {'nodeSpacing': 20, 'rankSpacing': 35, 'padding': 12}, 'themeVariables': {'fontSize': '15px'}}}%%
 flowchart TD
-  operator[Factory operator] --> questions[Three product questions]
-  questions --> stories[User stories]
-  stories --> decisions[Open product choices]
-  decisions --> implementation[Future implementation]
+  github[GitHub] -->|Work records| view[Factory graph]
+  files[Local files] -->|Protocol records| view
+  view -->|Select| context[Existing details]
 ```
 
-## Product boundary
+The graph combines the two sources without controlling either. Roles and the communication protocol are public. Worker implementations, credentials and installation details remain private.
 
-The proposed landing view groups decisions needing a response, items needing attention, and changes since the operator's last visit. Operators should be able to investigate an item through a work tree and detail pane. Every meaningful item must offer direct contextual communication with a worker who can answer. Prototype conversations are simulations; no live worker messaging or command backend is authorized. The application design and implementation stack remain open.
+## Direction and delivery
+
+The [roadmap](docs/roadmap.md) defines the first milestone, its three epics and six tickets. It also records the longer-term destination: communicating back to resolve attention through contextual conversations, and eventually selecting teams and directing the factory from the dashboard.
+
+Those future capabilities are not part of the first release. The [configuration contract](docs/configuration.md) makes safe source access and limited disclosure a release condition. The [ticket drafts](docs/tickets.md) define the implementation order and observable checks.
+
+## Current state
+
+The repository currently contains the product record and documentation tooling, not a released dashboard application. The application stack, runtime packaging and source license remain open choices. Synthetic prototypes are exploration material rather than evidence of a live integration.
 
 ## Build and check the documentation
-
-The repository currently contains product records and documentation tooling, not a dashboard application.
 
 ```sh
 nix develop
@@ -35,4 +39,4 @@ The documentation site is published at [GitHub Pages](https://lambdasistemi.gith
 
 ## License
 
-No license has been selected. The repository does not currently grant reuse rights.
+No license has been selected. The repository does not currently grant reuse rights. A source license must be settled before the first product release.

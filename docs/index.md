@@ -2,29 +2,28 @@
 
 ## Operator story
 
-As a factory operator, I want the opening view to show where I am needed, what moved forward, and why it is happening, so I can decide where to spend my attention.
+As a factory operator, I open a global graph and understand what the factory is doing, who owns each part, and which recorded communications connect the work.
 
-The proposed landing view brings together decisions needing a response, items needing attention, and changes since the operator's last visit. This is recorded product intent, not an implemented screen.
-
-## Investigate an item
-
-As an operator, I want to follow an item through a work tree into a detail pane, so I can understand its context before responding.
-
-Every meaningful dashboard item must also offer direct contextual communication with a worker who can answer. The dashed path in the diagram marks that requirement. Its interaction and authority rules remain open, and the prototype conversations are simulations only; no live messaging or command backend is authorized.
+The graph is the core of the product. It represents projects, milestones, epic and ticket issues, pull requests and role attachments using the actual source relationships. Selecting part of it opens existing details while the global structure remains available.
 
 ```mermaid
+%%{init: {'flowchart': {'nodeSpacing': 20, 'rankSpacing': 35, 'padding': 12}, 'themeVariables': {'fontSize': '15px'}}}%%
 flowchart TD
-  operator[Factory operator] --> overview[Proposed overview]
-  overview --> decisions[Decisions needing<br/>a response]
-  overview --> attention[Items needing<br/>attention]
-  overview --> changes[Changes since<br/>last visit]
-  decisions --> tree[Work tree]
-  attention --> tree
-  changes --> tree
-  tree --> detail[Detail pane]
-  detail -. Contextual answer<br/>required .-> worker[Worker who can answer]
+  github[GitHub] -->|Work records| view[Factory graph]
+  files[Local files] -->|Protocol records| view
+  view -->|Select| detail[Existing details]
 ```
+
+The two incoming read paths, existing-detail inspection and derived attention, status, activity and history are the first milestone. The operator notices what needs attention here and resolves it directly on the machine. The next milestone adds communicating back through local channels; the long-term goal includes operating teams from the dashboard.
+
+## A public process, a private installation
+
+The project publishes role definitions and the communication protocol it supports. It does not publish the intelligence behind those roles. Machine addresses, repository choices, file roots, worker bindings and credentials belong in private configuration, not application constants or browser payloads.
+
+The first release reads GitHub and approved local files only. It makes no external model calls, writes no communication files and manages no workers. Producers are responsible for supplying the documented file protocol; suggested skills can help them do that.
 
 ## Read the product record
 
-The [user stories](stories.md) state the operator needs. [Open product choices](open-questions.md) record what remains undecided, including application design, stack, and live communication authority.
+Start with the [milestone roadmap](roadmap.md), then the [first milestone's tickets](tickets.md). The [configuration and privacy contract](configuration.md) defines what must be verified before release. [User stories](stories.md) show the present and future experience; [product decisions](open-questions.md) identify what is fixed and what remains open.
+
+The repository currently records the intended product and its delivery plan. It does not yet provide a released application or evidence that these runtime boundaries are implemented.

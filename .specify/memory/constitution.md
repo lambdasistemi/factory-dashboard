@@ -1,12 +1,13 @@
 <!--
 Sync Impact Report
-- Version change: unratified template -> 1.0.0 (initial constitution)
-- Modified principles: none; established five project principles
-- Added sections: Product Constraints; Development Workflow
-- Removed sections: none
-- Templates reviewed: plan-template.md, spec-template.md, tasks-template.md; no changes required
-- Command templates: none are generated under .specify/templates/commands; prompts remain global
-- Follow-up choices: application design, stack, live communication authority, and source license remain open in docs/open-questions.md
+- Version change: 1.0.0 -> 2.0.0
+- Rationale: operator replaced the attention-first opening with a graph-first product, required a released read-only foundation before interaction, and fixed public protocol/private implementation and configuration boundaries.
+- Principles changed: operator experience, contextual answer sequencing, product boundaries and release evidence.
+- Clarification: computable attention and other derived observations belong in the first milestone; communicating back is the next milestone.
+- Added: first-release read-only sources; public role/protocol and private implementation distinction; configuration/privacy release gate; long-term milestone roadmap.
+- Dependent records updated: README, overview, user stories, product decisions, roadmap, ticket drafts, privacy/configuration contract.
+- Existing generic spec/plan/task templates retain their Constitution Check and acceptance sections; no template mechanism changed.
+- Open: application stack, runtime support/authentication details, exact configuration/protocol versions, license, future milestone designs.
 -->
 
 # Factory Dashboard Constitution
@@ -15,84 +16,47 @@ Sync Impact Report
 
 ### I. The product record outranks implementation
 
-Docs, specs, vision, and acceptance outrank implementation, always. Code is
-regenerable from a good record; the record is not regenerable from code. Every
-pull request that changes product behavior updates the affected reader-facing
-records in the same change. User-visible acceptance is written before
-implementation. When scope must shrink, reduce implementation work before
-removing requirements, decisions, evidence, or acceptance records.
+Docs, specs, vision, and acceptance outrank implementation, always. Code is regenerable from a good record; the record is not regenerable from code. Every behavior change updates its reader-facing record in the same change. Write user-visible acceptance before implementation. Reduce implementation scope before removing requirements, decisions or evidence.
 
-### II. Start with the operator's need
+### II. The graph is the product's core
 
-Describe a user, their need, and the observable benefit before naming a
-mechanism. The three product questions are where the operator is needed, what
-moved forward, and why it is happening. Acceptance criteria state what an
-operator can see or do, including relevant refusal and unavailable states.
+The opening interface is a connected, global factory graph. Preserve actual GitHub entities and relationships, and attach the public factory role and communication vocabulary. Selection exposes context while preserving the global view. Read-only views of attention, status, activity and available history derive from that graph and belong in the first milestone. Extract useful information supported by approved communication and local status records, with evidence and freshness.
 
-### III. Every meaningful item has a contextual answer path
+### III. Release observation before interaction
 
-Every meaningful dashboard item must offer direct contextual communication
-with a worker who can answer the operator. A prototype may simulate a
-conversation, but it must be labelled as simulation. Live worker messaging,
-instruction delivery, or command execution requires separate authorization;
-no such authority follows from a view, mockup, or repository scaffold.
+The first milestone reads exactly two source classes: configured GitHub work records and configured local communication files. It writes to neither source, sends no worker messages, launches no workers and calls no model services. Unknown, stale and unavailable observations never masquerade as successful or idle work.
 
-### IV. Preserve product boundaries and open choices
+Initially the operator notices attention in the dashboard and acts on the machine. The next milestone enables communicating back to address findings. The long-term goal includes contextual conversations, team selection and authorised factory operation. Keep these goals visible as milestones. Define their detailed design and acceptance later; no implementation or control authority follows from documenting that destination.
 
-The proposed overview groups decisions needing a response, items needing
-attention, and changes since the last visit, with investigation through a work
-tree and detail pane. This records direction, not a final visual design or
-system architecture. Do not infer approval for a dashboard feature, data
-source, communication backend, application framework, language, or deployment
-design from bootstrap tooling or a prototype. Record undecided choices
-explicitly and resolve them through a product decision before relying on them.
+### IV. Publish coordination, keep implementation private
 
-### V. Make evidence and limits checkable
+The supported protocol, file forms, role definitions and their semantics are public product design. Worker implementations, providers, models, prompts, launch commands, credentials and concrete installation bindings stay private. No private implementation information enters a public example or browser payload merely because it exists in a source record.
 
-Build and documentation gates must check the submitted content and produce
-evidence a reader can understand. A placeholder command that always passes is
-not a final gate. Reports distinguish local checks from hosted CI, deployed
-pages, acceptance, and release. Public issues, pull requests, docs, and wiki
-pages contain no credentials or private runtime records.
+Configuration supplies addresses, ports, approved repositories, file locations, role bindings, access policy and secret references. Producers supply compliant communication files. The dashboard may suggest skills, but does not install, discover or repair the factory.
+
+### V. Configuration and privacy are release conditions
+
+A versioned configuration contract must define every field, default, validation rule and disclosure class. The browser receives a permitted graph projection, never the private server configuration or raw runtime records. The runtime's only external application access is configured GitHub reads; browser assets are locally served.
+
+Acceptance must demonstrate source read-only behavior, permitted network access, private access controls, data minimisation, input refusal, redacted diagnostics and portability to a second synthetic installation. The operator reviews the evidence before release. A passing local build or hosted check does not by itself approve a release. State supported environments and residual limits; do not claim perfect safety.
 
 ## Product Constraints
 
-- The product serves factory operators reviewing work across a factory.
-- The proposed opening view covers decisions needing a response, items needing
-  attention, and changes since the operator's last visit.
-- Operators investigate through a work tree and detail pane.
-- Every meaningful item provides a direct contextual route to a worker who can
-  answer. Prototype conversations remain simulated until a live integration is
-  separately authorized.
-- Whether the product can issue instructions or commands is undecided. No
-  command backend or instruction authority is authorized by this constitution.
-- Application design and implementation stack remain open. Documentation
-  tooling does not settle those choices.
+- The first implementation ticket delivers the runnable graph with synthetic inputs.
+- Only the first milestone is decomposed into epics and tickets at this planning stage.
+- Communication and control are later milestones, after the read-only foundation is accepted and released.
+- Attention and other computable read-only information are included in the first milestone and derive from graph context; responding through the dashboard is deferred.
+- GitHub vocabulary remains GitHub's; the project defines its own additional role and communication vocabulary.
+- The application stack and source license remain open. Documentation tooling does not settle either.
 
 ## Development Workflow
 
-- Write specifications in product language. Keep implementation technology
-  undecided until a recorded product decision selects it.
-- Write observable acceptance before implementation and update affected docs
-  in the same pull request as behavior changes.
-- Use Conventional Commits for the release planner. Pull request descriptions
-  answer what changed, why, how to verify, and what remains limited.
-- The build gate performs the real documentation and presentation checks. Add
-  tests when a feature specification requests them; do not substitute a
-  passing placeholder for meaningful validation.
-- Keep claims bound to the exact candidate and report local and hosted results
-  separately.
+Describe the user, the observation or action, the successful result and relevant refusals before choosing a mechanism. Keep specs and acceptance bound to the actual candidate. Public issues and pull requests explain what changes, why, how to verify, and what remains limited. They may document public roles and protocol design but must not include private worker or host records.
+
+Use the existing documentation and presentation checks for product records. Implementation tickets add meaningful checks for their specified behavior. No placeholder check or self-reported completion replaces observable evidence. Do not automatically expand the team or start later milestones from this roadmap.
 
 ## Governance
 
-This constitution governs repository templates and product changes. A change
-to these principles requires an explicit rationale, an updated Sync Impact
-Report, and a review of dependent templates and reader-facing records. Version
-the constitution with semantic versioning: major for incompatible principle
-changes, minor for new or materially expanded rules, and patch for wording
-clarifications. Record the ratification and amendment dates below. Reviewers
-check each pull request against this constitution. Unresolved decisions stay
-visible in `docs/open-questions.md`; implementation must not silently settle
-them.
+This constitution governs project templates and product changes. Amend it with a rationale, updated impact report and review of dependent records. Major versions change principles incompatibly, minor versions add material rules, and patch versions clarify wording. Keep unresolved decisions visible in `docs/open-questions.md`.
 
-**Version**: 1.0.0 | **Ratified**: 2026-10-09 | **Last Amended**: 2026-10-09
+**Version**: 2.0.0 | **Ratified**: 2026-10-09 | **Last Amended**: 2026-10-09

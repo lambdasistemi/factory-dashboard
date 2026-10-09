@@ -1,35 +1,43 @@
 {
-  "factory-dashboard": [
+  "story-see-the-whole-factory": [
     {
-      "text": "Factory Dashboard.",
+      "text": "Story: See the whole factory.",
       "pause": 500
     },
     {
-      "text": "This repository records the product direction for an operator-facing view of factory work. The intended experience should help an operator answer three questions: where am I needed, what moved forward, and why is this happening?",
+      "text": "As a factory operator, I open a connected graph and understand the work, its ownership and its recorded communication without losing the global view.",
+      "pause": 400
+    },
+    {
+      "text": "Factory Dashboard is a public project for a privately configured factory. Its first milestone reads GitHub work records and explicitly configured local communication files. The graph is the main interface; selecting a node or connection reveals existing context, attention signals and other information derivable from the approved records. The first release is read-only.",
+      "pause": 400
+    },
+    {
+      "text": "The graph combines the two sources without controlling either. Roles and the communication protocol are public. Worker implementations, credentials and installation details remain private.",
       "pause": 400
     }
   ],
-  "story-find-the-next-useful-place-to-look": [
+  "direction-and-delivery": [
     {
-      "text": "Story: Find the next useful place to look.",
+      "text": "Direction and delivery.",
       "pause": 500
     },
     {
-      "text": "As a factory operator, I want a clear route from the questions I have to the product stories and unresolved choices, so I can understand what this project intends before implementation begins.",
+      "text": "The roadmap defines the first milestone, its three epics and six tickets. It also records the longer-term destination: communicating back to resolve attention through contextual conversations, and eventually selecting teams and directing the factory from the dashboard.",
       "pause": 400
     },
     {
-      "text": "The diagram shows that reading route through this repository. It does not describe a running dashboard.",
+      "text": "Those future capabilities are not part of the first release. The configuration contract makes safe source access and limited disclosure a release condition. The ticket drafts define the implementation order and observable checks.",
       "pause": 400
     }
   ],
-  "product-boundary": [
+  "current-state": [
     {
-      "text": "Product boundary.",
+      "text": "Current state.",
       "pause": 500
     },
     {
-      "text": "The proposed landing view groups decisions needing a response, items needing attention, and changes since the operator's last visit. Operators should be able to investigate an item through a work tree and detail pane. Every meaningful item must offer direct contextual communication with a worker who can answer. Prototype conversations are simulations; no live worker messaging or command backend is authorized. The application design and implementation stack remain open.",
+      "text": "The repository currently contains the product record and documentation tooling, not a released dashboard application. The application stack, runtime packaging and source license remain open choices. Synthetic prototypes are exploration material rather than evidence of a live integration.",
       "pause": 400
     }
   ],
@@ -37,10 +45,6 @@
     {
       "text": "Build and check the documentation.",
       "pause": 500
-    },
-    {
-      "text": "The repository currently contains product records and documentation tooling, not a dashboard application.",
-      "pause": 400
     },
     {
       "text": "The documentation site is published at GitHub Pages after a change lands on main.",
@@ -53,12 +57,12 @@
       "pause": 500
     },
     {
-      "text": "No license has been selected. The repository does not currently grant reuse rights.",
+      "text": "No license has been selected. The repository does not currently grant reuse rights. A source license must be settled before the first product release.",
       "pause": 400
     }
   ],
   "_source": {
     "file": "README.md",
-    "sha256": "25af1f4241000ca19846ce9274fdf502bee503649b3d040eb0881c991fde9a89"
+    "sha256": "5d67b6a76d077c2dd0f9d5ea9aa78b7d618338c026e02bd916c3feda74a91eed"
   }
 }

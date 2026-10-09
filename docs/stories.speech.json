@@ -1,48 +1,90 @@
 {
-  "find-where-attention-is-needed": [
+  "observe-the-complete-factory": [
     {
-      "text": "Find where attention is needed.",
+      "text": "Observe the complete factory.",
       "pause": 500
     },
     {
-      "text": "As a factory operator, I want to see decisions needing a response, items needing attention, and changes since my last visit, so I can tell where I am needed.",
+      "text": "As a factory operator, I navigate a connected graph of projects, milestones, epics, tickets, pull requests and roles, and observe their current records without leaving the global view.",
       "pause": 400
     },
     {
-      "text": "These are the three proposed groups for an opening view. Their visual arrangement and data sources have not been selected.",
+      "text": "The graph is the first implementation ticket and the first release's main screen. Missing or stale data stays visible as missing or stale; it must not appear as success or inactivity.",
       "pause": 400
     }
   ],
-  "understand-what-moved-and-why": [
+  "inspect-the-record-behind-a-connection": [
     {
-      "text": "Understand what moved and why.",
+      "text": "Inspect the record behind a connection.",
       "pause": 500
     },
     {
-      "text": "As a factory operator, I want to follow an item through a work tree into a detail pane, so I can understand what changed and why before I act.",
+      "text": "As a factory operator, I select a graph node or connection and read its existing work or communication context, so I can understand what the observation means.",
       "pause": 400
     },
     {
-      "text": "The work tree and detail pane are part of the proposed investigation path. Their interaction model remains open.",
+      "text": "The first release reads GitHub and configured local files. Inspection writes nothing to either source and performs no worker operation. Unknown references are reported rather than invented.",
       "pause": 400
     }
   ],
-  "reach-a-worker-who-can-answer": [
+  "run-privately-on-my-own-installation": [
     {
-      "text": "Reach a worker who can answer.",
+      "text": "Run privately on my own installation.",
       "pause": 500
     },
     {
-      "text": "As a factory operator, I want every meaningful dashboard item to provide direct contextual communication with a worker who can answer, so I can ask about the exact work I am reviewing.",
+      "text": "As an installation operator, I configure approved repositories, local input files and private credentials, and observe only the permitted graph data in the browser.",
       "pause": 400
     },
     {
-      "text": "This is a product requirement. Prototype conversations are simulations. A live messaging or command backend has not been authorized or selected.",
+      "text": "Unsafe configuration refuses source activation with a redacted explanation. The dashboard does not discover my machine, install workers or send data to model services. The configuration contract defines the required boundaries.",
+      "pause": 400
+    }
+  ],
+  "ask-the-appropriate-agent-later": [
+    {
+      "text": "Ask the appropriate agent later.",
+      "pause": 500
+    },
+    {
+      "text": "As a factory operator, I select graph context, ask the responsible role a question or answer a pending question, and receive a correlated reply from the appropriate agent so I can address attention without leaving the dashboard.",
+      "pause": 400
+    },
+    {
+      "text": "This is a later milestone after the read-only product has been accepted and released. Communication will use configured local channels, with explicit write authority and honest unavailable or failed-delivery states. The concrete worker implementation stays private.",
+      "pause": 400
+    }
+  ],
+  "notice-attention-and-changes-now": [
+    {
+      "text": "Notice attention and changes now.",
+      "pause": 500
+    },
+    {
+      "text": "As a factory operator, I open a specialised view derived from the graph and see the decisions, blockers or changes relevant to me, then return to their graph context.",
+      "pause": 400
+    },
+    {
+      "text": "This belongs in the first milestone alongside other useful information derivable from approved communication and local status records. Each finding shows its evidence and freshness. I go to the machine to address it; a later milestone lets me communicate back from the dashboard. A recorded response or acknowledgement is not proof that the issue was resolved.",
+      "pause": 400
+    }
+  ],
+  "operate-the-factory-in-the-long-term": [
+    {
+      "text": "Operate the factory in the long term.",
+      "pause": 500
+    },
+    {
+      "text": "As a factory operator, I select teams, speak with the right agents and request permitted work from the graph, with explicit authority and an audit trail.",
+      "pause": 400
+    },
+    {
+      "text": "This is the long-term goal. Team selection, assignment, approvals and other controls require their own design and acceptance conditions before implementation. A graph selection or question must never silently become permission to execute an operation.",
       "pause": 400
     }
   ],
   "_source": {
     "file": "stories.md",
-    "sha256": "b491296ac44f6a211ede671ad3b9072b9e389db6ba2d3de301320192367d31f7"
+    "sha256": "0021d8e7dae24f1e03c27b0a32e05faaeafcb779391fb9b94fe18a1580e0ce4e"
   }
 }
