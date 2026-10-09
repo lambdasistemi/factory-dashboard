@@ -30,8 +30,11 @@
       ]);
       documentation = pkgs.stdenvNoCC.mkDerivation {
         pname = "factory-dashboard-docs";
-        version = "0.1.0";
-        src = self;
+        version = (builtins.fromJSON (builtins.readFile ./.release-please-manifest.json)).".";
+        src = pkgs.lib.fileset.toSource {
+          root = ./.;
+          fileset = pkgs.lib.fileset.unions [ ./docs ./tools ./mkdocs.yml ./README.md ./README.speech.json ];
+        };
         nativeBuildInputs = [ docsPython ];
         buildPhase = ''
           cp ${shared.packages.${system}.mermaid-js} docs/javascripts/mermaid.min.js
