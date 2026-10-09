@@ -6,6 +6,8 @@ As a factory operator, I see where recorded work stops matching the expected coo
 
 This is research for the graph contract, local protocol and derived-attention tickets. The rules below are proposals grounded in current records, not implemented detectors or a claim that every observed branch is faulty. Read them alongside the [roadmap](roadmap.md) and [privacy contract](configuration.md).
 
+The operator's A–H observations are translated into a [prioritised rule and problem-prompt catalog](invariant-catalog.md). The primary outcome is a request the operator can pass to the right role without having to diagnose the graph first.
+
 ## What inspecting the current records revealed
 
 A bounded read-only sample on 9 October 2026 examined eight selected role journals and their communication-file inventories, plus available liveness records. The sample included an active supervision branch, a review branch and a completed handoff. It is not a factory-wide health census. The public examples below use synthetic names; private journals, paths, worker identities and message contents are not published.

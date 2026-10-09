@@ -11,6 +11,10 @@
     {
       "text": "This is research for the graph contract, local protocol and derived-attention tickets. The rules below are proposals grounded in current records, not implemented detectors or a claim that every observed branch is faulty. Read them alongside the roadmap and privacy contract.",
       "pause": 400
+    },
+    {
+      "text": "The operator's A–H observations are translated into a prioritised rule and problem-prompt catalog. The primary outcome is a request the operator can pass to the right role without having to diagnose the graph first.",
+      "pause": 400
     }
   ],
   "what-inspecting-the-current-records-revealed": [
@@ -307,6 +311,6 @@
   ],
   "_source": {
     "file": "graph-invariants.md",
-    "sha256": "f2aeff039d499b95e4ef7cf687e632d0fdedda3be18a686f34dc879aee673b56"
+    "sha256": "ab646b1ef168c8507a447ec43dd30bef2bf1dc26df82e2c24b9252a6c654e33c"
   }
 }
