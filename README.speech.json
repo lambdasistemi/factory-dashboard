@@ -37,7 +37,7 @@
       "pause": 500
     },
     {
-      "text": "The repository currently contains the product record and documentation tooling, not a released dashboard application. The application stack, runtime packaging and source license remain open choices. Synthetic prototypes are exploration material rather than evidence of a live integration.",
+      "text": "The repository currently contains the product record and documentation tooling, not a released dashboard application. PureScript is the preferred implementation language and project default. The remaining framework/interop choices, runtime packaging and source license are still to be settled. Synthetic prototypes are exploration material rather than evidence of a live integration.",
       "pause": 400
     }
   ],
@@ -63,6 +63,6 @@
   ],
   "_source": {
     "file": "README.md",
-    "sha256": "5d67b6a76d077c2dd0f9d5ea9aa78b7d618338c026e02bd916c3feda74a91eed"
+    "sha256": "e897da00ae9fe853361bdccfa1e9db6fb045cba5be19113588d21c3f6b0280f8"
   }
 }

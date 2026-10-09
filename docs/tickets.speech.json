@@ -17,7 +17,7 @@
       "pause": 400
     },
     {
-      "text": "Every implementation ticket must meet constitution principle VI: explicit responsibility boundaries, validated inputs, deterministic domain rules, applicable strict type/build/lint/format gates and meaningful behavior tests. The first graph ticket establishes the architecture and executable CI gates; later tickets extend them. TypeScript-specific requirements apply if that language is chosen.",
+      "text": "Every implementation ticket must meet constitution principle VI: explicit responsibility boundaries, validated inputs, deterministic domain rules, applicable strict type/build/lint/format gates and meaningful behavior tests. The first graph ticket establishes the architecture and executable CI gates; later tickets extend them. PureScript is the implementation default, with a pure domain core, explicit effects and minimal typed/tested FFI. Any alternative language requires a concrete rationale and operator agreement.",
       "pause": 400
     }
   ],
@@ -517,6 +517,6 @@
   ],
   "_source": {
     "file": "tickets.md",
-    "sha256": "236280baee1707e1427f704fac82031a7f7276da92c50a5e573893919fd85677"
+    "sha256": "14fc2b2abd23fcd2efb3d1aa38bdd0f6370f89e6a1bcf01f7cd7e0d112a785f7"
   }
 }

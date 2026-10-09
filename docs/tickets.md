@@ -8,7 +8,7 @@ These tickets are filed under the [Read-only factory graph milestone](https://gi
 
 Each acceptance checkbox must become a directly observable browser check, contract check, integration check or release receipt. The initial sequence is serial. No implementation team is assigned by this plan. Each ticket extends the same dashboard artifact; intermediate completion does not authorise a product release.
 
-Every implementation ticket must meet constitution principle VI: explicit responsibility boundaries, validated inputs, deterministic domain rules, applicable strict type/build/lint/format gates and meaningful behavior tests. The first graph ticket establishes the architecture and executable CI gates; later tickets extend them. TypeScript-specific requirements apply if that language is chosen.
+Every implementation ticket must meet constitution principle VI: explicit responsibility boundaries, validated inputs, deterministic domain rules, applicable strict type/build/lint/format gates and meaningful behavior tests. The first graph ticket establishes the architecture and executable CI gates; later tickets extend them. PureScript is the implementation default, with a pure domain core, explicit effects and minimal typed/tested FFI. Any alternative language requires a concrete rationale and operator agreement.
 
 ## Open and explore the complete factory graph
 

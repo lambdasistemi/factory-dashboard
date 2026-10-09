@@ -2,10 +2,10 @@
 Sync Impact Report
 - Version change: 2.0.0 -> 2.1.0
 - Rationale: operator requires production-quality structure and code regardless of language.
-- Added principle VI: explicit architecture boundaries, deterministic domain rules, conditional strict TypeScript discipline, reproducible builds and executable quality gates.
+- Added principle VI: explicit architecture boundaries, deterministic domain rules, PureScript as the preferred implementation language and strict typed boundary discipline, reproducible builds and executable quality gates.
 - Existing graph-first, read-only, public protocol/private implementation and operator release-approval principles remain in force.
 - Dependent records updated: implementation tickets and product decisions. Existing generic spec/plan/task Constitution Check sections remain applicable without changing template mechanisms.
-- Open: application stack, runtime support/authentication details, configuration/protocol encodings, license and rule-set acceptance.
+- Open: remaining application framework/interop choices and packaging, runtime support/authentication details, configuration/protocol encodings, license and rule-set acceptance.
 -->
 
 # Factory Dashboard Constitution
@@ -44,7 +44,9 @@ Factory Dashboard is production software. Maintainable architecture, correctness
 
 Separate source adapters and runtime input validation, the domain graph and obligation model, invariant evaluation, approved-data projection and prompt generation, and UI rendering through explicit interfaces. Keep domain rules deterministic and independently testable; inject time and external effects. Filesystem, network, credentials and private runtime configuration stay outside domain logic and browser modules. Dependencies have a documented direction with no circular module dependencies or hidden global state. Organise by coherent responsibilities, keeping interfaces and abstractions as small as the real requirements permit; this does not require separate services or packages for every responsibility.
 
-If TypeScript is selected, enable strict compiler checking including unchecked indexed access and exact optional property handling. Model states, scoped identities and failures explicitly, using discriminated unions where appropriate. Treat external input as unknown until runtime validation succeeds; compile-time types never establish trust in GitHub or file payloads. Unchecked casts, any, non-null assertions and suppressed diagnostics require a narrow documented boundary justification and behavior checks; they cannot bypass the privacy or protocol contract.
+PureScript is the operator-preferred implementation language and the project default. Model states, scoped identities and failures with explicit types and exhaustive handling; keep the graph, invariant evaluation and prompt construction pure, with effects at explicit boundaries. Follow the project family's PureScript build conventions, using pinned tools from Nix and committed dependency locks. Keep JavaScript FFI small, typed, documented and tested at its actual boundary. Decode external data before it enters the domain; compile-time types never establish trust in GitHub or file payloads. Partial functions, unsafe coercions and suppressed diagnostics require a narrow documented boundary justification and behavior checks; they cannot bypass the privacy or protocol contract.
+
+Choosing another application language requires an explicit product/maintenance rationale and operator agreement; presumed agent convenience is insufficient. If TypeScript is later approved for a component, its compiler must use strict checking, unchecked indexed access and exact optional property handling, with runtime input validation and the same restrictions on unsafe escapes.
 
 Every behavior-changing PR must pass the applicable formatter, linter, type checker, build and meaningful tests for the selected stack. The first implementation establishes those executable local and hosted CI gates. Test public behavior and module boundaries: valid, invalid, stale, missing and conflicting records; exact correlation; parser-to-graph-to-finding-to-prompt flows; privacy projection; and keyboard-accessible UI behavior. Demonstrate both a triggering fault and a healthy counterexample for every detector, plus insufficient-evidence handling. Do not substitute mocked internal agreement, snapshots alone, a placeholder gate or unexecuted tests for observable evidence.
 
@@ -57,7 +59,7 @@ Pin dependencies and retain lockfiles, document reproducible build/run commands 
 - Communication and control are later milestones, after the read-only foundation is accepted and released.
 - Attention and other computable read-only information are included in the first milestone and derive from graph context; responding through the dashboard is deferred.
 - GitHub vocabulary remains GitHub's; the project defines its own additional role and communication vocabulary.
-- The application stack and source license remain open. Documentation tooling does not settle either.
+- PureScript is the default implementation language. Remaining framework, interop and runtime packaging decisions must be recorded before implementation; the source license remains open.
 
 ## Development Workflow
 
