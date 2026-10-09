@@ -8,6 +8,8 @@ These tickets are filed under the [Read-only factory graph milestone](https://gi
 
 Each acceptance checkbox must become a directly observable browser check, contract check, integration check or release receipt. The initial sequence is serial. No implementation team is assigned by this plan. Each ticket extends the same dashboard artifact; intermediate completion does not authorise a product release.
 
+Every implementation ticket must meet constitution principle VI: explicit responsibility boundaries, validated inputs, deterministic domain rules, applicable strict type/build/lint/format gates and meaningful behavior tests. The first graph ticket establishes the architecture and executable CI gates; later tickets extend them. TypeScript-specific requirements apply if that language is chosen.
+
 ## Open and explore the complete factory graph
 
 [Track ticket #4](https://github.com/lambdasistemi/factory-dashboard/issues/4).
@@ -19,6 +21,8 @@ Each acceptance checkbox must become a directly observable browser check, contra
 **P1 user story:** As a factory operator, I navigate the global graph and observe the work hierarchy, responsible roles and existing communication context without losing my place.
 
 ### Graph acceptance criteria
+
+- [ ] Document the responsibility boundaries and dependency direction, establish the selected stack's formatter, linter, type checker, build and behavior checks in local commands and CI, and satisfy constitution principle VI from the first runnable artifact.
 
 - [ ] The documented local entry point opens the connected graph as the main screen, using entirely synthetic records with no source credentials or external requests.
 - [ ] Fixtures contain projects, milestones, epic and ticket issues, pull requests, role attachments and recorded communication links. Distinct relationship types are visibly distinguishable; the graph does not invent missing GitHub parentage.

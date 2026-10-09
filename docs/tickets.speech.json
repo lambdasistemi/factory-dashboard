@@ -15,6 +15,10 @@
     {
       "text": "Each acceptance checkbox must become a directly observable browser check, contract check, integration check or release receipt. The initial sequence is serial. No implementation team is assigned by this plan. Each ticket extends the same dashboard artifact; intermediate completion does not authorise a product release.",
       "pause": 400
+    },
+    {
+      "text": "Every implementation ticket must meet constitution principle VI: explicit responsibility boundaries, validated inputs, deterministic domain rules, applicable strict type/build/lint/format gates and meaningful behavior tests. The first graph ticket establishes the architecture and executable CI gates; later tickets extend them. TypeScript-specific requirements apply if that language is chosen.",
+      "pause": 400
     }
   ],
   "open-and-explore-the-complete-factory-graph": [
@@ -45,8 +49,12 @@
       "pause": 500
     },
     {
+      "text": "[ ] Document the responsibility boundaries and dependency direction, establish the selected stack's formatter, linter, type checker, build and behavior checks in local commands and CI, and satisfy constitution principle VI from the first runnable artifact.",
+      "pause": 400
+    },
+    {
       "text": "[ ] The documented local entry point opens the connected graph as the main screen, using entirely synthetic records with no source credentials or external requests.",
-      "pause": 300
+      "pause": 400
     },
     {
       "text": "[ ] Fixtures contain projects, milestones, epic and ticket issues, pull requests, role attachments and recorded communication links. Distinct relationship types are visibly distinguishable; the graph does not invent missing GitHub parentage.",
@@ -509,6 +517,6 @@
   ],
   "_source": {
     "file": "tickets.md",
-    "sha256": "db6746c1f798bdf64c14e18a44dc93863c667fedc4d180198604b158f2d906f4"
+    "sha256": "236280baee1707e1427f704fac82031a7f7276da92c50a5e573893919fd85677"
   }
 }

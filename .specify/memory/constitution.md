@@ -1,13 +1,11 @@
 <!--
 Sync Impact Report
-- Version change: 1.0.0 -> 2.0.0
-- Rationale: operator replaced the attention-first opening with a graph-first product, required a released read-only foundation before interaction, and fixed public protocol/private implementation and configuration boundaries.
-- Principles changed: operator experience, contextual answer sequencing, product boundaries and release evidence.
-- Clarification: computable attention and other derived observations belong in the first milestone; communicating back is the next milestone.
-- Added: first-release read-only sources; public role/protocol and private implementation distinction; configuration/privacy release gate; long-term milestone roadmap.
-- Dependent records updated: README, overview, user stories, product decisions, roadmap, ticket drafts, privacy/configuration contract.
-- Existing generic spec/plan/task templates retain their Constitution Check and acceptance sections; no template mechanism changed.
-- Open: application stack, runtime support/authentication details, exact configuration/protocol versions, license, future milestone designs.
+- Version change: 2.0.0 -> 2.1.0
+- Rationale: operator requires production-quality structure and code regardless of language.
+- Added principle VI: explicit architecture boundaries, deterministic domain rules, conditional strict TypeScript discipline, reproducible builds and executable quality gates.
+- Existing graph-first, read-only, public protocol/private implementation and operator release-approval principles remain in force.
+- Dependent records updated: implementation tickets and product decisions. Existing generic spec/plan/task Constitution Check sections remain applicable without changing template mechanisms.
+- Open: application stack, runtime support/authentication details, configuration/protocol encodings, license and rule-set acceptance.
 -->
 
 # Factory Dashboard Constitution
@@ -40,6 +38,18 @@ A versioned configuration contract must define every field, default, validation 
 
 Acceptance must demonstrate source read-only behavior, permitted network access, private access controls, data minimisation, input refusal, redacted diagnostics and portability to a second synthetic installation. The operator reviews the evidence before release. A passing local build or hosted check does not by itself approve a release. State supported environments and residual limits; do not claim perfect safety.
 
+### VI. Production-quality structure is mandatory
+
+Factory Dashboard is production software. Maintainable architecture, correctness and operational clarity are acceptance requirements from the first runnable graph onward, regardless of language. A small feature scope must still have a deliberate design. Prototype code enters the product only after it meets the same contracts and checks.
+
+Separate source adapters and runtime input validation, the domain graph and obligation model, invariant evaluation, approved-data projection and prompt generation, and UI rendering through explicit interfaces. Keep domain rules deterministic and independently testable; inject time and external effects. Filesystem, network, credentials and private runtime configuration stay outside domain logic and browser modules. Dependencies have a documented direction with no circular module dependencies or hidden global state. Organise by coherent responsibilities, keeping interfaces and abstractions as small as the real requirements permit; this does not require separate services or packages for every responsibility.
+
+If TypeScript is selected, enable strict compiler checking including unchecked indexed access and exact optional property handling. Model states, scoped identities and failures explicitly, using discriminated unions where appropriate. Treat external input as unknown until runtime validation succeeds; compile-time types never establish trust in GitHub or file payloads. Unchecked casts, any, non-null assertions and suppressed diagnostics require a narrow documented boundary justification and behavior checks; they cannot bypass the privacy or protocol contract.
+
+Every behavior-changing PR must pass the applicable formatter, linter, type checker, build and meaningful tests for the selected stack. The first implementation establishes those executable local and hosted CI gates. Test public behavior and module boundaries: valid, invalid, stale, missing and conflicting records; exact correlation; parser-to-graph-to-finding-to-prompt flows; privacy projection; and keyboard-accessible UI behavior. Demonstrate both a triggering fault and a healthy counterexample for every detector, plus insufficient-evidence handling. Do not substitute mocked internal agreement, snapshots alone, a placeholder gate or unexecuted tests for observable evidence.
+
+Pin dependencies and retain lockfiles, document reproducible build/run commands and supported environments, make failures actionable without leaking private data, and document the architecture and public contracts with the code. Review changes for responsibility boundaries, complexity, duplication, dependency cost and error handling. Runtime work must have bounded input, resource and failure behavior. No merge or release may waive these requirements silently; any proposed exception requires an explicit rationale, risk, compensating evidence and operator acceptance before use.
+
 ## Product Constraints
 
 - The first implementation ticket delivers the runnable graph with synthetic inputs.
@@ -59,4 +69,4 @@ Use the existing documentation and presentation checks for product records. Impl
 
 This constitution governs project templates and product changes. Amend it with a rationale, updated impact report and review of dependent records. Major versions change principles incompatibly, minor versions add material rules, and patch versions clarify wording. Keep unresolved decisions visible in `docs/open-questions.md`.
 
-**Version**: 2.0.0 | **Ratified**: 2026-10-09 | **Last Amended**: 2026-10-09
+**Version**: 2.1.0 | **Ratified**: 2026-10-09 | **Last Amended**: 2026-10-09

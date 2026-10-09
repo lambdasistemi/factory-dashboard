@@ -29,6 +29,10 @@
     {
       "text": "Before any first product release, the operator must review the configuration and privacy evidence. Successful builds are not sufficient. The project promises defined, tested boundaries and explicit limits, not perfect safety in arbitrary installations.",
       "pause": 400
+    },
+    {
+      "text": "Production-quality structure and verification are fixed requirements from the first runnable graph. Clear module responsibilities, validated inputs, explicit state models, reproducible builds and meaningful automated checks are mandatory. If TypeScript is selected, strict typing and runtime boundary validation are required. The constitution defines the enforcement; language choice does not relax it.",
+      "pause": 400
     }
   ],
   "long-term-goals": [
@@ -87,6 +91,6 @@
   ],
   "_source": {
     "file": "open-questions.md",
-    "sha256": "a3389f243a59c54a43ee323b3b712d921594dee7c0a3ff4d7d3f82d2605ffe8f"
+    "sha256": "5a61c42b8bf99ac75f54eabbd89b5a8a8fcf838439dc0d4913153bcab722eabc"
   }
 }

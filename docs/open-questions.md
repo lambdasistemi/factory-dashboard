@@ -14,6 +14,8 @@ Roles and the supported protocol are public product design. Concrete worker impl
 
 Before any first product release, the operator must review the configuration and privacy evidence. Successful builds are not sufficient. The project promises defined, tested boundaries and explicit limits, not perfect safety in arbitrary installations.
 
+Production-quality structure and verification are fixed requirements from the first runnable graph. Clear module responsibilities, validated inputs, explicit state models, reproducible builds and meaningful automated checks are mandatory. If TypeScript is selected, strict typing and runtime boundary validation are required. The constitution defines the enforcement; language choice does not relax it.
+
 ## Long-term goals
 
 After the observation foundation is accepted and released, the product should support communicating back through local channels to address observed attention, including asking and answering contextual questions. Eventually the operator should be able to select teams and direct authorised factory operations from the dashboard.
