@@ -35,6 +35,9 @@
     await window.mermaid.run({ nodes: diagrams });
   }
 
-  document.addEventListener("DOMContentLoaded", renderDiagrams);
-  window.addEventListener("factory-dashboard-palette-change", renderDiagrams);
+  /* palette.js announces the palette on load and on every toggle; renders run one at a time. */
+  let rendering = Promise.resolve();
+  window.addEventListener("factory-dashboard-palette-change", () => {
+    rendering = rendering.then(renderDiagrams, renderDiagrams);
+  });
 })();
