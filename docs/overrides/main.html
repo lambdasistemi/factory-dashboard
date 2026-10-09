@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block extrahead %}
+<link id="factory-dashboard-dark-palette" href="{{ 'css/palettes/dark.css' | url }}" rel="stylesheet" media="(prefers-color-scheme: dark)">
+<script src="{{ 'javascripts/palette.js' | url }}?v=b71419c6c755a0ab"></script>
+{% endblock %}
+{% block side_panel %}
+<aside id="terminal-mkdocs-side-panel">
+  <details id="factory-dashboard-navigation">
+    <summary>Explore Factory Dashboard</summary>
+    {% include "partials/side-nav/side-nav.html" %}
+    {% include "partials/side-panel/side-toc.html" %}
+  </details>
+</aside>
+{% endblock %}

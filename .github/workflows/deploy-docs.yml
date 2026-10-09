@@ -1,0 +1,50 @@
+name: Build and deploy documentation
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  docs-build:
+    name: Docs build
+    runs-on: nixos
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: cachix/cachix-action@v17
+        with:
+          name: paolino
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+
+      - name: Build the Pages artifact
+        run: |
+          nix build --quiet .#docs --out-link result
+          mkdir -p site
+          cp -R -L result/. site/
+          chmod -R u+w site
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: docs-build
+    runs-on: nixos
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

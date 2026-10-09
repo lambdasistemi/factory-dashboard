@@ -1,0 +1,64 @@
+{
+  "factory-dashboard": [
+    {
+      "text": "Factory Dashboard.",
+      "pause": 500
+    },
+    {
+      "text": "This repository records the product direction for an operator-facing view of factory work. The intended experience should help an operator answer three questions: where am I needed, what moved forward, and why is this happening?",
+      "pause": 400
+    }
+  ],
+  "story-find-the-next-useful-place-to-look": [
+    {
+      "text": "Story: Find the next useful place to look.",
+      "pause": 500
+    },
+    {
+      "text": "As a factory operator, I want a clear route from the questions I have to the product stories and unresolved choices, so I can understand what this project intends before implementation begins.",
+      "pause": 400
+    },
+    {
+      "text": "The diagram shows that reading route through this repository. It does not describe a running dashboard.",
+      "pause": 400
+    }
+  ],
+  "product-boundary": [
+    {
+      "text": "Product boundary.",
+      "pause": 500
+    },
+    {
+      "text": "The proposed landing view groups decisions needing a response, items needing attention, and changes since the operator's last visit. Operators should be able to investigate an item through a work tree and detail pane. Every meaningful item must offer direct contextual communication with a worker who can answer. Prototype conversations are simulations; no live worker messaging or command backend is authorized. The application design and implementation stack remain open.",
+      "pause": 400
+    }
+  ],
+  "build-and-check-the-documentation": [
+    {
+      "text": "Build and check the documentation.",
+      "pause": 500
+    },
+    {
+      "text": "The repository currently contains product records and documentation tooling, not a dashboard application.",
+      "pause": 400
+    },
+    {
+      "text": "The documentation site is published at GitHub Pages after a change lands on main.",
+      "pause": 400
+    }
+  ],
+  "license": [
+    {
+      "text": "License.",
+      "pause": 500
+    },
+    {
+      "text": "No license has been selected. The repository does not currently grant reuse rights.",
+      "pause": 400
+    }
+  ],
+  "_source": {
+    "file": "README.md",
+    "sha256": "25af1f4241000ca19846ce9274fdf502bee503649b3d040eb0881c991fde9a89"
+  }
+}

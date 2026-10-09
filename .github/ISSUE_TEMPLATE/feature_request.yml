@@ -1,0 +1,37 @@
+name: Propose a product change
+description: Describe an operator need and its observable outcome.
+title: ""
+labels: ["feat"]
+body:
+  - type: markdown
+    attributes:
+      value: Do not include private factory records, credentials, or other information that cannot be published here.
+  - type: textarea
+    id: story
+    attributes:
+      label: Who needs what, and why?
+      description: Describe the person, the need, and the benefit in ordinary language.
+      placeholder: As an operator, I want to … so that …
+    validations:
+      required: true
+  - type: textarea
+    id: success
+    attributes:
+      label: What would success look like?
+      description: Describe what the operator would see when the need is met.
+    validations:
+      required: true
+  - type: textarea
+    id: refusal
+    attributes:
+      label: What should remain unavailable?
+      description: Describe any action, data, or authority that must remain unavailable.
+    validations:
+      required: false
+  - type: textarea
+    id: evidence
+    attributes:
+      label: What evidence or examples support this need?
+      description: Link only public, shareable material.
+    validations:
+      required: false

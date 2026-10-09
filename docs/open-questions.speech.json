@@ -1,0 +1,60 @@
+{
+  "fixed-product-requirements": [
+    {
+      "text": "Fixed product requirements.",
+      "pause": 500
+    },
+    {
+      "text": "The dashboard is an operator-facing view of factory work. It must help answer where the operator is needed, what moved forward, and why it is happening. The proposed opening view groups decisions needing a response, items needing attention, and changes since the last visit, with investigation through a work tree and detail pane.",
+      "pause": 400
+    },
+    {
+      "text": "Every meaningful dashboard item must offer direct contextual communication with a worker who can answer. Prototype conversations are simulations only. This requirement does not authorize live worker messaging or command execution.",
+      "pause": 400
+    }
+  ],
+  "open-choices": [
+    {
+      "text": "Open choices.",
+      "pause": 500
+    },
+    {
+      "text": "The visual design and interaction details of the overview, work tree, and detail pane.",
+      "pause": 300
+    },
+    {
+      "text": "Which factory records appear, how they are refreshed, and how changes are explained.",
+      "pause": 300
+    },
+    {
+      "text": "How contextual communication reaches a worker, how replies relate to work items, and what authority a reply grants. A live backend needs a separate authorization decision.",
+      "pause": 300
+    },
+    {
+      "text": "Whether the product may issue instructions or commands.",
+      "pause": 300
+    },
+    {
+      "text": "The dashboard application's framework, language, and deployment design.",
+      "pause": 300
+    },
+    {
+      "text": "The repository's source license.",
+      "pause": 300
+    }
+  ],
+  "bootstrap-choices": [
+    {
+      "text": "Bootstrap choices.",
+      "pause": 500
+    },
+    {
+      "text": "This repository uses a documentation-only Nix and MkDocs scaffold to publish its product record. That choice does not select an application stack or dashboard behavior.",
+      "pause": 400
+    }
+  ],
+  "_source": {
+    "file": "open-questions.md",
+    "sha256": "f85317975f1641d8c3ad815b2e5bc9280a59253810fe9f36b3fc49a61075a6d2"
+  }
+}

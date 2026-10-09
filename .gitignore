@@ -1,0 +1,10 @@
+# Generated documentation output
+result
+result-*
+site/
+
+# Local investigation notes
+.llm/
+
+# Mermaid bundle linked in by tools/docs-shell-check.sh
+docs/javascripts/mermaid.min.js

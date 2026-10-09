@@ -1,0 +1,36 @@
+name: Report a problem
+description: Describe a problem you experienced while using the project.
+title: ""
+labels: ["fix"]
+body:
+  - type: markdown
+    attributes:
+      value: Share only information that can be published in this public repository.
+  - type: textarea
+    id: goal
+    attributes:
+      label: What were you trying to do?
+      description: Describe your goal and the part of the project you used.
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: What happened?
+      description: Include the result you saw and the result you expected.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How can someone reproduce it?
+      description: Give steps and the public environment details needed to reproduce the problem.
+    validations:
+      required: false
+  - type: textarea
+    id: limits
+    attributes:
+      label: What remains unclear?
+      description: Note anything you could not verify.
+    validations:
+      required: false
