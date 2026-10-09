@@ -18,9 +18,10 @@
         };
         dependencies = with pkgs.python3Packages; [ jinja2 markdown mkdocs pygments pymdown-extensions ];
       };
-      docsShell = shared.devShells.${system}.default.overrideAttrs (old: {
-        buildInputs = (old.buildInputs or [ ]) ++ [ terminal pkgs.just ];
-      });
+      docsShell = pkgs.mkShell {
+        packages = [ docsPython pkgs.just ];
+        MERMAID_JS = shared.packages.${system}.mermaid-js;
+      };
       docsPython = pkgs.python3.withPackages (pythonPackages: [
         pythonPackages.mkdocs
         pythonPackages.markdown
@@ -33,7 +34,7 @@
         version = (builtins.fromJSON (builtins.readFile ./.release-please-manifest.json)).".";
         src = pkgs.lib.fileset.toSource {
           root = ./.;
-          fileset = pkgs.lib.fileset.unions [ ./docs ./tools ./mkdocs.yml ./README.md ./README.speech.json ];
+          fileset = pkgs.lib.fileset.unions [ ./docs ./tools ./mkdocs.yml ./README.md ];
         };
         nativeBuildInputs = [ docsPython ];
         buildPhase = ''

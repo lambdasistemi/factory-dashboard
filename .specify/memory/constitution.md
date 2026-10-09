@@ -2,9 +2,10 @@
 Sync Impact Report
 - Version change: 2.0.0 -> 2.1.0
 - Rationale: operator requires production-quality structure and code regardless of language.
+- Added principle VII: technical documentation is text and diagrams only; remove speech artifacts, runtime playback and build/dev-shell tooling.
 - Added principle VI: explicit architecture boundaries, deterministic domain rules, PureScript as the preferred implementation language and strict typed boundary discipline, reproducible builds and executable quality gates.
 - Existing graph-first, read-only, public protocol/private implementation and operator release-approval principles remain in force.
-- Dependent records updated: implementation tickets and product decisions. Existing generic spec/plan/task Constitution Check sections remain applicable without changing template mechanisms.
+- Dependent records updated: implementation tickets, product decisions, README, documentation build and presentation tooling. Existing generic spec/plan/task Constitution Check sections remain applicable without changing template mechanisms.
 - Open: remaining application framework/interop choices and packaging, runtime support/authentication details, configuration/protocol encodings, license and rule-set acceptance.
 -->
 
@@ -51,6 +52,10 @@ Choosing another application language requires an explicit product/maintenance r
 Every behavior-changing PR must pass the applicable formatter, linter, type checker, build and meaningful tests for the selected stack. The first implementation establishes those executable local and hosted CI gates. Test public behavior and module boundaries: valid, invalid, stale, missing and conflicting records; exact correlation; parser-to-graph-to-finding-to-prompt flows; privacy projection; and keyboard-accessible UI behavior. Demonstrate both a triggering fault and a healthy counterexample for every detector, plus insufficient-evidence handling. Do not substitute mocked internal agreement, snapshots alone, a placeholder gate or unexecuted tests for observable evidence.
 
 Pin dependencies and retain lockfiles, document reproducible build/run commands and supported environments, make failures actionable without leaking private data, and document the architecture and public contracts with the code. Review changes for responsibility boundaries, complexity, duplication, dependency cost and error handling. Runtime work must have bounded input, resource and failure behavior. No merge or release may waive these requirements silently; any proposed exception requires an explicit rationale, risk, compensating evidence and operator acceptance before use.
+
+### VII. Documentation is text and diagrams only
+
+This project does not use speech synthesis for documentation. Do not generate, require, commit or publish speech companions, narration/audio assets, read-aloud controls or synthesis tooling. Documentation builds and CI must work without speech metadata, synthesis services or credentials. Keep technical prose, examples, diagrams, navigation and ordinary accessibility checks. This project-specific decision overrides generic documentation workflows that require narration.
 
 ## Product Constraints
 

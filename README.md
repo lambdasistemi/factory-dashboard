@@ -28,9 +28,10 @@ The repository currently contains the product record and documentation tooling, 
 
 ## Build and check the documentation
 
+Documentation is text and diagrams only. No speech synthesis, narration assets or playback controls are part of this project.
+
 ```sh
 nix develop
-just docs-speech
 nix build .#docs
 just docs-shell-check
 ```

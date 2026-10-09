@@ -37,7 +37,6 @@ markdown_extensions:
 extra_javascript:
   - javascripts/mermaid.min.js?v=11.17.2
   - javascripts/mermaid-init.js?v=94f9bed71da69206
-  - https://cdn.jsdelivr.net/gh/paolino/dev-assets@a9d7371c1118de4026ba6ee3a9c3b54614924b82/mkdocs/docs/js/read-aloud.js
 
 extra_css:
   - stylesheets/terminal.css?v=b545662909a78737
