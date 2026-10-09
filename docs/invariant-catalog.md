@@ -6,7 +6,7 @@ As a factory operator, I see a branch needing attention, copy a complete problem
 
 The first milestone's practical output is an evidence-backed request that can improve the factory's state. Graph inspection remains available, but understanding every edge is not a prerequisite to using the finding. The dashboard prepares the request locally; the operator delivers it. Automatic conversations remain the next milestone.
 
-This page translates the operator's A–H findings into proposed detection and prompt contracts. The wider [invariant research](graph-invariants.md) explains sampling, correlation, authority and unknown states.
+This page reviews the operator's A–H findings and adds I–N from observed coordination stages and evidence gaps. Each rule has a proposed detection and prompt contract. The wider [invariant research](graph-invariants.md) explains sampling, correlation, authority and unknown states.
 
 ## Reported observations, not a new live census
 
@@ -107,6 +107,76 @@ COMPLETE ends an assignment; it need not mean every task succeeded. Every unreso
 
 **Control cases:** a successful correlated answer; an authorised cancellation; a capacity handoff accepted by a successor; an unacknowledged transfer; an unrelated answer; historical retained question files.
 
+## I: Unrelated evidence cannot settle a question
+
+An answer, acknowledgement or escalation must bind the original obligation, run and applicable revision. Matching only the existence of an answer file, a reused question number or nearby activity creates false resolution. The synthetic correlation probe described in the research reproduced this failure shape in an existing local check.
+
+**Prompt recipient:** the coordination owner responsible for the question, or the producer/adapter owner if correlation was lost during parsing.
+
+**Prompt request:** trace the exact question through answer and acknowledgement references; restore an accurate unresolved/resolved disposition from admissible evidence. Do not create an answer merely to close the alert.
+
+**Control cases:** matching answer; unrelated answer; reused question number in another run; escalation that renumbers a question but preserves its origin; truncated history. This strengthens A and H without creating duplicate alerts for the same missing answer.
+
+## J: Required review handoffs reach a disposition
+
+A requested review creates obligations to route the exact candidate and evidence to an eligible reviewer and return the applicable verdict to the role that needs it. Consuming a request is not forwarding it. Receipt is not a verdict, and a verdict left at the reviewer is not a completed return path. Configured checkpoint and timing rules determine when a pending stage becomes overdue.
+
+The sampled records contain separately recorded review request, supervisor consumption, forwarding, reviewer receipt and returned blocked verdict. Those healthy transitions establish observable stages; they do not prove any current handoff is lost.
+
+**Prompt recipient:** the supervisor responsible for the missing hop, escalating across scopes when necessary.
+
+**Prompt request:** find the last correlated stage and complete or reconcile the missing handoff within authority. Deliver existing evidence before asking for duplicate review work. Report the recipient, candidate and remaining obligation.
+
+**Control cases:** complete review round trip; consumed-but-not-forwarded request; verdict not returned; reviewer legitimately within its allowance; superseded review; unavailable reviewer. A nonblocking background review is not automatically a blocker.
+
+## K: Readiness needs applicable evidence and no unresolved blocking verdict
+
+A ready/accepted claim must reference the required checks and review on the applicable candidate and gate. A blocked verdict remains relevant until its findings are resolved through the required process or explicitly superseded by authorised evidence. A repair instruction is not a repaired candidate; a repaired candidate is not an approved one.
+
+The sample contains failed checks and a blocked review for a named revision, followed by authorised repair instructions. This motivates checking that a later ready claim does not inherit the earlier evidence incorrectly; no false ready claim was established by the sample.
+
+**Prompt recipient:** the acceptance owner for that scope, retaining any required independent review authority.
+
+**Prompt request:** reconcile the current candidate, gate and blocking findings; obtain the missing applicable evidence or correct the readiness claim. Do not ask a supervisor to self-approve a required independent audit.
+
+**Control cases:** exact candidate and gate match; old approval after a revision change; gate version change; missing required check; explicit authorised equivalence; legitimately pending review; unresolved negative verdict.
+
+## L: Required corrections are acknowledged before the governed checkpoint
+
+A delivered correction with an explicit applicability and acknowledgement rule must be acknowledged by the correct recipient before the checkpoint it governs. A missing acknowledgement after that checkpoint is a protocol breach; it does not prove whether the recipient mentally read the instruction or whether every part of its output is wrong. Where applicability or checkpoint order is unknown, request evidence.
+
+Sampled supervisor records report overdue note acknowledgements, followed by named acknowledgements after intervention. This is a source-reported incident, not an independently observed process diagnosis. It supports checking durable instruction receipt without inspecting panes or processes in the dashboard.
+
+**Prompt recipient:** the issuing supervisor, or its authorised successor.
+
+**Prompt request:** verify the effective instruction, delivery and checkpoint; obtain acknowledgement and assess any affected output under existing authority. Apply the correction at the permitted boundary. Respect ongoing operations and explicit pause authority.
+
+**Control cases:** timely acknowledgement; unrelated note acknowledged; correction superseded before applicability; checkpoint reached without receipt; missing checkpoint coverage; instruction explicitly allowed to wait until a safe boundary.
+
+## M: The graph retains supersession and event identity
+
+Run changes, retirement, source relocation and rewritten/truncated inputs must not silently rebind an old event reference to a different fact. Line numbers alone need a source revision or content identity. A superseded role binding must not create two current owners. Conflicting records need reconciliation; global timestamp order cannot decide authority on its own.
+
+Inspection encountered an explicit runtime relocation and a historical open-pull-request claim superseded by fresh GitHub state. These observations motivate preserving lineage rather than treating every directory or latest prose line as a new current role.
+
+**Prompt recipient:** the scope owner for conflicting bindings, or source owner for broken event identity.
+
+**Prompt request:** establish the current binding and authoritative lineage, preserve historical references, and restore missing coverage or mappings. Do not silently drop the older record or guess which claimant is authorised.
+
+**Control cases:** explicit successor; valid relocation mapping; duplicate ingestion of one event; two exclusive active bindings; source truncation; a line reference with mismatched content; historical disagreement that is correctly time-scoped.
+
+## N: An unusable observation cannot become a successful check
+
+Every record relevant to a supported rule must be parsed, explicitly unsupported, or rejected with visible coverage loss. Unknown event kinds, missing receipts, invalid times and setup failures cannot disappear into a healthy aggregate. A verification result must distinguish whether the check ran and what it established.
+
+The sample includes an escalation reporting that a supporting check failed during setup and ran no subject work; the supervisor recorded that distinction. This is a concrete reason to keep setup failure separate from a behavioral result and to make unsupported escalation formats visible.
+
+**Prompt recipient:** the check/source owner for a broken instrument, with escalation to the acceptance owner if readiness relies on it.
+
+**Prompt request:** identify the missing observation or failed setup and restore the instrument under existing authority; then obtain the actual required result. Do not relabel infrastructure failure as behavioral evidence or retry costly work without the required authority.
+
+**Control cases:** executed pass; executed failure; setup failure; empty or truncated input; unsupported relevant event; invalid timestamp; configured source unavailable. This rule changes coverage/confidence rather than producing a second repair prompt for every dependent symptom.
+
 ## The operator sees a short action, the recipient gets the detail
 
 Each finding card needs only a plain-language problem, affected scope, observation age and recommended recipient, followed by **Copy problem prompt**. Expandable graph context and evidence support investigation without requiring it before copying. Distinguish "needs a decision", "broken coordination" and "cannot verify state" in language, not only colour.
@@ -146,6 +216,6 @@ provides context and grants no new authority.
 
 ## Acceptance of the first rule set
 
-Treat A–H as priority candidates for the first milestone, alongside exact correlation and candidate-bound acceptance from the broader research. Freeze rule meanings and input requirements before calling a detector complete. Every implemented rule needs a triggering fixture, a healthy counterexample, an insufficient-evidence case, a prompt-content check and a recipient-routing check through the real configured-file-to-graph path. A zero-case run must report coverage and show that a seeded matching case is detected.
+Treat A–N as candidate rules for the first milestone, prioritising observed coordination failures and observation gaps. I–N extend A–H rather than certifying additional live faults. Where several rules describe one cause, issue one coordinated prompt while retaining every violated obligation. Freeze rule meanings and input requirements before calling a detector complete. Every implemented rule needs a triggering fixture, a healthy counterexample, an insufficient-evidence case, a prompt-content check and a recipient-routing check through the real configured-file-to-graph path. A zero-case run must report coverage and show that a seeded matching case is detected.
 
 Prompt checks must prove the request is useful without inspecting the graph first, preserves uncertainty and authority, excludes prohibited fields, and names the evidence that would demonstrate resolution. No automatic delivery, acknowledgement, dismissal, mailbox write or worker restart belongs in this milestone.

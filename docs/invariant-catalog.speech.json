@@ -13,7 +13,7 @@
       "pause": 400
     },
     {
-      "text": "This page translates the operator's A–H findings into proposed detection and prompt contracts. The wider invariant research explains sampling, correlation, authority and unknown states.",
+      "text": "This page reviews the operator's A–H findings and adds I–N from observed coordination stages and evidence gaps. Each rule has a proposed detection and prompt contract. The wider invariant research explains sampling, correlation, authority and unknown states.",
       "pause": 400
     }
   ],
@@ -211,6 +211,158 @@
       "pause": 400
     }
   ],
+  "i-unrelated-evidence-cannot-settle-a-question": [
+    {
+      "text": "I: Unrelated evidence cannot settle a question.",
+      "pause": 500
+    },
+    {
+      "text": "An answer, acknowledgement or escalation must bind the original obligation, run and applicable revision. Matching only the existence of an answer file, a reused question number or nearby activity creates false resolution. The synthetic correlation probe described in the research reproduced this failure shape in an existing local check.",
+      "pause": 400
+    },
+    {
+      "text": "Prompt recipient: the coordination owner responsible for the question, or the producer/adapter owner if correlation was lost during parsing.",
+      "pause": 400
+    },
+    {
+      "text": "Prompt request: trace the exact question through answer and acknowledgement references; restore an accurate unresolved/resolved disposition from admissible evidence. Do not create an answer merely to close the alert.",
+      "pause": 400
+    },
+    {
+      "text": "Control cases: matching answer; unrelated answer; reused question number in another run; escalation that renumbers a question but preserves its origin; truncated history. This strengthens A and H without creating duplicate alerts for the same missing answer.",
+      "pause": 400
+    }
+  ],
+  "j-required-review-handoffs-reach-a-disposition": [
+    {
+      "text": "J: Required review handoffs reach a disposition.",
+      "pause": 500
+    },
+    {
+      "text": "A requested review creates obligations to route the exact candidate and evidence to an eligible reviewer and return the applicable verdict to the role that needs it. Consuming a request is not forwarding it. Receipt is not a verdict, and a verdict left at the reviewer is not a completed return path. Configured checkpoint and timing rules determine when a pending stage becomes overdue.",
+      "pause": 400
+    },
+    {
+      "text": "The sampled records contain separately recorded review request, supervisor consumption, forwarding, reviewer receipt and returned blocked verdict. Those healthy transitions establish observable stages; they do not prove any current handoff is lost.",
+      "pause": 400
+    },
+    {
+      "text": "Prompt recipient: the supervisor responsible for the missing hop, escalating across scopes when necessary.",
+      "pause": 400
+    },
+    {
+      "text": "Prompt request: find the last correlated stage and complete or reconcile the missing handoff within authority. Deliver existing evidence before asking for duplicate review work. Report the recipient, candidate and remaining obligation.",
+      "pause": 400
+    },
+    {
+      "text": "Control cases: complete review round trip; consumed-but-not-forwarded request; verdict not returned; reviewer legitimately within its allowance; superseded review; unavailable reviewer. A nonblocking background review is not automatically a blocker.",
+      "pause": 400
+    }
+  ],
+  "k-readiness-needs-applicable-evidence-and-no-unresolved-blocking-verdict": [
+    {
+      "text": "K: Readiness needs applicable evidence and no unresolved blocking verdict.",
+      "pause": 500
+    },
+    {
+      "text": "A ready/accepted claim must reference the required checks and review on the applicable candidate and gate. A blocked verdict remains relevant until its findings are resolved through the required process or explicitly superseded by authorised evidence. A repair instruction is not a repaired candidate; a repaired candidate is not an approved one.",
+      "pause": 400
+    },
+    {
+      "text": "The sample contains failed checks and a blocked review for a named revision, followed by authorised repair instructions. This motivates checking that a later ready claim does not inherit the earlier evidence incorrectly; no false ready claim was established by the sample.",
+      "pause": 400
+    },
+    {
+      "text": "Prompt recipient: the acceptance owner for that scope, retaining any required independent review authority.",
+      "pause": 400
+    },
+    {
+      "text": "Prompt request: reconcile the current candidate, gate and blocking findings; obtain the missing applicable evidence or correct the readiness claim. Do not ask a supervisor to self-approve a required independent audit.",
+      "pause": 400
+    },
+    {
+      "text": "Control cases: exact candidate and gate match; old approval after a revision change; gate version change; missing required check; explicit authorised equivalence; legitimately pending review; unresolved negative verdict.",
+      "pause": 400
+    }
+  ],
+  "l-required-corrections-are-acknowledged-before-the-governed-checkpoint": [
+    {
+      "text": "L: Required corrections are acknowledged before the governed checkpoint.",
+      "pause": 500
+    },
+    {
+      "text": "A delivered correction with an explicit applicability and acknowledgement rule must be acknowledged by the correct recipient before the checkpoint it governs. A missing acknowledgement after that checkpoint is a protocol breach; it does not prove whether the recipient mentally read the instruction or whether every part of its output is wrong. Where applicability or checkpoint order is unknown, request evidence.",
+      "pause": 400
+    },
+    {
+      "text": "Sampled supervisor records report overdue note acknowledgements, followed by named acknowledgements after intervention. This is a source-reported incident, not an independently observed process diagnosis. It supports checking durable instruction receipt without inspecting panes or processes in the dashboard.",
+      "pause": 400
+    },
+    {
+      "text": "Prompt recipient: the issuing supervisor, or its authorised successor.",
+      "pause": 400
+    },
+    {
+      "text": "Prompt request: verify the effective instruction, delivery and checkpoint; obtain acknowledgement and assess any affected output under existing authority. Apply the correction at the permitted boundary. Respect ongoing operations and explicit pause authority.",
+      "pause": 400
+    },
+    {
+      "text": "Control cases: timely acknowledgement; unrelated note acknowledged; correction superseded before applicability; checkpoint reached without receipt; missing checkpoint coverage; instruction explicitly allowed to wait until a safe boundary.",
+      "pause": 400
+    }
+  ],
+  "m-the-graph-retains-supersession-and-event-identity": [
+    {
+      "text": "M: The graph retains supersession and event identity.",
+      "pause": 500
+    },
+    {
+      "text": "Run changes, retirement, source relocation and rewritten/truncated inputs must not silently rebind an old event reference to a different fact. Line numbers alone need a source revision or content identity. A superseded role binding must not create two current owners. Conflicting records need reconciliation; global timestamp order cannot decide authority on its own.",
+      "pause": 400
+    },
+    {
+      "text": "Inspection encountered an explicit runtime relocation and a historical open-pull-request claim superseded by fresh GitHub state. These observations motivate preserving lineage rather than treating every directory or latest prose line as a new current role.",
+      "pause": 400
+    },
+    {
+      "text": "Prompt recipient: the scope owner for conflicting bindings, or source owner for broken event identity.",
+      "pause": 400
+    },
+    {
+      "text": "Prompt request: establish the current binding and authoritative lineage, preserve historical references, and restore missing coverage or mappings. Do not silently drop the older record or guess which claimant is authorised.",
+      "pause": 400
+    },
+    {
+      "text": "Control cases: explicit successor; valid relocation mapping; duplicate ingestion of one event; two exclusive active bindings; source truncation; a line reference with mismatched content; historical disagreement that is correctly time-scoped.",
+      "pause": 400
+    }
+  ],
+  "n-an-unusable-observation-cannot-become-a-successful-check": [
+    {
+      "text": "N: An unusable observation cannot become a successful check.",
+      "pause": 500
+    },
+    {
+      "text": "Every record relevant to a supported rule must be parsed, explicitly unsupported, or rejected with visible coverage loss. Unknown event kinds, missing receipts, invalid times and setup failures cannot disappear into a healthy aggregate. A verification result must distinguish whether the check ran and what it established.",
+      "pause": 400
+    },
+    {
+      "text": "The sample includes an escalation reporting that a supporting check failed during setup and ran no subject work; the supervisor recorded that distinction. This is a concrete reason to keep setup failure separate from a behavioral result and to make unsupported escalation formats visible.",
+      "pause": 400
+    },
+    {
+      "text": "Prompt recipient: the check/source owner for a broken instrument, with escalation to the acceptance owner if readiness relies on it.",
+      "pause": 400
+    },
+    {
+      "text": "Prompt request: identify the missing observation or failed setup and restore the instrument under existing authority; then obtain the actual required result. Do not relabel infrastructure failure as behavioral evidence or retry costly work without the required authority.",
+      "pause": 400
+    },
+    {
+      "text": "Control cases: executed pass; executed failure; setup failure; empty or truncated input; unsupported relevant event; invalid timestamp; configured source unavailable. This rule changes coverage/confidence rather than producing a second repair prompt for every dependent symptom.",
+      "pause": 400
+    }
+  ],
   "the-operator-sees-a-short-action-the-recipient-gets-the-detail": [
     {
       "text": "The operator sees a short action, the recipient gets the detail.",
@@ -245,7 +397,7 @@
       "pause": 500
     },
     {
-      "text": "Treat A–H as priority candidates for the first milestone, alongside exact correlation and candidate-bound acceptance from the broader research. Freeze rule meanings and input requirements before calling a detector complete. Every implemented rule needs a triggering fixture, a healthy counterexample, an insufficient-evidence case, a prompt-content check and a recipient-routing check through the real configured-file-to-graph path. A zero-case run must report coverage and show that a seeded matching case is detected.",
+      "text": "Treat A–N as candidate rules for the first milestone, prioritising observed coordination failures and observation gaps. I–N extend A–H rather than certifying additional live faults. Where several rules describe one cause, issue one coordinated prompt while retaining every violated obligation. Freeze rule meanings and input requirements before calling a detector complete. Every implemented rule needs a triggering fixture, a healthy counterexample, an insufficient-evidence case, a prompt-content check and a recipient-routing check through the real configured-file-to-graph path. A zero-case run must report coverage and show that a seeded matching case is detected.",
       "pause": 400
     },
     {
@@ -255,6 +407,6 @@
   ],
   "_source": {
     "file": "invariant-catalog.md",
-    "sha256": "51133279e37d866ed36f0adf333765e17dd9ba486190e0ee5e406ac846dd5837"
+    "sha256": "8caf9a084e418c9e2314cb8f2a253136cca3dc2431f11c9c8f2a8178eed701fe"
   }
 }
