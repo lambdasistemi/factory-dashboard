@@ -9,8 +9,8 @@ index labels are permitted; everything else is reader-facing.
 --front names the front page (default: README.md if present under the first
 directory root, else index.md) that must carry a story heading and a diagram.
 --no-speech skips the speech binding. By default every page must have a sibling
-PAGE.speech.json whose `_source.sha256` equals the page's current hash (see
-stamp_speech.py) and whose keys are exactly the page's h2/h3 anchor ids: a page
+PAGE.speech.json whose `_source.sha256` equals the page's current hash (written
+by `just docs-speech`) and whose keys are exactly the page's h2/h3 anchor ids: a page
 edited without its speech being redone and re-stamped fails.
 
 Exit 1 with a JSON report of every violation; exit 0 with a JSON summary.
@@ -24,7 +24,6 @@ from pathlib import Path
 LABEL = re.compile(r"(?<![\w/#.-])(?:R|S|D|N|M|INV)-?\d{1,3}[a-z]?(?![\w.-])")
 FENCE = re.compile(r"^```")
 MERMAID = re.compile(r"^```mermaid\b")
-DIAGRAM_ASSET = re.compile(r"^<!-- diagram: [\w-]+ -->$")
 HEADING = re.compile(r"^(#{1,6})\s+(.*)$")
 STORY = re.compile(r"\b(stor(y|ies)|who (this|it) is for|what you can do)\b", re.I)
 STRUCTURAL = re.compile(r"(architecture|design|lifecycle|flow|protocol|overview|spec)", re.I)
@@ -96,9 +95,6 @@ def scan(path):
             continue
         if in_fence:
             continue
-        if DIAGRAM_ASSET.match(line):
-            # Source/image freshness is checked by render_diagrams.py.
-            mermaid += 1
         h = HEADING.match(line)
         if h:
             headings.append((len(h.group(1)), h.group(2).strip()))
