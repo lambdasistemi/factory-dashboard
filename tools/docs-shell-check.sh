@@ -16,5 +16,6 @@ cleanup() {
 trap cleanup EXIT
 
 ln -s "$MERMAID_JS" "$mermaid_asset"
+tools/check-asset-versions.sh
 python3 tools/check_presentation.py --front docs/index.md README.md docs
 mkdocs build --strict --site-dir "$site_root/site"

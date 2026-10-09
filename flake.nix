@@ -35,6 +35,7 @@
         nativeBuildInputs = [ docsPython ];
         buildPhase = ''
           cp ${shared.packages.${system}.mermaid-js} docs/javascripts/mermaid.min.js
+          bash tools/check-asset-versions.sh
           python3 tools/check_presentation.py --front docs/index.md README.md docs
           mkdocs build --strict --site-dir build-site
         '';
