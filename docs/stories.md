@@ -28,7 +28,7 @@ This is a later milestone after the read-only product has been accepted and rele
 
 As a factory operator, I open a specialised view derived from the graph and see the decisions, blockers or changes relevant to me, then return to their graph context.
 
-This belongs in the first milestone alongside other useful information derivable from approved communication and local status records. Each finding shows its evidence and freshness. I go to the machine to address it; a later milestone lets me communicate back from the dashboard. A recorded response or acknowledgement is not proof that the issue was resolved.
+This belongs in the first milestone alongside other useful information derivable from approved communication and local status records. Each finding shows its evidence and freshness. I copy an evidence-backed problem prompt for a recommended role with sufficient authority and go to the machine to send it; a later milestone lets me communicate back from the dashboard. A recorded response or acknowledgement is not proof that the issue was resolved.
 
 ## Operate the factory in the long term
 

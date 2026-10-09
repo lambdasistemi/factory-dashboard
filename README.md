@@ -24,13 +24,14 @@ Those future capabilities are not part of the first release. The [configuration 
 
 ## Current state
 
-The repository currently contains the product record and documentation tooling, not a released dashboard application. The application stack, runtime packaging and source license remain open choices. Synthetic prototypes are exploration material rather than evidence of a live integration.
+The repository currently contains the product record and documentation tooling, not a released dashboard application. PureScript is the preferred implementation language and project default. The remaining framework/interop choices, runtime packaging and source license are still to be settled. Synthetic prototypes are exploration material rather than evidence of a live integration.
 
 ## Build and check the documentation
 
+Documentation is text and diagrams only. No speech synthesis, narration assets or playback controls are part of this project.
+
 ```sh
 nix develop
-just docs-speech
 nix build .#docs
 just docs-shell-check
 ```

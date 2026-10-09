@@ -8,6 +8,8 @@ These tickets are filed under the [Read-only factory graph milestone](https://gi
 
 Each acceptance checkbox must become a directly observable browser check, contract check, integration check or release receipt. The initial sequence is serial. No implementation team is assigned by this plan. Each ticket extends the same dashboard artifact; intermediate completion does not authorise a product release.
 
+Every implementation ticket must meet constitution principle VI: explicit responsibility boundaries, validated inputs, deterministic domain rules, applicable strict type/build/lint/format gates and meaningful behavior tests. The first graph ticket establishes the architecture and executable CI gates; later tickets extend them. PureScript is the implementation default, with a pure domain core, explicit effects and minimal typed/tested FFI. Any alternative language requires a concrete rationale and operator agreement.
+
 ## Open and explore the complete factory graph
 
 [Track ticket #4](https://github.com/lambdasistemi/factory-dashboard/issues/4).
@@ -19,6 +21,8 @@ Each acceptance checkbox must become a directly observable browser check, contra
 **P1 user story:** As a factory operator, I navigate the global graph and observe the work hierarchy, responsible roles and existing communication context without losing my place.
 
 ### Graph acceptance criteria
+
+- [ ] Document the responsibility boundaries and dependency direction, establish the selected stack's formatter, linter, type checker, build and behavior checks in local commands and CI, and satisfy constitution principle VI from the first runnable artifact.
 
 - [ ] The documented local entry point opens the connected graph as the main screen, using entirely synthetic records with no source credentials or external requests.
 - [ ] Fixtures contain projects, milestones, epic and ticket issues, pull requests, role attachments and recorded communication links. Distinct relationship types are visibly distinguishable; the graph does not invent missing GitHub parentage.
@@ -140,6 +144,7 @@ Searched: no existing issues matched protocol/configuration work; the repository
 - [ ] Fixtures exercise a pending question, correlated answer, unresolved blocker, explicit resolution, duplicate or out-of-order events, stale or missing records, and conflicting evidence. Refresh after an external action updates findings without a dashboard write. Positive and negative controls prove that irrelevant or insufficient evidence does not create or clear attention.
 - [ ] History and summaries use only available configured records, disclose retention or coverage gaps, and do not imply a complete history where none exists.
 - [ ] Derived fields pass the same approved-field projection as source data. Aggregates, labels and evidence references cannot leak private worker details, raw paths or secrets.
+- [ ] Every finding offers a deterministic, copyable problem prompt with approved facts, evidence references, freshness, uncertainty, impact and a recommended recipient role. Routing uses recorded supervision and authority, escalating to the operator when ambiguous; copying sends nothing. The prompt is usable without first diagnosing the graph: it requests bounded investigation or repair within existing authority and an evidence-backed disposition. Findings with a supported shared cause can produce one prompt without losing individual obligations. Synthetic cases cover a shared supervisor, an unavailable recipient, incomplete authority, stale evidence and prohibited fields.
 - [ ] The interface explains that action happens on the machine in this release. It has no reply, acknowledge, dismiss, assign or resolve operation that writes to sources or conceals an unresolved finding.
 
 ### Derived observation non-goals

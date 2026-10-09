@@ -14,6 +14,8 @@ Roles and the supported protocol are public product design. Concrete worker impl
 
 Before any first product release, the operator must review the configuration and privacy evidence. Successful builds are not sufficient. The project promises defined, tested boundaries and explicit limits, not perfect safety in arbitrary installations.
 
+Production-quality structure and verification are fixed requirements from the first runnable graph. Clear module responsibilities, validated inputs, explicit state models, reproducible builds and meaningful automated checks are mandatory. PureScript is the operator-preferred language and the implementation default, with a pure domain core, explicit effects and a small typed FFI boundary. Another language requires a concrete product/maintenance reason and operator agreement. The constitution defines the enforcement; language choice does not relax it.
+
 ## Long-term goals
 
 After the observation foundation is accepted and released, the product should support communicating back through local channels to address observed attention, including asking and answering contextual questions. Eventually the operator should be able to select teams and direct authorised factory operations from the dashboard.
@@ -22,7 +24,7 @@ The [roadmap](roadmap.md) keeps these goals visible as milestones without assign
 
 ## Remaining choices
 
-- The application framework, language and runtime packaging. The documentation scaffold does not select these.
+- PureScript is the default language. Confirm the UI framework, graph-rendering interop, server/runtime packaging and pinned toolchain before implementation; use the established PureScript conventions as the starting point.
 - The supported initial operating environments and authentication mechanism within the fixed private-access boundary.
 - The exact versioned configuration schema and the initial supported subset of the file protocol. Their tickets must resolve these before integrating real sources.
 - The mapping of configured projects and repositories to existing GitHub work relationships; GitHub terms themselves are not being redesigned.

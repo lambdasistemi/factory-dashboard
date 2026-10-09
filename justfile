@@ -1,9 +1,6 @@
 default:
     @just --list
 
-docs-speech:
-    nix develop . --quiet -c tools/update-speech.sh
-
 docs-check:
     nix build --quiet .#docs
 

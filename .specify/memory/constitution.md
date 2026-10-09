@@ -1,13 +1,12 @@
 <!--
 Sync Impact Report
-- Version change: 1.0.0 -> 2.0.0
-- Rationale: operator replaced the attention-first opening with a graph-first product, required a released read-only foundation before interaction, and fixed public protocol/private implementation and configuration boundaries.
-- Principles changed: operator experience, contextual answer sequencing, product boundaries and release evidence.
-- Clarification: computable attention and other derived observations belong in the first milestone; communicating back is the next milestone.
-- Added: first-release read-only sources; public role/protocol and private implementation distinction; configuration/privacy release gate; long-term milestone roadmap.
-- Dependent records updated: README, overview, user stories, product decisions, roadmap, ticket drafts, privacy/configuration contract.
-- Existing generic spec/plan/task templates retain their Constitution Check and acceptance sections; no template mechanism changed.
-- Open: application stack, runtime support/authentication details, exact configuration/protocol versions, license, future milestone designs.
+- Version change: 2.0.0 -> 2.1.0
+- Rationale: operator requires production-quality structure and code regardless of language.
+- Added principle VII: technical documentation is text and diagrams only; remove speech artifacts, runtime playback and build/dev-shell tooling.
+- Added principle VI: explicit architecture boundaries, deterministic domain rules, PureScript as the preferred implementation language and strict typed boundary discipline, reproducible builds and executable quality gates.
+- Existing graph-first, read-only, public protocol/private implementation and operator release-approval principles remain in force.
+- Dependent records updated: implementation tickets, product decisions, README, documentation build and presentation tooling. Existing generic spec/plan/task Constitution Check sections remain applicable without changing template mechanisms.
+- Open: remaining application framework/interop choices and packaging, runtime support/authentication details, configuration/protocol encodings, license and rule-set acceptance.
 -->
 
 # Factory Dashboard Constitution
@@ -40,6 +39,24 @@ A versioned configuration contract must define every field, default, validation 
 
 Acceptance must demonstrate source read-only behavior, permitted network access, private access controls, data minimisation, input refusal, redacted diagnostics and portability to a second synthetic installation. The operator reviews the evidence before release. A passing local build or hosted check does not by itself approve a release. State supported environments and residual limits; do not claim perfect safety.
 
+### VI. Production-quality structure is mandatory
+
+Factory Dashboard is production software. Maintainable architecture, correctness and operational clarity are acceptance requirements from the first runnable graph onward, regardless of language. A small feature scope must still have a deliberate design. Prototype code enters the product only after it meets the same contracts and checks.
+
+Separate source adapters and runtime input validation, the domain graph and obligation model, invariant evaluation, approved-data projection and prompt generation, and UI rendering through explicit interfaces. Keep domain rules deterministic and independently testable; inject time and external effects. Filesystem, network, credentials and private runtime configuration stay outside domain logic and browser modules. Dependencies have a documented direction with no circular module dependencies or hidden global state. Organise by coherent responsibilities, keeping interfaces and abstractions as small as the real requirements permit; this does not require separate services or packages for every responsibility.
+
+PureScript is the operator-preferred implementation language and the project default. Model states, scoped identities and failures with explicit types and exhaustive handling; keep the graph, invariant evaluation and prompt construction pure, with effects at explicit boundaries. Follow the project family's PureScript build conventions, using pinned tools from Nix and committed dependency locks. Keep JavaScript FFI small, typed, documented and tested at its actual boundary. Decode external data before it enters the domain; compile-time types never establish trust in GitHub or file payloads. Partial functions, unsafe coercions and suppressed diagnostics require a narrow documented boundary justification and behavior checks; they cannot bypass the privacy or protocol contract.
+
+Choosing another application language requires an explicit product/maintenance rationale and operator agreement; presumed agent convenience is insufficient. If TypeScript is later approved for a component, its compiler must use strict checking, unchecked indexed access and exact optional property handling, with runtime input validation and the same restrictions on unsafe escapes.
+
+Every behavior-changing PR must pass the applicable formatter, linter, type checker, build and meaningful tests for the selected stack. The first implementation establishes those executable local and hosted CI gates. Test public behavior and module boundaries: valid, invalid, stale, missing and conflicting records; exact correlation; parser-to-graph-to-finding-to-prompt flows; privacy projection; and keyboard-accessible UI behavior. Demonstrate both a triggering fault and a healthy counterexample for every detector, plus insufficient-evidence handling. Do not substitute mocked internal agreement, snapshots alone, a placeholder gate or unexecuted tests for observable evidence.
+
+Pin dependencies and retain lockfiles, document reproducible build/run commands and supported environments, make failures actionable without leaking private data, and document the architecture and public contracts with the code. Review changes for responsibility boundaries, complexity, duplication, dependency cost and error handling. Runtime work must have bounded input, resource and failure behavior. No merge or release may waive these requirements silently; any proposed exception requires an explicit rationale, risk, compensating evidence and operator acceptance before use.
+
+### VII. Documentation is text and diagrams only
+
+This project does not use speech synthesis for documentation. Do not generate, require, commit or publish speech companions, narration/audio assets, read-aloud controls or synthesis tooling. Documentation builds and CI must work without speech metadata, synthesis services or credentials. Keep technical prose, examples, diagrams, navigation and ordinary accessibility checks. This project-specific decision overrides generic documentation workflows that require narration.
+
 ## Product Constraints
 
 - The first implementation ticket delivers the runnable graph with synthetic inputs.
@@ -47,7 +64,7 @@ Acceptance must demonstrate source read-only behavior, permitted network access,
 - Communication and control are later milestones, after the read-only foundation is accepted and released.
 - Attention and other computable read-only information are included in the first milestone and derive from graph context; responding through the dashboard is deferred.
 - GitHub vocabulary remains GitHub's; the project defines its own additional role and communication vocabulary.
-- The application stack and source license remain open. Documentation tooling does not settle either.
+- PureScript is the default implementation language. Remaining framework, interop and runtime packaging decisions must be recorded before implementation; the source license remains open.
 
 ## Development Workflow
 
@@ -59,4 +76,4 @@ Use the existing documentation and presentation checks for product records. Impl
 
 This constitution governs project templates and product changes. Amend it with a rationale, updated impact report and review of dependent records. Major versions change principles incompatibly, minor versions add material rules, and patch versions clarify wording. Keep unresolved decisions visible in `docs/open-questions.md`.
 
-**Version**: 2.0.0 | **Ratified**: 2026-10-09 | **Last Amended**: 2026-10-09
+**Version**: 2.1.0 | **Ratified**: 2026-10-09 | **Last Amended**: 2026-10-09

@@ -61,6 +61,8 @@ Unsafe, incomplete or unsupported configuration refuses source activation and gi
 
 The release checks include deliberate negative controls: secret sentinels in denied fields, path traversal and symlink attempts, an unapproved repository or network destination, attempted GitHub mutation, malformed or oversized local records, and an installation with missing access configuration. Each must be refused or omitted at its defined boundary. Secret sentinels must be absent from browser payloads, generated assets, errors and support output. Input files are hashed before and after operation to prove read-only behavior.
 
+Findings and user-copied problem prompts use the same approved-field projection. They include no raw source dump, private path, credential or concrete worker implementation. Prompt text is generated locally from a deterministic template; copying never sends a message or writes a mailbox.
+
 A second synthetic installation uses different host settings, repository identities, directory roots and role bindings without changing application source. This demonstrates portability without publishing a real machine's details.
 
 No project can promise perfect safety against every environment or operator decision. Release evidence must state the supported deployment, the checks performed and remaining limits. The operator reviews that evidence and configuration contract before a release proceeds.
