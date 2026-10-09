@@ -65,7 +65,7 @@
       "pause": 400
     },
     {
-      "text": "This belongs in the first milestone alongside other useful information derivable from approved communication and local status records. Each finding shows its evidence and freshness. I go to the machine to address it; a later milestone lets me communicate back from the dashboard. A recorded response or acknowledgement is not proof that the issue was resolved.",
+      "text": "This belongs in the first milestone alongside other useful information derivable from approved communication and local status records. Each finding shows its evidence and freshness. I copy an evidence-backed problem prompt for a recommended role with sufficient authority and go to the machine to send it; a later milestone lets me communicate back from the dashboard. A recorded response or acknowledgement is not proof that the issue was resolved.",
       "pause": 400
     }
   ],
@@ -85,6 +85,6 @@
   ],
   "_source": {
     "file": "stories.md",
-    "sha256": "0021d8e7dae24f1e03c27b0a32e05faaeafcb779391fb9b94fe18a1580e0ce4e"
+    "sha256": "a6462d4a5702947b3083138cd35e7ab77ea415a51a7e30648e41f935f60b907b"
   }
 }

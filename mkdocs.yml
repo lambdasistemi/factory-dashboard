@@ -16,6 +16,7 @@ nav:
       - Overview: index.md
       - Milestone roadmap: roadmap.md
       - First milestone tickets: tickets.md
+      - Graph invariants research: graph-invariants.md
       - Privacy and configuration: configuration.md
       - User stories: stories.md
       - Product decisions: open-questions.md

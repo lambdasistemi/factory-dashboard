@@ -64,6 +64,8 @@ Its child tickets are **Configure a private, read-only installation** and **Veri
 | Fifth | [#8 — Derive attention and information from recorded factory state](https://github.com/lambdasistemi/factory-dashboard/issues/8) | Graph and both real sources | Attention, status, activity and available history can be inspected with evidence. |
 | Sixth | [#9 — Verify the first release's privacy and observation boundaries](https://github.com/lambdasistemi/factory-dashboard/issues/9) | Both real sources, derived observations and configuration | An integrated release candidate has explicit safety and outcome evidence. |
 
+Before freezing the first graph contract, [research graph invariants](graph-invariants.md) against sampled records: typed obligations, broken expectations, evidence quality and copyable problem prompts. This research informs the existing tickets and does not introduce automatic worker communication.
+
 The initial execution order is serial to keep the project small. Parallel adapter work is possible only after the graph and configuration contracts are frozen and implementation ownership is agreed. This plan does not assign a team, models or execution seats.
 
 Every epic extends the same dashboard artifact. Every implementation ticket remains unreleased until the integrated release checks pass. The first release also requires a selected source license and documented runtime support; those remain open product decisions.

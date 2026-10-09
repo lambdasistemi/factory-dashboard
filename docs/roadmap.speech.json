@@ -103,6 +103,10 @@
       "pause": 500
     },
     {
+      "text": "Before freezing the first graph contract, research graph invariants against sampled records: typed obligations, broken expectations, evidence quality and copyable problem prompts. This research informs the existing tickets and does not introduce automatic worker communication.",
+      "pause": 400
+    },
+    {
       "text": "The initial execution order is serial to keep the project small. Parallel adapter work is possible only after the graph and configuration contracts are frozen and implementation ownership is agreed. This plan does not assign a team, models or execution seats.",
       "pause": 400
     },
@@ -205,6 +209,6 @@
   ],
   "_source": {
     "file": "roadmap.md",
-    "sha256": "324d42d849f1058bf64f2d3eb617242d942d6c15fa76cdca794322ab827c3a87"
+    "sha256": "a1497ead36f40f12a2a300574057504efeb4bc03597d65facb86e9e8b567a1ef"
   }
 }

@@ -389,6 +389,10 @@
       "pause": 300
     },
     {
+      "text": "[ ] Every finding offers a deterministic, copyable problem prompt with approved facts, evidence references, freshness, uncertainty, impact and a recommended recipient role. Routing uses recorded supervision and authority, escalating to the operator when ambiguous; copying sends nothing. Synthetic cases cover a shared supervisor, an unavailable recipient, incomplete authority, stale evidence and prohibited fields.",
+      "pause": 300
+    },
+    {
       "text": "[ ] The interface explains that action happens on the machine in this release. It has no reply, acknowledge, dismiss, assign or resolve operation that writes to sources or conceals an unresolved finding.",
       "pause": 300
     }
@@ -505,6 +509,6 @@
   ],
   "_source": {
     "file": "tickets.md",
-    "sha256": "842798ed56f84aaea2146d131f8013b2e71bb15f45b4e1bb94d34d7933d28c9e"
+    "sha256": "2773b0c9d1a66a645cf4f83d905b4b3e28fe833825e2baaee2ea50603acb857b"
   }
 }

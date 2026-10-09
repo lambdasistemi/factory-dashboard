@@ -77,6 +77,10 @@
       "pause": 400
     },
     {
+      "text": "Findings and user-copied problem prompts use the same approved-field projection. They include no raw source dump, private path, credential or concrete worker implementation. Prompt text is generated locally from a deterministic template; copying never sends a message or writes a mailbox.",
+      "pause": 400
+    },
+    {
       "text": "A second synthetic installation uses different host settings, repository identities, directory roots and role bindings without changing application source. This demonstrates portability without publishing a real machine's details.",
       "pause": 400
     },
@@ -97,6 +101,6 @@
   ],
   "_source": {
     "file": "configuration.md",
-    "sha256": "fcee0cf2eff2261800441c87f7364f37528d14418ea1efde06880ee4d57c617b"
+    "sha256": "a553804ff145b7ad203fe991e3e7533b76160278370b416e6ac52fe044d91365"
   }
 }
