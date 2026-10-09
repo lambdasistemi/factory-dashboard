@@ -1,0 +1,44 @@
+{
+  "operator-story": [
+    {
+      "text": "Operator story.",
+      "pause": 500
+    },
+    {
+      "text": "As a factory operator, I want the opening view to show where I am needed, what moved forward, and why it is happening, so I can decide where to spend my attention.",
+      "pause": 400
+    },
+    {
+      "text": "The proposed landing view brings together decisions needing a response, items needing attention, and changes since the operator's last visit. This is recorded product intent, not an implemented screen.",
+      "pause": 400
+    }
+  ],
+  "investigate-an-item": [
+    {
+      "text": "Investigate an item.",
+      "pause": 500
+    },
+    {
+      "text": "As an operator, I want to follow an item through a work tree into a detail pane, so I can understand its context before responding.",
+      "pause": 400
+    },
+    {
+      "text": "Every meaningful dashboard item must also offer direct contextual communication with a worker who can answer. The dashed path in the diagram marks that requirement. Its interaction and authority rules remain open, and the prototype conversations are simulations only; no live messaging or command backend is authorized.",
+      "pause": 400
+    }
+  ],
+  "read-the-product-record": [
+    {
+      "text": "Read the product record.",
+      "pause": 500
+    },
+    {
+      "text": "The user stories state the operator needs. Open product choices record what remains undecided, including application design, stack, and live communication authority.",
+      "pause": 400
+    }
+  ],
+  "_source": {
+    "file": "index.md",
+    "sha256": "00025f46eacb69fd1c97a19717fc30cdb8a4d817e4e046155bfe3856dda2c8e9"
+  }
+}

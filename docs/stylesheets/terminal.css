@@ -1,0 +1,31 @@
+/* Keep the reading column and navigation usable on phones as well as desktops. */
+body { padding-top: 1.5rem; }
+.container { max-width: 80rem; }
+.terminal-mkdocs-main-grid > * { min-width: 0; }
+#terminal-mkdocs-main-content { overflow-wrap: anywhere; }
+#terminal-mkdocs-main-content table { display: block; overflow-x: auto; }
+#factory-dashboard-navigation { margin-bottom: 1.5rem; }
+#factory-dashboard-navigation summary { cursor: pointer; padding: 0.75rem 0; }
+#factory-dashboard-palette-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--font-color);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+#factory-dashboard-palette-toggle svg { width: 1.25rem; height: 1.25rem; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+#factory-dashboard-palette-toggle:focus-visible { outline: 2px solid var(--secondary-color); outline-offset: 2px; }
+.terminal-menu ul { gap: 1rem; }
+.terminal-menu a { display: inline-block; padding: 0.5rem 0; }
+#terminal-mkdocs-main-content .mermaid { max-width: 100%; overflow-x: auto; background: transparent; }
+#terminal-mkdocs-main-content .mermaid svg { display: block; max-width: 100%; height: auto; margin-inline: auto; }
+@media (min-width: 70em) {
+  .terminal-mkdocs-main-grid { grid-template-columns: minmax(14rem, 1fr) minmax(0, 3fr); }
+}
+@media (max-width: 30em) {
+  .terminal-nav { align-items: flex-start; }
+  .terminal-menu ul { flex-direction: row; align-items: center; }
+}

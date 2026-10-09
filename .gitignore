@@ -1,0 +1,7 @@
+# Generated documentation output
+result
+result-*
+site/
+
+# Local investigation notes
+.llm/

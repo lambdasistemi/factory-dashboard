@@ -1,0 +1,42 @@
+site_name: Factory Dashboard
+site_description: Product record for an operator-facing view of factory work
+site_url: https://lambdasistemi.github.io/factory-dashboard/
+repo_url: https://github.com/lambdasistemi/factory-dashboard
+
+theme:
+  name: terminal
+  custom_dir: docs/overrides
+  palette: default
+  features:
+    - footer.prev_next
+    - navigation.top.cursor_animation.hide
+
+nav:
+  - Start here:
+      - Overview: index.md
+      - User stories: stories.md
+      - Product decisions: open-questions.md
+
+plugins:
+  - search
+
+markdown_extensions:
+  - tables
+  - admonition
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+extra_javascript:
+  - javascripts/mermaid.min.js?v=11.17.2
+  - javascripts/mermaid-init.js?v=60f1d3a67f42a492
+  - https://cdn.jsdelivr.net/gh/paolino/dev-assets@a9d7371c1118de4026ba6ee3a9c3b54614924b82/mkdocs/docs/js/read-aloud.js
+
+extra_css:
+  - stylesheets/terminal.css?v=b545662909a78737
+
+validation:
+  links:
+    anchors: warn

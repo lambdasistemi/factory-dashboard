@@ -1,0 +1,48 @@
+{
+  "find-where-attention-is-needed": [
+    {
+      "text": "Find where attention is needed.",
+      "pause": 500
+    },
+    {
+      "text": "As a factory operator, I want to see decisions needing a response, items needing attention, and changes since my last visit, so I can tell where I am needed.",
+      "pause": 400
+    },
+    {
+      "text": "These are the three proposed groups for an opening view. Their visual arrangement and data sources have not been selected.",
+      "pause": 400
+    }
+  ],
+  "understand-what-moved-and-why": [
+    {
+      "text": "Understand what moved and why.",
+      "pause": 500
+    },
+    {
+      "text": "As a factory operator, I want to follow an item through a work tree into a detail pane, so I can understand what changed and why before I act.",
+      "pause": 400
+    },
+    {
+      "text": "The work tree and detail pane are part of the proposed investigation path. Their interaction model remains open.",
+      "pause": 400
+    }
+  ],
+  "reach-a-worker-who-can-answer": [
+    {
+      "text": "Reach a worker who can answer.",
+      "pause": 500
+    },
+    {
+      "text": "As a factory operator, I want every meaningful dashboard item to provide direct contextual communication with a worker who can answer, so I can ask about the exact work I am reviewing.",
+      "pause": 400
+    },
+    {
+      "text": "This is a product requirement. Prototype conversations are simulations. A live messaging or command backend has not been authorized or selected.",
+      "pause": 400
+    }
+  ],
+  "_source": {
+    "file": "stories.md",
+    "sha256": "b491296ac44f6a211ede671ad3b9072b9e389db6ba2d3de301320192367d31f7"
+  }
+}

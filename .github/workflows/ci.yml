@@ -1,20 +1,71 @@
 name: CI
 
 on:
-  push:
-    branches: [main]
   pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, closed]
+  push:
     branches: [main]
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.pull_request.number) || github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
 
 jobs:
   build-gate:
     name: Build Gate
+    if: github.event.action != 'closed'
     runs-on: nixos
     steps:
       - uses: actions/checkout@v6
-      - name: Bootstrap placeholder
-        run: echo "CI scaffold is pending the repository bootstrap PR."
+
+      - uses: cachix/cachix-action@v17
+        with:
+          name: paolino
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+
+      - name: Check the product record and build the documentation site
+        run: nix build --quiet .#docs --out-link result
+
+      - name: Prepare the site preview
+        if: github.event_name == 'pull_request'
+        run: |
+          mkdir -p site
+          cp -R -L result/. site/
+          chmod -R u+w site
+
+      - name: Publish the pull request preview
+        if: github.event_name == 'pull_request'
+        uses: paolino/dev-assets/static-preview@a9d7371c1118de4026ba6ee3a9c3b54614924b82
+        with:
+          path: site
+
+  docs-shell:
+    name: Docs shell
+    if: github.event.action != 'closed'
+    needs: build-gate
+    runs-on: nixos
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: cachix/cachix-action@v17
+        with:
+          name: paolino
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+
+      - name: Build the site from the development shell
+        run: nix develop . --quiet -c tools/docs-shell-check.sh
+
+  pr-preview-cleanup:
+    name: Remove PR Preview
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: nixos
+    steps:
+      - uses: paolino/dev-assets/static-preview@a9d7371c1118de4026ba6ee3a9c3b54614924b82
+        with:
+          mode: cleanup
