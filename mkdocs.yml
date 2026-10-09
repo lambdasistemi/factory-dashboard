@@ -14,6 +14,9 @@ theme:
 nav:
   - Start here:
       - Overview: index.md
+      - Milestone roadmap: roadmap.md
+      - First milestone tickets: tickets.md
+      - Privacy and configuration: configuration.md
       - User stories: stories.md
       - Product decisions: open-questions.md
 

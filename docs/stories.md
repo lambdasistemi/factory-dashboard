@@ -1,19 +1,37 @@
 # User stories
 
-## Find where attention is needed
+## Observe the complete factory
 
-As a factory operator, I want to see decisions needing a response, items needing attention, and changes since my last visit, so I can tell where I am needed.
+As a factory operator, I navigate a connected graph of projects, milestones, epics, tickets, pull requests and roles, and observe their current records without leaving the global view.
 
-These are the three proposed groups for an opening view. Their visual arrangement and data sources have not been selected.
+The graph is the first implementation ticket and the first release's main screen. Missing or stale data stays visible as missing or stale; it must not appear as success or inactivity.
 
-## Understand what moved and why
+## Inspect the record behind a connection
 
-As a factory operator, I want to follow an item through a work tree into a detail pane, so I can understand what changed and why before I act.
+As a factory operator, I select a graph node or connection and read its existing work or communication context, so I can understand what the observation means.
 
-The work tree and detail pane are part of the proposed investigation path. Their interaction model remains open.
+The first release reads GitHub and configured local files. Inspection writes nothing to either source and performs no worker operation. Unknown references are reported rather than invented.
 
-## Reach a worker who can answer
+## Run privately on my own installation
 
-As a factory operator, I want every meaningful dashboard item to provide direct contextual communication with a worker who can answer, so I can ask about the exact work I am reviewing.
+As an installation operator, I configure approved repositories, local input files and private credentials, and observe only the permitted graph data in the browser.
 
-This is a product requirement. Prototype conversations are simulations. A live messaging or command backend has not been authorized or selected.
+Unsafe configuration refuses source activation with a redacted explanation. The dashboard does not discover my machine, install workers or send data to model services. The [configuration contract](configuration.md) defines the required boundaries.
+
+## Ask the appropriate agent later
+
+As a factory operator, I select graph context, ask the responsible role a question, and receive a correlated reply from the appropriate agent.
+
+This is a later milestone after the read-only product has been accepted and released. Communication will use configured local channels, with explicit write authority and honest unavailable or failed-delivery states. The concrete worker implementation stays private.
+
+## Find attention and changes later
+
+As a factory operator, I open a specialised view derived from the graph and see the decisions, blockers or changes relevant to me, then return to their graph context.
+
+Attention and history are later milestones, not competing first-release home screens. Their correctness depends on the observation layer and published protocol semantics.
+
+## Operate the factory in the long term
+
+As a factory operator, I select teams, speak with the right agents and request permitted work from the graph, with explicit authority and an audit trail.
+
+This is the long-term goal. Team selection, assignment, approvals and other controls require their own design and acceptance conditions before implementation. A graph selection or question must never silently become permission to execute an operation.

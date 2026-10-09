@@ -1,0 +1,102 @@
+{
+  "story-connect-an-installation-without-publishing-it": [
+    {
+      "text": "Story: Connect an installation without publishing it.",
+      "pause": 500
+    },
+    {
+      "text": "As an installation operator, I supply the locations and credentials needed to read my factory and see exactly what the dashboard can access, so I can run the public project without exposing my workers or sensitive material.",
+      "pause": 400
+    },
+    {
+      "text": "This page defines required behavior for the first milestone. The runtime and its configuration schema are not implemented yet. These requirements must become enforced checks; this document alone does not make an installation safe.",
+      "pause": 400
+    }
+  ],
+  "what-is-public-and-what-is-private": [
+    {
+      "text": "What is public and what is private.",
+      "pause": 500
+    },
+    {
+      "text": "The graph presents roles and approved work information. It does not display provider identities, model choices, launch commands, prompt contents, secret locations or raw runtime records. Role identifiers exposed to the client must not encode those private details.",
+      "pause": 400
+    },
+    {
+      "text": "Public source code is not a public dashboard instance. A real installation requires authenticated, authorised access to its own data. The public demo is a separate, synthetic-data mode and must not inherit a real installation's credentials, files or repositories.",
+      "pause": 400
+    }
+  ],
+  "required-configuration-categories": [
+    {
+      "text": "Required configuration categories.",
+      "pause": 500
+    },
+    {
+      "text": "The configuration ticket must define one versioned schema, a synthetic example, validation rules, and a field-by-field disclosure classification. Runtime settings are configuration rather than installation-specific constants.",
+      "pause": 400
+    },
+    {
+      "text": "The first milestone does not need a secret manager, worker installer, remote agent, or setup wizard. A clear configuration validator and minimal operator instructions are sufficient. Credential availability is reported without printing its value or private location.",
+      "pause": 400
+    }
+  ],
+  "network-and-filesystem-boundaries": [
+    {
+      "text": "Network and filesystem boundaries.",
+      "pause": 500
+    },
+    {
+      "text": "At runtime the server's only external application traffic is read access to configured GitHub resources. It must not follow a redirect to an unapproved origin or accept an arbitrary URL from a graph item. A broad token must not make a write operation available through the dashboard.",
+      "pause": 400
+    },
+    {
+      "text": "Browser assets are served locally with the application. No analytics, remote fonts, telemetry, error-reporting service, external script CDN, automatic update check, or model-provider connection belongs in the runtime. An explicitly opened GitHub source link is operator navigation, not an automatic background fetch. Build and package acquisition are a separate, documented installation concern.",
+      "pause": 400
+    },
+    {
+      "text": "Local integration reads only explicitly configured communication inputs. The first release never writes questions, answers, acknowledgements, control files or source journals. It never launches a process described by an input file. Dashboard-owned state must be separately configured; it cannot reuse a source directory as a cache.",
+      "pause": 400
+    },
+    {
+      "text": "The diagram separates private configuration from the browser-visible projection. The two configured sources feed the read service as shown in the roadmap. The browser never receives the server's configuration object. The service must enforce the boundary before serialisation, rather than hiding sensitive fields in the UI.",
+      "pause": 400
+    }
+  ],
+  "failure-behavior-and-release-proof": [
+    {
+      "text": "Failure behavior and release proof.",
+      "pause": 500
+    },
+    {
+      "text": "Unsafe, incomplete or unsupported configuration refuses source activation and gives a redacted explanation. A source that becomes unavailable remains visibly unavailable; old data carries its last successful read time rather than appearing current. Untrusted record text is data, not an instruction, executable command, URL to fetch or HTML to render.",
+      "pause": 400
+    },
+    {
+      "text": "The release checks include deliberate negative controls: secret sentinels in denied fields, path traversal and symlink attempts, an unapproved repository or network destination, attempted GitHub mutation, malformed or oversized local records, and an installation with missing access configuration. Each must be refused or omitted at its defined boundary. Secret sentinels must be absent from browser payloads, generated assets, errors and support output. Input files are hashed before and after operation to prove read-only behavior.",
+      "pause": 400
+    },
+    {
+      "text": "A second synthetic installation uses different host settings, repository identities, directory roots and role bindings without changing application source. This demonstrates portability without publishing a real machine's details.",
+      "pause": 400
+    },
+    {
+      "text": "No project can promise perfect safety against every environment or operator decision. Release evidence must state the supported deployment, the checks performed and remaining limits. The operator reviews that evidence and configuration contract before a release proceeds.",
+      "pause": 400
+    }
+  ],
+  "decisions-and-limits": [
+    {
+      "text": "Decisions and limits.",
+      "pause": 500
+    },
+    {
+      "text": "The roadmap carries future communication and control goals. The ticket drafts make these boundaries acceptance work rather than optional polish.",
+      "pause": 400
+    }
+  ],
+  "_source": {
+    "file": "configuration.md",
+    "sha256": "fcee0cf2eff2261800441c87f7364f37528d14418ea1efde06880ee4d57c617b"
+  }
+}

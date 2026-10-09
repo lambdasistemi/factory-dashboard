@@ -1,0 +1,200 @@
+{
+  "story-see-the-factory-now-operate-it-later": [
+    {
+      "text": "Story: See the factory now, operate it later.",
+      "pause": 500
+    },
+    {
+      "text": "As a factory operator, I open a global graph, understand the work and its ownership, and eventually use that same graph to talk to the appropriate agents and direct the factory. The first release earns that capability by making observation reliable before introducing actions.",
+      "pause": 400
+    },
+    {
+      "text": "The dashboard starts with exactly two sources: GitHub work records and explicitly configured communication files on the local system. It does not create workers or repair their setup. The public project explains the communication protocol and role vocabulary; concrete worker implementations, credentials and installation details remain private.",
+      "pause": 400
+    },
+    {
+      "text": "This is a proposed delivery plan, not a claim that these capabilities are implemented. Only the first milestone has an epic and ticket breakdown. Later milestones describe the destination and remain subject to further design.",
+      "pause": 400
+    }
+  ],
+  "milestone-read-only-factory-graph": [
+    {
+      "text": "Milestone: Read-only factory graph.",
+      "pause": 500
+    },
+    {
+      "text": "An operator runs a privately configured dashboard, sees the whole factory as a connected graph, and follows projects, milestones, epics, tickets, pull requests, roles and recorded communication without changing the factory.",
+      "pause": 400
+    },
+    {
+      "text": "GitHub supplies its existing vocabulary and relationships. The dashboard defines the additional role and communication vocabulary. Missing relationships remain visibly missing rather than being inferred into a tidy but incorrect tree. Roles are visible; provider names, models, launch commands, prompts and concrete worker identities are not part of the browser data contract.",
+      "pause": 400
+    },
+    {
+      "text": "Graph selection opens existing details, evidence and communication records. It does not send questions, write mailbox files, launch a worker or execute instructions. There is no attention inbox or separate specialised view in this release.",
+      "pause": 400
+    },
+    {
+      "text": "The private service reads the two configured sources and returns an approved graph representation. Selecting part of that graph reveals the existing record. No arrow grants the browser access to a filesystem, credential, or worker launcher.",
+      "pause": 400
+    }
+  ],
+  "epic-explore-the-factory-through-one-graph": [
+    {
+      "text": "Epic: Explore the factory through one graph.",
+      "pause": 500
+    },
+    {
+      "text": "The first runnable artifact is a graph with synthetic records. Its scope covers the complete work hierarchy and role attachments, with stable selection, expansion and collapse, and contextual inspection. It establishes the browser data contract that the source tickets will consume.",
+      "pause": 400
+    },
+    {
+      "text": "Its child ticket is Open and explore the complete factory graph. This is the first implementation ticket in the project. The graph remains the application's primary screen as later tickets add real sources.",
+      "pause": 400
+    }
+  ],
+  "epic-read-the-two-supported-sources": [
+    {
+      "text": "Epic: Read the two supported sources.",
+      "pause": 500
+    },
+    {
+      "text": "GitHub and configured local communication files populate that same graph. GitHub reads preserve source identities and relationships. The file reader implements a documented, versioned interpretation of roles, states, events and communication references. It reports unknown, stale, malformed and unavailable input honestly.",
+      "pause": 400
+    },
+    {
+      "text": "Its child tickets are Read configured GitHub work into the graph and Read local communication records through a public protocol. Each adds an observable source to the running dashboard, rather than delivering an isolated adapter library.",
+      "pause": 400
+    }
+  ],
+  "epic-run-privately-and-release-with-evidence": [
+    {
+      "text": "Epic: Run privately and release with evidence.",
+      "pause": 500
+    },
+    {
+      "text": "An installation supplies its own repositories, local input locations, access policy and secrets. The dashboard has no compiled-in installation identity. Its server reads only the approved inputs, emits only the approved data, and performs no outbound application communication except GitHub reads. Startup explains configuration errors without disclosing sensitive values.",
+      "pause": 400
+    },
+    {
+      "text": "Its child tickets are Configure a private, read-only installation and Verify the first release's privacy and observation boundaries. The latter verifies the integrated product and records the operator's release approval; passing a build alone does not permit release.",
+      "pause": 400
+    }
+  ],
+  "ticket-order-and-dependencies": [
+    {
+      "text": "Ticket order and dependencies.",
+      "pause": 500
+    },
+    {
+      "text": "The initial execution order is serial to keep the project small. Parallel adapter work is possible only after the graph and configuration contracts are frozen and implementation ownership is agreed. This plan does not assign a team, models or execution seats.",
+      "pause": 400
+    },
+    {
+      "text": "Every epic extends the same dashboard artifact. Every implementation ticket remains unreleased until the integrated release checks pass. The first release also requires a selected source license and documented runtime support; those remain open product decisions.",
+      "pause": 400
+    }
+  ],
+  "milestone-acceptance": [
+    {
+      "text": "Milestone acceptance.",
+      "pause": 500
+    },
+    {
+      "text": "An operator opens a connected graph of configured GitHub work and recorded role activity, and inspects a node or connection without leaving the global view.",
+      "pause": 300
+    },
+    {
+      "text": "Repository identity is part of each source reference; identical issue numbers in different repositories never collide.",
+      "pause": 300
+    },
+    {
+      "text": "Missing, stale, unsupported and unavailable data remain distinguishable from idle, successful or completed work.",
+      "pause": 300
+    },
+    {
+      "text": "GitHub reads and local-file reads are the only source operations. The service does not change GitHub, local communication records or workers.",
+      "pause": 300
+    },
+    {
+      "text": "Public protocol and role documentation are sufficient for another installation to produce compatible records without learning the private worker implementation.",
+      "pause": 300
+    },
+    {
+      "text": "Private configuration stays outside browser assets and payloads. Public examples contain synthetic values only.",
+      "pause": 300
+    },
+    {
+      "text": "The release evidence checks data disclosure, read-only behavior, permitted network destinations, source failures and installation portability. The operator reviews that evidence before release.",
+      "pause": 300
+    }
+  ],
+  "milestone-ask-through-the-graph": [
+    {
+      "text": "Milestone: Ask through the graph.",
+      "pause": 500
+    },
+    {
+      "text": "After the read-only milestone is accepted and released, an operator selects work or a role and asks a contextual question through configured local communication channels. A reply returns to the same context and identifies the responding role without disclosing the underlying worker implementation.",
+      "pause": 400
+    },
+    {
+      "text": "The intended transport is local mailbox files consumed by an already running factory. Delivery, acknowledgement, reply correlation, unavailable recipients and retained conversations need their own design. The dashboard will not call an external AI service or choose an implementation for a role. Local write authority must be explicitly configured and tested before it is enabled.",
+      "pause": 400
+    },
+    {
+      "text": "No epics or tickets are defined for this milestone yet. It is not included in the first release.",
+      "pause": 400
+    }
+  ],
+  "milestone-discover-attention-and-change-from-the-graph": [
+    {
+      "text": "Milestone: Discover attention and change from the graph.",
+      "pause": 500
+    },
+    {
+      "text": "An operator opens a graph-derived view of questions needing a decision, blocked work, changes, or relevant history, then follows an item back to its place in the graph. The graph remains the common context for every specialised view.",
+      "pause": 400
+    },
+    {
+      "text": "These views must derive from defined source semantics and show their freshness and evidence. An activity count does not prove progress, and a quiet journal does not prove a dead worker. The exact views and their order remain open. This milestone depends on a reliable released observation layer; it need not wait for worker conversations unless its chosen stories require them.",
+      "pause": 400
+    },
+    {
+      "text": "No epics or tickets are defined for this milestone yet.",
+      "pause": 400
+    }
+  ],
+  "milestone-operate-the-factory-from-the-dashboard": [
+    {
+      "text": "Milestone: Operate the factory from the dashboard.",
+      "pause": 500
+    },
+    {
+      "text": "An operator selects teams and role assignments, speaks with the appropriate agents, and directs permitted work from graph context. Possible actions include assigning a team, approving a transition, or requesting a pause or resumption.",
+      "pause": 400
+    },
+    {
+      "text": "This is the long-term product goal, not current execution authority. Before it becomes an implementation plan, each action needs a clear recipient, authorisation boundary, confirmation behavior, audit record, failure handling and recovery rule. Asking a question must not silently grant permission to execute a command. Private configuration maps visible roles to actual implementations; the public product exposes the process, not the intelligence behind it.",
+      "pause": 400
+    },
+    {
+      "text": "This milestone depends on accepted observation and communication foundations. Its scope, supported operations, epics and tickets remain deliberately undefined.",
+      "pause": 400
+    }
+  ],
+  "why-this-sequence": [
+    {
+      "text": "Why this sequence.",
+      "pause": 500
+    },
+    {
+      "text": "The ticket drafts define the first milestone's checks. The privacy and configuration contract records the boundaries every ticket must preserve. Product decisions separates the fixed direction from the remaining choices.",
+      "pause": 400
+    }
+  ],
+  "_source": {
+    "file": "roadmap.md",
+    "sha256": "79075dda656d0e2da169b9cf61f8c1f8558affd7b8117c1744e028f6fa89cdc9"
+  }
+}

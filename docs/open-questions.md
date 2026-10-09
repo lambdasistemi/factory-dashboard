@@ -1,20 +1,34 @@
 # Product decisions
 
-## Fixed product requirements
+## Story: Know what is settled before building
 
-The dashboard is an operator-facing view of factory work. It must help answer where the operator is needed, what moved forward, and why it is happening. The proposed opening view groups decisions needing a response, items needing attention, and changes since the last visit, with investigation through a work tree and detail pane.
+As a contributor, I read the product decisions and know which boundaries to preserve and which choices still need an answer.
 
-Every meaningful dashboard item must offer direct contextual communication with a worker who can answer. Prototype conversations are simulations only. This requirement does not authorize live worker messaging or command execution.
+## Fixed requirements
 
-## Open choices
+The graph is the core and the opening view. It preserves the actual GitHub work structure and attaches the public factory role and communication vocabulary. Other views must be reached through graph context and derived from the same data.
 
-- The visual design and interaction details of the overview, work tree, and detail pane.
-- Which factory records appear, how they are refreshed, and how changes are explained.
-- How contextual communication reaches a worker, how replies relate to work items, and what authority a reply grants. A live backend needs a separate authorization decision.
-- Whether the product may issue instructions or commands.
-- The dashboard application's framework, language, and deployment design.
-- The repository's source license.
+The first milestone is read-only. Its two sources are GitHub work records and explicitly configured local communication files. The dashboard does not call model services, change GitHub, write communication files, discover a machine, install workers or manage the factory.
 
-## Bootstrap choices
+Roles and the supported protocol are public product design. Concrete worker implementations, provider and model identities, prompts, launch commands, credentials and real installation bindings remain private. Runtime addresses, roots, selected repositories and access settings are configurable.
 
-This repository uses a documentation-only Nix and MkDocs scaffold to publish its product record. That choice does not select an application stack or dashboard behavior.
+Before any first product release, the operator must review the configuration and privacy evidence. Successful builds are not sufficient. The project promises defined, tested boundaries and explicit limits, not perfect safety in arbitrary installations.
+
+## Long-term goals
+
+After the observation foundation is accepted and released, the product should support contextual conversations through local channels. Graph-derived attention and history views are also later goals. Eventually the operator should be able to select teams and direct authorised factory operations from the dashboard.
+
+The [roadmap](roadmap.md) keeps these goals visible as milestones without assigning speculative epics, tickets or dates to them.
+
+## Remaining choices
+
+- The application framework, language and runtime packaging. The documentation scaffold does not select these.
+- The supported initial operating environments and authentication mechanism within the fixed private-access boundary.
+- The exact versioned configuration schema and the initial supported subset of the file protocol. Their tickets must resolve these before integrating real sources.
+- The mapping of configured projects and repositories to existing GitHub work relationships; GitHub terms themselves are not being redesigned.
+- The source license, which must be selected before the first product release.
+- The detailed design, authorisation and release order of later conversations, derived views and team controls.
+
+## Current delivery status
+
+The repository bootstrap is merged. The milestone, epic and ticket definitions in this documentation are proposed planning artifacts pending review and issue creation. The dashboard application is not implemented by these records. Existing prototypes use example data and simulated conversations.

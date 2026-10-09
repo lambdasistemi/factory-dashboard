@@ -1,0 +1,145 @@
+# First milestone ticket drafts
+
+## Story: Deliver a small, verifiable first release
+
+As a project contributor, I take one bounded ticket, improve the runnable dashboard, and demonstrate its acceptance criteria without pulling future controls into the first release.
+
+These are drafts for the **Read-only factory graph** milestone in the [roadmap](roadmap.md). They are not filed issues and have no GitHub issue numbers yet. The repository had no issues or milestones when this plan was prepared. Searches for graph work and protocol/configuration work found no duplicates.
+
+Each acceptance checkbox must become a directly observable browser check, contract check, integration check or release receipt. The initial sequence is serial. No implementation team is assigned by this plan. Each ticket extends the same dashboard artifact; intermediate completion does not authorise a product release.
+
+## Open and explore the complete factory graph
+
+**Epic:** Explore the factory through one graph. **Label:** feat. **Dependency:** none. This is the first implementation ticket.
+
+**Goal:** Open a runnable browser view of a complete synthetic factory and inspect its structure through the graph.
+
+**P1 user story:** As a factory operator, I navigate the global graph and observe the work hierarchy, responsible roles and existing communication context without losing my place.
+
+### Graph acceptance criteria
+
+- [ ] The documented local entry point opens the connected graph as the main screen, using entirely synthetic records with no source credentials or external requests.
+- [ ] Fixtures contain projects, milestones, epic and ticket issues, pull requests, role attachments and recorded communication links. Distinct relationship types are visibly distinguishable; the graph does not invent missing GitHub parentage.
+- [ ] Expansion and collapse preserve stable identities and selection. Pan, zoom, fit and keyboard selection allow every fixture node and connection to be reached on supported desktop and narrow screens.
+- [ ] Selecting a node or connection opens its existing context while keeping the global graph available. Inspection never writes a message or starts work.
+- [ ] The graph input contract permits approved work and role fields only; worker implementation fields and arbitrary unknown payload fields are rejected rather than passed to the browser.
+- [ ] Empty, missing, unknown and stale input states have distinct visible examples. Colour is accompanied by text or another non-colour indicator.
+- [ ] A browser check follows project to milestone to epic to ticket to pull request and its responsible role, then returns without losing context.
+
+### Graph non-goals
+
+- Live GitHub or local-file integration.
+- Worker questions, replies, team selection or commands.
+- Attention panels, activity summaries, special-purpose dashboards or a table-first home screen.
+- Choosing or exposing concrete worker implementations.
+
+Searched: no existing issues matched graph work or protocol/configuration work; the repository issue list was empty at planning time.
+
+## Configure a private, read-only installation
+
+**Epic:** Run privately and release with evidence. **Labels:** feat, docs. **Dependency:** the graph ticket.
+
+**Goal:** Start a portable installation from an explicit configuration, or refuse it with a useful redacted error.
+
+**P1 user story:** As an installation operator, I provide configuration and observe which sources and access boundaries are enabled without exposing private values.
+
+### Configuration acceptance criteria
+
+- [ ] One versioned schema and a synthetic example document all fields described in the [configuration contract](configuration.md), including defaults and server-only versus browser-visible classification.
+- [ ] Demo mode has no real credentials, file roots or repository bindings. A real installation requires explicit approved sources and access configuration.
+- [ ] No host address, user, filesystem root, repository selection, role binding or credential is compiled into the application. A second synthetic installation starts with different values and no source edits.
+- [ ] Secrets are resolved server-side from external references. Unknown configuration fields, unsupported versions and missing required values refuse activation without printing private values or paths.
+- [ ] The runtime has no background external application traffic except reads to approved GitHub origins. Browser assets are local. Redirects, URLs in records and unapproved repositories cannot expand that access.
+- [ ] Explicit local input roots are read-only, bounded and separate from dashboard-owned state; traversal and symlink escapes are refused.
+- [ ] Startup and the read-only status surface distinguish invalid configuration, unavailable source and healthy source. Wider network exposure without complete access configuration is refused.
+
+### Configuration non-goals
+
+- A worker installer, automatic machine discovery, secret-management product or host repair tool.
+- File mailboxes for outgoing questions, remote execution or provider connections.
+- Real production credentials or host details in examples, tests or public reports.
+
+Searched: no existing issues matched protocol/configuration work; the repository issue list was empty at planning time.
+
+## Read configured GitHub work into the graph
+
+**Epic:** Read the two supported sources. **Label:** feat. **Dependencies:** graph and private configuration tickets.
+
+**Goal:** Populate the running graph with work records from the repositories explicitly selected by the installation.
+
+**P1 user story:** As a factory operator, I open the graph and observe my configured GitHub work with its actual identities and relationships.
+
+### GitHub source acceptance criteria
+
+- [ ] The running dashboard reads only configured repositories using the private credential reference; it exposes no mutation operation and performs no GitHub write.
+- [ ] Repository, milestone, issue, parent/sub-issue and pull-request references preserve GitHub identities. A fixture with equal issue numbers in different repositories proves they never collide.
+- [ ] An explicitly configured mapping associates projects and repositories and recognises epic issues without changing GitHub vocabulary or inventing missing relationships.
+- [ ] Source links identify the corresponding GitHub object. Unconfigured destinations or automatic requests derived from untrusted content are refused.
+- [ ] Pagination, incremental refresh, rate limits, access refusal and unavailable GitHub responses are exercised. The UI shows freshness and retains old data only with an explicit stale state.
+- [ ] A read-only integration receipt binds the displayed graph to the configured test records while recording no credentials or private response bodies.
+
+### GitHub source non-goals
+
+- Creating or editing issues, milestones, pull requests, comments or repository settings.
+- Fetching arbitrary repositories, URLs, private worker identities or external services.
+- Attention or history views beyond the graph's current source state.
+
+Searched: no existing issues matched graph work; the repository issue list was empty at planning time.
+
+## Read local communication records through a public protocol
+
+**Epic:** Read the two supported sources. **Labels:** feat, docs. **Dependencies:** graph and private configuration tickets. It follows the GitHub integration in the initial serial plan.
+
+**Goal:** Add role activity and recorded communication to the running graph from installation-selected local files.
+
+**P1 user story:** As a factory operator, I inspect a graph role or connection and observe the existing local communication record and its freshness without revealing the worker implementation.
+
+### Local protocol acceptance criteria
+
+- [ ] The repository publishes a versioned protocol contract for the file forms it supports, including journal events, liveness claims, questions, answers, inbox notes and acknowledgement references where implemented.
+- [ ] Public role definitions distinguish product ownership, implementation and audit responsibilities without including provider, model, prompt, launch-command or real worker identity details.
+- [ ] The documentation explains producer responsibilities and provides synthetic conforming examples. Optional worker-skill guidance demonstrates emitting those records; the dashboard does not install or enforce that skill on workers.
+- [ ] Only explicitly configured files are read. Unsupported versions, malformed records, oversized input, source replacement and out-of-root references are handled with documented unavailable or refusal states.
+- [ ] Working, waiting, blocked, paused, retired, unknown and stale observations have defined evidence rules. Journal completion, passed checks, acceptance and release are not treated as equivalent.
+- [ ] Communication edges are supported by actual recorded references, not guessed from nearby timestamps. Selecting one shows approved context and its role endpoints.
+- [ ] Private implementation fields, unapproved free text and raw filesystem locations never enter graph payloads or diagnostics. Identifiers exposed to the browser are opaque and installation-independent.
+- [ ] A read-only fixture run proves that the same graph combines GitHub work with the approved local role records, with all source files unchanged.
+
+### Local protocol non-goals
+
+- Recreating the factory's intelligence, launching workers or inspecting process arguments.
+- Writing questions, answers, acknowledgements, inbox notes or control files.
+- Turning every arbitrary journal tag into a supported protocol operation.
+- Scraping the whole host or requiring producers to use a particular model or agent harness.
+
+Searched: no existing issues matched protocol/configuration work; the repository issue list was empty at planning time.
+
+## Verify the first release's privacy and observation boundaries
+
+**Epic:** Run privately and release with evidence. **Labels:** test, docs. **Dependencies:** all preceding tickets.
+
+**Goal:** Produce an integrated release candidate with checkable evidence that the supported configuration and disclosure boundaries hold.
+
+**P1 user story:** As an installation operator, I review the release's configuration guide and safety evidence and can distinguish what the dashboard reads, what it exposes, and what it cannot do.
+
+### Release acceptance criteria
+
+- [ ] A representative configured instance loads both sources, preserves the complete graph relationships, and supports read-only inspection in the documented supported environment.
+- [ ] Filesystem and network observations prove source files remain unchanged and external application requests are limited to approved GitHub reads. GitHub mutation attempts, unapproved origins and redirect escapes are refused.
+- [ ] Secret sentinels placed in prohibited configuration and source fields do not appear in client payloads, assets, logs, errors, caches intended for export or support bundles. Tests also prove a permitted field still reaches the graph.
+- [ ] Unauthenticated or out-of-scope access, traversal, symlink escape, malformed or oversized records, missing credentials and unavailable sources exercise their defined refusal or degraded states.
+- [ ] A second synthetic installation changes addresses, repositories, roots and role bindings without source edits. Setup instructions explain how producers supply compliant files; they do not require a particular machine or worker implementation.
+- [ ] The public artifact and documentation include synthetic examples, the source license, protocol version, supported configuration, checks performed and explicit remaining limits. No private runtime record is shipped.
+- [ ] Evidence is bound to the release candidate and reviewed by the operator. Release remains blocked until the configuration and privacy review is accepted; local or hosted build success alone is insufficient.
+
+### Release non-goals
+
+- New views, interactive mailboxes, worker control or team selection.
+- A claim of perfect safety in every environment.
+- Automatically releasing when checks turn green without the required operator review.
+
+Searched: no existing issues matched protocol/configuration work; the repository issue list was empty at planning time.
+
+## Publishing this plan
+
+The milestone and three epic issues will carry the corresponding roadmap outcomes, shared privacy constraints, this serial child order and the shared dashboard artifact. After the plan is reviewed, create the milestone and replace title-based references with actual GitHub issue relationships. Keep the future milestones visible without inventing their epics or delivery dates.
