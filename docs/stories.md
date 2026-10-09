@@ -20,15 +20,15 @@ Unsafe configuration refuses source activation with a redacted explanation. The 
 
 ## Ask the appropriate agent later
 
-As a factory operator, I select graph context, ask the responsible role a question, and receive a correlated reply from the appropriate agent.
+As a factory operator, I select graph context, ask the responsible role a question or answer a pending question, and receive a correlated reply from the appropriate agent so I can address attention without leaving the dashboard.
 
 This is a later milestone after the read-only product has been accepted and released. Communication will use configured local channels, with explicit write authority and honest unavailable or failed-delivery states. The concrete worker implementation stays private.
 
-## Find attention and changes later
+## Notice attention and changes now
 
 As a factory operator, I open a specialised view derived from the graph and see the decisions, blockers or changes relevant to me, then return to their graph context.
 
-Attention and history are later milestones, not competing first-release home screens. Their correctness depends on the observation layer and published protocol semantics.
+This belongs in the first milestone alongside other useful information derivable from approved communication and local status records. Each finding shows its evidence and freshness. I go to the machine to address it; a later milestone lets me communicate back from the dashboard. A recorded response or acknowledgement is not proof that the issue was resolved.
 
 ## Operate the factory in the long term
 

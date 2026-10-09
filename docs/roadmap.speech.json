@@ -31,7 +31,7 @@
       "pause": 400
     },
     {
-      "text": "Graph selection opens existing details, evidence and communication records. It does not send questions, write mailbox files, launch a worker or execute instructions. There is no attention inbox or separate specialised view in this release.",
+      "text": "Graph selection opens existing details, evidence and communication records. It does not send questions, write mailbox files, launch a worker or execute instructions. Read-only attention, status, activity, summaries and available history derived from approved communication and local status records belong in this release. The operator follows each finding to its graph context and supporting evidence, then goes to the machine to act. The dashboard does not resolve the finding itself.",
       "pause": 400
     },
     {
@@ -45,11 +45,11 @@
       "pause": 500
     },
     {
-      "text": "The first runnable artifact is a graph with synthetic records. Its scope covers the complete work hierarchy and role attachments, with stable selection, expansion and collapse, and contextual inspection. It establishes the browser data contract that the source tickets will consume.",
+      "text": "The first runnable artifact is a graph with synthetic records. This epic also delivers read-only findings and views derived from the integrated sources. Its scope covers the complete work hierarchy and role attachments, with stable selection, expansion and collapse, and contextual inspection. It establishes the browser data contract that the source tickets will consume.",
       "pause": 400
     },
     {
-      "text": "Its child ticket is Open and explore the complete factory graph. This is the first implementation ticket in the project. The graph remains the application's primary screen as later tickets add real sources.",
+      "text": "Its child tickets are Open and explore the complete factory graph and Derive attention and information from recorded factory state. The graph ticket is the first implementation ticket in the project. The graph remains the application's primary screen as later tickets add real sources.",
       "pause": 400
     }
   ],
@@ -101,6 +101,10 @@
       "pause": 500
     },
     {
+      "text": "An operator sees attention and other useful information computable from supported communication and local status records, with a source reference, derivation rule and freshness. The operator resolves findings outside the dashboard on the machine.",
+      "pause": 300
+    },
+    {
       "text": "An operator opens a connected graph of configured GitHub work and recorded role activity, and inspects a node or connection without leaving the global view.",
       "pause": 300
     },
@@ -129,13 +133,13 @@
       "pause": 300
     }
   ],
-  "milestone-ask-through-the-graph": [
+  "milestone-communicate-back-through-the-graph": [
     {
-      "text": "Milestone: Ask through the graph.",
+      "text": "Milestone: Communicate back through the graph.",
       "pause": 500
     },
     {
-      "text": "After the read-only milestone is accepted and released, an operator selects work or a role and asks a contextual question through configured local communication channels. A reply returns to the same context and identifies the responding role without disclosing the underlying worker implementation.",
+      "text": "After the read-only milestone is accepted and released, an operator selects an attention finding, work or a role and communicates back through configured local channels: asking a contextual question or answering a pending question so the recipient can address the issue. A reply returns to the same context and identifies the responding role without disclosing the underlying worker implementation.",
       "pause": 400
     },
     {
@@ -144,24 +148,6 @@
     },
     {
       "text": "No epics or tickets are defined for this milestone yet. It is not included in the first release.",
-      "pause": 400
-    }
-  ],
-  "milestone-discover-attention-and-change-from-the-graph": [
-    {
-      "text": "Milestone: Discover attention and change from the graph.",
-      "pause": 500
-    },
-    {
-      "text": "An operator opens a graph-derived view of questions needing a decision, blocked work, changes, or relevant history, then follows an item back to its place in the graph. The graph remains the common context for every specialised view.",
-      "pause": 400
-    },
-    {
-      "text": "These views must derive from defined source semantics and show their freshness and evidence. An activity count does not prove progress, and a quiet journal does not prove a dead worker. The exact views and their order remain open. This milestone depends on a reliable released observation layer; it need not wait for worker conversations unless its chosen stories require them.",
-      "pause": 400
-    },
-    {
-      "text": "No epics or tickets are defined for this milestone yet.",
       "pause": 400
     }
   ],
@@ -195,6 +181,6 @@
   ],
   "_source": {
     "file": "roadmap.md",
-    "sha256": "79075dda656d0e2da169b9cf61f8c1f8558affd7b8117c1744e028f6fa89cdc9"
+    "sha256": "99314df14f2ceddf5d3d99584a69da0bcaea35e0bda009636d7a93d4bb79a04e"
   }
 }

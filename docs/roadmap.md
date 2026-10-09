@@ -14,7 +14,7 @@ An operator runs a privately configured dashboard, sees the whole factory as a c
 
 GitHub supplies its existing vocabulary and relationships. The dashboard defines the additional role and communication vocabulary. Missing relationships remain visibly missing rather than being inferred into a tidy but incorrect tree. Roles are visible; provider names, models, launch commands, prompts and concrete worker identities are not part of the browser data contract.
 
-Graph selection opens existing details, evidence and communication records. It does not send questions, write mailbox files, launch a worker or execute instructions. There is no attention inbox or separate specialised view in this release.
+Graph selection opens existing details, evidence and communication records. It does not send questions, write mailbox files, launch a worker or execute instructions. Read-only attention, status, activity, summaries and available history derived from approved communication and local status records belong in this release. The operator follows each finding to its graph context and supporting evidence, then goes to the machine to act. The dashboard does not resolve the finding itself.
 
 ```mermaid
 %%{init: {'flowchart': {'nodeSpacing': 20, 'rankSpacing': 35, 'padding': 12}, 'themeVariables': {'fontSize': '15px'}}}%%
@@ -29,9 +29,9 @@ The private service reads the two configured sources and returns an approved gra
 
 ### Epic: Explore the factory through one graph
 
-The first runnable artifact is a graph with synthetic records. Its scope covers the complete work hierarchy and role attachments, with stable selection, expansion and collapse, and contextual inspection. It establishes the browser data contract that the source tickets will consume.
+The first runnable artifact is a graph with synthetic records. This epic also delivers read-only findings and views derived from the integrated sources. Its scope covers the complete work hierarchy and role attachments, with stable selection, expansion and collapse, and contextual inspection. It establishes the browser data contract that the source tickets will consume.
 
-Its child ticket is **Open and explore the complete factory graph**. This is the first implementation ticket in the project. The graph remains the application's primary screen as later tickets add real sources.
+Its child tickets are **Open and explore the complete factory graph** and **Derive attention and information from recorded factory state**. The graph ticket is the first implementation ticket in the project. The graph remains the application's primary screen as later tickets add real sources.
 
 ### Epic: Read the two supported sources
 
@@ -53,7 +53,8 @@ Its child tickets are **Configure a private, read-only installation** and **Veri
 | Second | Configure a private, read-only installation | The graph contract | A configured instance starts safely or explains why it refuses. |
 | Third | Read configured GitHub work into the graph | Graph and configuration | The graph displays selected GitHub work. |
 | Fourth | Read local communication records through a public protocol | Graph and configuration | The graph also displays recorded roles, states and communication. |
-| Fifth | Verify the first release's privacy and observation boundaries | Both real sources and configuration | An integrated release candidate has explicit safety and outcome evidence. |
+| Fifth | Derive attention and information from recorded factory state | Graph and both real sources | Attention, status, activity and available history can be inspected with evidence. |
+| Sixth | Verify the first release's privacy and observation boundaries | Both real sources, derived observations and configuration | An integrated release candidate has explicit safety and outcome evidence. |
 
 The initial execution order is serial to keep the project small. Parallel adapter work is possible only after the graph and configuration contracts are frozen and implementation ownership is agreed. This plan does not assign a team, models or execution seats.
 
@@ -61,6 +62,7 @@ Every epic extends the same dashboard artifact. Every implementation ticket rema
 
 ### Milestone acceptance
 
+- An operator sees attention and other useful information computable from supported communication and local status records, with a source reference, derivation rule and freshness. The operator resolves findings outside the dashboard on the machine.
 - An operator opens a connected graph of configured GitHub work and recorded role activity, and inspects a node or connection without leaving the global view.
 - Repository identity is part of each source reference; identical issue numbers in different repositories never collide.
 - Missing, stale, unsupported and unavailable data remain distinguishable from idle, successful or completed work.
@@ -69,21 +71,13 @@ Every epic extends the same dashboard artifact. Every implementation ticket rema
 - Private configuration stays outside browser assets and payloads. Public examples contain synthetic values only.
 - The release evidence checks data disclosure, read-only behavior, permitted network destinations, source failures and installation portability. The operator reviews that evidence before release.
 
-## Milestone: Ask through the graph
+## Milestone: Communicate back through the graph
 
-After the read-only milestone is accepted and released, an operator selects work or a role and asks a contextual question through configured local communication channels. A reply returns to the same context and identifies the responding role without disclosing the underlying worker implementation.
+After the read-only milestone is accepted and released, an operator selects an attention finding, work or a role and communicates back through configured local channels: asking a contextual question or answering a pending question so the recipient can address the issue. A reply returns to the same context and identifies the responding role without disclosing the underlying worker implementation.
 
 The intended transport is local mailbox files consumed by an already running factory. Delivery, acknowledgement, reply correlation, unavailable recipients and retained conversations need their own design. The dashboard will not call an external AI service or choose an implementation for a role. Local write authority must be explicitly configured and tested before it is enabled.
 
 No epics or tickets are defined for this milestone yet. It is not included in the first release.
-
-## Milestone: Discover attention and change from the graph
-
-An operator opens a graph-derived view of questions needing a decision, blocked work, changes, or relevant history, then follows an item back to its place in the graph. The graph remains the common context for every specialised view.
-
-These views must derive from defined source semantics and show their freshness and evidence. An activity count does not prove progress, and a quiet journal does not prove a dead worker. The exact views and their order remain open. This milestone depends on a reliable released observation layer; it need not wait for worker conversations unless its chosen stories require them.
-
-No epics or tickets are defined for this milestone yet.
 
 ## Milestone: Operate the factory from the dashboard
 
@@ -98,7 +92,7 @@ This milestone depends on accepted observation and communication foundations. It
 | Decision | Chosen approach | Alternative deferred | Reason |
 | --- | --- | --- | --- |
 | Primary surface | A global connected graph | Attention-first home screen | The operator wants to see the whole factory before narrowing the view. |
-| Initial capability | Read-only observation | Sending questions or controlling workers | The observational foundation must be solid and released first. |
+| Initial capability | Read-only observation, including derived attention and history | Sending questions or controlling workers | The observational foundation must be solid and released first. |
 | Integration | GitHub reads and configured local files | Provider APIs, host discovery and worker management | Keep the public product small and independent of one installation. |
 | Public boundary | Roles and communication protocol | Worker implementations and real installation details | Explain how the factory coordinates while preserving private intelligence. |
 | Planning detail | Tickets for the first milestone | Detailed commitments for every future feature | Keep the long-term direction visible without guessing its implementation. |

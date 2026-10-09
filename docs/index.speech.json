@@ -13,7 +13,7 @@
       "pause": 400
     },
     {
-      "text": "The two incoming read paths and existing-detail inspection are the first milestone. Later goals build on this graph: asking through local channels, finding attention and changes, and eventually operating teams from the dashboard.",
+      "text": "The two incoming read paths, existing-detail inspection and derived attention, status, activity and history are the first milestone. The operator notices what needs attention here and resolves it directly on the machine. The next milestone adds communicating back through local channels; the long-term goal includes operating teams from the dashboard.",
       "pause": 400
     }
   ],
@@ -47,6 +47,6 @@
   ],
   "_source": {
     "file": "index.md",
-    "sha256": "a8ab7249ddb6a4000c9075057c104a1d20b76810301c2ea3e40b546784f36611"
+    "sha256": "ab6d24ccd2b0f298ba4413deafbb7448ffa6253317f565754457241c0e9adc42"
   }
 }

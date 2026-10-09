@@ -30,7 +30,7 @@ Each acceptance checkbox must become a directly observable browser check, contra
 
 - Live GitHub or local-file integration.
 - Worker questions, replies, team selection or commands.
-- Attention panels, activity summaries, special-purpose dashboards or a table-first home screen.
+- A table-first home screen. Derived attention and summaries are delivered by the observation ticket in this same milestone.
 - Choosing or exposing concrete worker implementations.
 
 Searched: no existing issues matched graph work or protocol/configuration work; the repository issue list was empty at planning time.
@@ -82,7 +82,7 @@ Searched: no existing issues matched protocol/configuration work; the repository
 
 - Creating or editing issues, milestones, pull requests, comments or repository settings.
 - Fetching arbitrary repositories, URLs, private worker identities or external services.
-- Attention or history views beyond the graph's current source state.
+- Outgoing communication or actions that resolve an observed attention finding.
 
 Searched: no existing issues matched graph work; the repository issue list was empty at planning time.
 
@@ -114,6 +114,32 @@ Searched: no existing issues matched graph work; the repository issue list was e
 
 Searched: no existing issues matched protocol/configuration work; the repository issue list was empty at planning time.
 
+## Derive attention and information from recorded factory state
+
+**Epic:** Explore the factory through one graph. **Label:** feat. **Dependencies:** graph, configuration and both source tickets.
+
+**Goal:** Extract useful read-only information from the supported graph, communication and local status records so the operator can see what needs attention and act on the machine.
+
+**P1 user story:** As a factory operator, I notice a pending question, blocker or other evidenced condition, inspect its context and freshness, and go to the machine to address it.
+
+### Derived observation acceptance criteria
+
+- [ ] A documented inventory maps supported communication and status record types to useful observations: pending questions, recorded answers and acknowledgements, waiting or blocked work, role state, handoffs, activity, available history and evidence of completion, acceptance or release. Useful derivable information is included; unavailable information is explicitly identified rather than invented.
+- [ ] Each derivation specifies source references, correlation rules, freshness and resolution evidence. Activity does not prove progress; silence does not prove a dead worker; a reply or acknowledgement does not by itself prove a blocker resolved.
+- [ ] Attention indicators and graph-derived filters or detail views preserve the global graph and return to the relevant node or connection. Findings explain why they are shown and distinguish recorded facts, rule-based derivations and unknown state.
+- [ ] Fixtures exercise a pending question, correlated answer, unresolved blocker, explicit resolution, duplicate or out-of-order events, stale or missing records, and conflicting evidence. Refresh after an external action updates findings without a dashboard write. Positive and negative controls prove that irrelevant or insufficient evidence does not create or clear attention.
+- [ ] History and summaries use only available configured records, disclose retention or coverage gaps, and do not imply a complete history where none exists.
+- [ ] Derived fields pass the same approved-field projection as source data. Aggregates, labels and evidence references cannot leak private worker details, raw paths or secrets.
+- [ ] The interface explains that action happens on the machine in this release. It has no reply, acknowledge, dismiss, assign or resolve operation that writes to sources or conceals an unresolved finding.
+
+### Derived observation non-goals
+
+- Sending questions or answers, writing acknowledgements, controlling workers or resolving issues through the dashboard.
+- Provider calls, speculation about worker intent, or inference beyond documented record semantics.
+- Additional sources or broader file access to fill evidence gaps.
+
+Searched: this ticket extends the graph and local protocol scope within the same first milestone; no filed issue is replaced by this planning draft.
+
 ## Verify the first release's privacy and observation boundaries
 
 **Epic:** Run privately and release with evidence. **Labels:** test, docs. **Dependencies:** all preceding tickets.
@@ -124,7 +150,7 @@ Searched: no existing issues matched protocol/configuration work; the repository
 
 ### Release acceptance criteria
 
-- [ ] A representative configured instance loads both sources, preserves the complete graph relationships, and supports read-only inspection in the documented supported environment.
+- [ ] A representative configured instance loads both sources, preserves the complete graph relationships, and supports read-only inspection, derived attention, status, activity and available history in the documented supported environment. A finding can be traced to evidence; a subsequent source update after an external resolution updates the finding without any dashboard write.
 - [ ] Filesystem and network observations prove source files remain unchanged and external application requests are limited to approved GitHub reads. GitHub mutation attempts, unapproved origins and redirect escapes are refused.
 - [ ] Secret sentinels placed in prohibited configuration and source fields do not appear in client payloads, assets, logs, errors, caches intended for export or support bundles. Tests also prove a permitted field still reaches the graph.
 - [ ] Unauthenticated or out-of-scope access, traversal, symlink escape, malformed or oversized records, missing credentials and unavailable sources exercise their defined refusal or degraded states.

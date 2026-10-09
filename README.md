@@ -4,7 +4,7 @@
 
 As a factory operator, I open a connected graph and understand the work, its ownership and its recorded communication without losing the global view.
 
-Factory Dashboard is a public project for a privately configured factory. Its first milestone reads GitHub work records and explicitly configured local communication files. The graph is the main interface; selecting a node or connection reveals existing context. The first release is read-only.
+Factory Dashboard is a public project for a privately configured factory. Its first milestone reads GitHub work records and explicitly configured local communication files. The graph is the main interface; selecting a node or connection reveals existing context, attention signals and other information derivable from the approved records. The first release is read-only.
 
 ```mermaid
 %%{init: {'flowchart': {'nodeSpacing': 20, 'rankSpacing': 35, 'padding': 12}, 'themeVariables': {'fontSize': '15px'}}}%%
@@ -18,7 +18,7 @@ The graph combines the two sources without controlling either. Roles and the com
 
 ## Direction and delivery
 
-The [roadmap](docs/roadmap.md) defines the first milestone, its three epics and five ticket drafts. It also records the longer-term destination: contextual conversations, graph-derived attention and history, and eventually selecting teams and directing the factory from the dashboard.
+The [roadmap](docs/roadmap.md) defines the first milestone, its three epics and six ticket drafts. It also records the longer-term destination: communicating back to resolve attention through contextual conversations, and eventually selecting teams and directing the factory from the dashboard.
 
 Those future capabilities are not part of the first release. The [configuration contract](docs/configuration.md) makes safe source access and limited disclosure a release condition. The [ticket drafts](docs/tickets.md) define the implementation order and observable checks.
 

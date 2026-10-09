@@ -9,7 +9,7 @@
       "pause": 400
     },
     {
-      "text": "Factory Dashboard is a public project for a privately configured factory. Its first milestone reads GitHub work records and explicitly configured local communication files. The graph is the main interface; selecting a node or connection reveals existing context. The first release is read-only.",
+      "text": "Factory Dashboard is a public project for a privately configured factory. Its first milestone reads GitHub work records and explicitly configured local communication files. The graph is the main interface; selecting a node or connection reveals existing context, attention signals and other information derivable from the approved records. The first release is read-only.",
       "pause": 400
     },
     {
@@ -23,7 +23,7 @@
       "pause": 500
     },
     {
-      "text": "The roadmap defines the first milestone, its three epics and five ticket drafts. It also records the longer-term destination: contextual conversations, graph-derived attention and history, and eventually selecting teams and directing the factory from the dashboard.",
+      "text": "The roadmap defines the first milestone, its three epics and six ticket drafts. It also records the longer-term destination: communicating back to resolve attention through contextual conversations, and eventually selecting teams and directing the factory from the dashboard.",
       "pause": 400
     },
     {
@@ -63,6 +63,6 @@
   ],
   "_source": {
     "file": "README.md",
-    "sha256": "13f953976cb17850e73b6635b8aac9e70ebfa0b5db57a00d514a6c6199b8bb26"
+    "sha256": "98436a2c4634ddabeb2416554b20835a24a5111321d51861424a0eaa31bf1328"
   }
 }

@@ -83,7 +83,7 @@
       "pause": 300
     },
     {
-      "text": "Attention panels, activity summaries, special-purpose dashboards or a table-first home screen.",
+      "text": "A table-first home screen. Derived attention and summaries are delivered by the observation ticket in this same milestone.",
       "pause": 300
     },
     {
@@ -231,7 +231,7 @@
       "pause": 300
     },
     {
-      "text": "Attention or history views beyond the graph's current source state.",
+      "text": "Outgoing communication or actions that resolve an observed attention finding.",
       "pause": 300
     },
     {
@@ -321,6 +321,80 @@
       "pause": 400
     }
   ],
+  "derive-attention-and-information-from-recorded-factory-state": [
+    {
+      "text": "Derive attention and information from recorded factory state.",
+      "pause": 500
+    },
+    {
+      "text": "Epic: Explore the factory through one graph. Label: feat. Dependencies: graph, configuration and both source tickets.",
+      "pause": 400
+    },
+    {
+      "text": "Goal: Extract useful read-only information from the supported graph, communication and local status records so the operator can see what needs attention and act on the machine.",
+      "pause": 400
+    },
+    {
+      "text": "P1 user story: As a factory operator, I notice a pending question, blocker or other evidenced condition, inspect its context and freshness, and go to the machine to address it.",
+      "pause": 400
+    }
+  ],
+  "derived-observation-acceptance-criteria": [
+    {
+      "text": "Derived observation acceptance criteria.",
+      "pause": 500
+    },
+    {
+      "text": "[ ] A documented inventory maps supported communication and status record types to useful observations: pending questions, recorded answers and acknowledgements, waiting or blocked work, role state, handoffs, activity, available history and evidence of completion, acceptance or release. Useful derivable information is included; unavailable information is explicitly identified rather than invented.",
+      "pause": 300
+    },
+    {
+      "text": "[ ] Each derivation specifies source references, correlation rules, freshness and resolution evidence. Activity does not prove progress; silence does not prove a dead worker; a reply or acknowledgement does not by itself prove a blocker resolved.",
+      "pause": 300
+    },
+    {
+      "text": "[ ] Attention indicators and graph-derived filters or detail views preserve the global graph and return to the relevant node or connection. Findings explain why they are shown and distinguish recorded facts, rule-based derivations and unknown state.",
+      "pause": 300
+    },
+    {
+      "text": "[ ] Fixtures exercise a pending question, correlated answer, unresolved blocker, explicit resolution, duplicate or out-of-order events, stale or missing records, and conflicting evidence. Refresh after an external action updates findings without a dashboard write. Positive and negative controls prove that irrelevant or insufficient evidence does not create or clear attention.",
+      "pause": 300
+    },
+    {
+      "text": "[ ] History and summaries use only available configured records, disclose retention or coverage gaps, and do not imply a complete history where none exists.",
+      "pause": 300
+    },
+    {
+      "text": "[ ] Derived fields pass the same approved-field projection as source data. Aggregates, labels and evidence references cannot leak private worker details, raw paths or secrets.",
+      "pause": 300
+    },
+    {
+      "text": "[ ] The interface explains that action happens on the machine in this release. It has no reply, acknowledge, dismiss, assign or resolve operation that writes to sources or conceals an unresolved finding.",
+      "pause": 300
+    }
+  ],
+  "derived-observation-non-goals": [
+    {
+      "text": "Derived observation non-goals.",
+      "pause": 500
+    },
+    {
+      "text": "Sending questions or answers, writing acknowledgements, controlling workers or resolving issues through the dashboard.",
+      "pause": 300
+    },
+    {
+      "text": "Provider calls, speculation about worker intent, or inference beyond documented record semantics.",
+      "pause": 300
+    },
+    {
+      "text": "Additional sources or broader file access to fill evidence gaps.",
+      "pause": 300
+    },
+    {
+      "text": "Searched: this ticket extends the graph and local protocol scope within the same first milestone; no filed issue is replaced by this planning draft.",
+      "pause": 400
+    }
+  ],
   "verify-the-first-releases-privacy-and-observation-boundaries": [
     {
       "text": "Verify the first release's privacy and observation boundaries.",
@@ -345,7 +419,7 @@
       "pause": 500
     },
     {
-      "text": "[ ] A representative configured instance loads both sources, preserves the complete graph relationships, and supports read-only inspection in the documented supported environment.",
+      "text": "[ ] A representative configured instance loads both sources, preserves the complete graph relationships, and supports read-only inspection, derived attention, status, activity and available history in the documented supported environment. A finding can be traced to evidence; a subsequent source update after an external resolution updates the finding without any dashboard write.",
       "pause": 300
     },
     {
@@ -407,6 +481,6 @@
   ],
   "_source": {
     "file": "tickets.md",
-    "sha256": "af08a38c5c7e0d43d34abeaf23ba4bdde9f292465a56fb37fc4e9437724d6386"
+    "sha256": "62f712f28f4cebf5a19a6bd6eff92ed110ae3790d699c00e5601fcea17672905"
   }
 }

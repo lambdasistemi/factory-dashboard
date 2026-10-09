@@ -8,7 +8,7 @@ As a contributor, I read the product decisions and know which boundaries to pres
 
 The graph is the core and the opening view. It preserves the actual GitHub work structure and attaches the public factory role and communication vocabulary. Other views must be reached through graph context and derived from the same data.
 
-The first milestone is read-only. Its two sources are GitHub work records and explicitly configured local communication files. The dashboard does not call model services, change GitHub, write communication files, discover a machine, install workers or manage the factory.
+The first milestone includes read-only attention and all useful information derivable from the supported graph, communication and local status records, including status, activity and available history. Findings show evidence and freshness; the operator acts directly on the machine. The first milestone is read-only. Its two sources are GitHub work records and explicitly configured local communication files. The dashboard does not call model services, change GitHub, write communication files, discover a machine, install workers or manage the factory.
 
 Roles and the supported protocol are public product design. Concrete worker implementations, provider and model identities, prompts, launch commands, credentials and real installation bindings remain private. Runtime addresses, roots, selected repositories and access settings are configurable.
 
@@ -16,7 +16,7 @@ Before any first product release, the operator must review the configuration and
 
 ## Long-term goals
 
-After the observation foundation is accepted and released, the product should support contextual conversations through local channels. Graph-derived attention and history views are also later goals. Eventually the operator should be able to select teams and direct authorised factory operations from the dashboard.
+After the observation foundation is accepted and released, the product should support communicating back through local channels to address observed attention, including asking and answering contextual questions. Eventually the operator should be able to select teams and direct authorised factory operations from the dashboard.
 
 The [roadmap](roadmap.md) keeps these goals visible as milestones without assigning speculative epics, tickets or dates to them.
 
@@ -27,7 +27,7 @@ The [roadmap](roadmap.md) keeps these goals visible as milestones without assign
 - The exact versioned configuration schema and the initial supported subset of the file protocol. Their tickets must resolve these before integrating real sources.
 - The mapping of configured projects and repositories to existing GitHub work relationships; GitHub terms themselves are not being redesigned.
 - The source license, which must be selected before the first product release.
-- The detailed design, authorisation and release order of later conversations, derived views and team controls.
+- The detailed design, authorisation and release order of later conversations and team controls.
 
 ## Current delivery status
 

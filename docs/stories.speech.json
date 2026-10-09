@@ -47,7 +47,7 @@
       "pause": 500
     },
     {
-      "text": "As a factory operator, I select graph context, ask the responsible role a question, and receive a correlated reply from the appropriate agent.",
+      "text": "As a factory operator, I select graph context, ask the responsible role a question or answer a pending question, and receive a correlated reply from the appropriate agent so I can address attention without leaving the dashboard.",
       "pause": 400
     },
     {
@@ -55,9 +55,9 @@
       "pause": 400
     }
   ],
-  "find-attention-and-changes-later": [
+  "notice-attention-and-changes-now": [
     {
-      "text": "Find attention and changes later.",
+      "text": "Notice attention and changes now.",
       "pause": 500
     },
     {
@@ -65,7 +65,7 @@
       "pause": 400
     },
     {
-      "text": "Attention and history are later milestones, not competing first-release home screens. Their correctness depends on the observation layer and published protocol semantics.",
+      "text": "This belongs in the first milestone alongside other useful information derivable from approved communication and local status records. Each finding shows its evidence and freshness. I go to the machine to address it; a later milestone lets me communicate back from the dashboard. A recorded response or acknowledgement is not proof that the issue was resolved.",
       "pause": 400
     }
   ],
@@ -85,6 +85,6 @@
   ],
   "_source": {
     "file": "stories.md",
-    "sha256": "1924dcb48dd864cd2d6cf761d209ca3e135efc9a8f8af7422937dbd361838eb2"
+    "sha256": "0021d8e7dae24f1e03c27b0a32e05faaeafcb779391fb9b94fe18a1580e0ce4e"
   }
 }

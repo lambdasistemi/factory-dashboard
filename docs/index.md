@@ -14,7 +14,7 @@ flowchart TD
   view -->|Select| detail[Existing details]
 ```
 
-The two incoming read paths and existing-detail inspection are the first milestone. Later goals build on this graph: asking through local channels, finding attention and changes, and eventually operating teams from the dashboard.
+The two incoming read paths, existing-detail inspection and derived attention, status, activity and history are the first milestone. The operator notices what needs attention here and resolves it directly on the machine. The next milestone adds communicating back through local channels; the long-term goal includes operating teams from the dashboard.
 
 ## A public process, a private installation
 

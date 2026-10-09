@@ -19,7 +19,7 @@
       "pause": 400
     },
     {
-      "text": "The first milestone is read-only. Its two sources are GitHub work records and explicitly configured local communication files. The dashboard does not call model services, change GitHub, write communication files, discover a machine, install workers or manage the factory.",
+      "text": "The first milestone includes read-only attention and all useful information derivable from the supported graph, communication and local status records, including status, activity and available history. Findings show evidence and freshness; the operator acts directly on the machine. The first milestone is read-only. Its two sources are GitHub work records and explicitly configured local communication files. The dashboard does not call model services, change GitHub, write communication files, discover a machine, install workers or manage the factory.",
       "pause": 400
     },
     {
@@ -37,7 +37,7 @@
       "pause": 500
     },
     {
-      "text": "After the observation foundation is accepted and released, the product should support contextual conversations through local channels. Graph-derived attention and history views are also later goals. Eventually the operator should be able to select teams and direct authorised factory operations from the dashboard.",
+      "text": "After the observation foundation is accepted and released, the product should support communicating back through local channels to address observed attention, including asking and answering contextual questions. Eventually the operator should be able to select teams and direct authorised factory operations from the dashboard.",
       "pause": 400
     },
     {
@@ -71,7 +71,7 @@
       "pause": 300
     },
     {
-      "text": "The detailed design, authorisation and release order of later conversations, derived views and team controls.",
+      "text": "The detailed design, authorisation and release order of later conversations and team controls.",
       "pause": 300
     }
   ],
@@ -87,6 +87,6 @@
   ],
   "_source": {
     "file": "open-questions.md",
-    "sha256": "110e9a1f6511b7c5a503bb4ec6a705f356c12d3c024153094437e0acaf374093"
+    "sha256": "21db881ec329e421b856dac8907b4f3cbb214bceac9af1c14608816b69366a23"
   }
 }
