@@ -15,23 +15,8 @@ permissions:
   id-token: write
 
 jobs:
-  build-gate:
-    name: Docs Build Gate
-    runs-on: nixos
-    steps:
-      - uses: actions/checkout@v6
-
-      - uses: cachix/cachix-action@v17
-        with:
-          name: paolino
-          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
-
-      - name: Check the product record and build the documentation site
-        run: nix build --quiet .#docs
-
   docs-build:
     name: Docs build
-    needs: build-gate
     runs-on: nixos
     steps:
       - uses: actions/checkout@v6
