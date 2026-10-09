@@ -81,12 +81,12 @@
       "pause": 500
     },
     {
-      "text": "The repository bootstrap is merged. The milestone, epic and ticket definitions in this documentation are proposed planning artifacts pending review and issue creation. The dashboard application is not implemented by these records. Existing prototypes use example data and simulated conversations.",
+      "text": "The repository bootstrap is merged. The approved roadmap is published as three GitHub milestones, with three epics and six tickets under the first milestone. Their links are in the roadmap and ticket pages. The dashboard application is not implemented by these records. Existing prototypes use example data and simulated conversations.",
       "pause": 400
     }
   ],
   "_source": {
     "file": "open-questions.md",
-    "sha256": "21db881ec329e421b856dac8907b4f3cbb214bceac9af1c14608816b69366a23"
+    "sha256": "a3389f243a59c54a43ee323b3b712d921594dee7c0a3ff4d7d3f82d2605ffe8f"
   }
 }

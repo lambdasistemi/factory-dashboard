@@ -31,4 +31,4 @@ The [roadmap](roadmap.md) keeps these goals visible as milestones without assign
 
 ## Current delivery status
 
-The repository bootstrap is merged. The milestone, epic and ticket definitions in this documentation are proposed planning artifacts pending review and issue creation. The dashboard application is not implemented by these records. Existing prototypes use example data and simulated conversations.
+The repository bootstrap is merged. The approved roadmap is published as three GitHub milestones, with three epics and six tickets under the first milestone. Their links are in the roadmap and ticket pages. The dashboard application is not implemented by these records. Existing prototypes use example data and simulated conversations.

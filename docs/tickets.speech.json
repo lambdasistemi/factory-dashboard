@@ -9,7 +9,7 @@
       "pause": 400
     },
     {
-      "text": "These are drafts for the Read-only factory graph milestone in the roadmap. They are not filed issues and have no GitHub issue numbers yet. The repository had no issues or milestones when this plan was prepared. Searches for graph work and protocol/configuration work found no duplicates.",
+      "text": "These tickets are filed under the Read-only factory graph milestone in the roadmap. GitHub tracks their implementation state, native parent/sub-issue relationships and serial dependencies. Duplicate searches found no existing issues before publication.",
       "pause": 400
     },
     {
@@ -21,6 +21,10 @@
     {
       "text": "Open and explore the complete factory graph.",
       "pause": 500
+    },
+    {
+      "text": "Track ticket #4.",
+      "pause": 400
     },
     {
       "text": "Epic: Explore the factory through one graph. Label: feat. Dependency: none. This is the first implementation ticket.",
@@ -101,6 +105,10 @@
       "pause": 500
     },
     {
+      "text": "Track ticket #5.",
+      "pause": 400
+    },
+    {
       "text": "Epic: Run privately and release with evidence. Labels: feat, docs. Dependency: the graph ticket.",
       "pause": 400
     },
@@ -175,6 +183,10 @@
       "pause": 500
     },
     {
+      "text": "Track ticket #6.",
+      "pause": 400
+    },
+    {
       "text": "Epic: Read the two supported sources. Label: feat. Dependencies: graph and private configuration tickets.",
       "pause": 400
     },
@@ -243,6 +255,10 @@
     {
       "text": "Read local communication records through a public protocol.",
       "pause": 500
+    },
+    {
+      "text": "Track ticket #7.",
+      "pause": 400
     },
     {
       "text": "Epic: Read the two supported sources. Labels: feat, docs. Dependencies: graph and private configuration tickets. It follows the GitHub integration in the initial serial plan.",
@@ -327,6 +343,10 @@
       "pause": 500
     },
     {
+      "text": "Track ticket #8.",
+      "pause": 400
+    },
+    {
       "text": "Epic: Explore the factory through one graph. Label: feat. Dependencies: graph, configuration and both source tickets.",
       "pause": 400
     },
@@ -399,6 +419,10 @@
     {
       "text": "Verify the first release's privacy and observation boundaries.",
       "pause": 500
+    },
+    {
+      "text": "Track ticket #9.",
+      "pause": 400
     },
     {
       "text": "Epic: Run privately and release with evidence. Labels: test, docs. Dependencies: all preceding tickets.",
@@ -475,12 +499,12 @@
       "pause": 500
     },
     {
-      "text": "The milestone and three epic issues will carry the corresponding roadmap outcomes, shared privacy constraints, this serial child order and the shared dashboard artifact. After the plan is reviewed, create the milestone and replace title-based references with actual GitHub issue relationships. Keep the future milestones visible without inventing their epics or delivery dates.",
+      "text": "The first milestone and its three epic issues carry the roadmap outcomes, shared privacy constraints, serial child order and shared dashboard artifact. All six tickets are linked to their epic through native GitHub sub-issue relationships. The two future milestones are also published, without speculative epics or delivery dates.",
       "pause": 400
     }
   ],
   "_source": {
     "file": "tickets.md",
-    "sha256": "62f712f28f4cebf5a19a6bd6eff92ed110ae3790d699c00e5601fcea17672905"
+    "sha256": "842798ed56f84aaea2146d131f8013b2e71bb15f45b4e1bb94d34d7933d28c9e"
   }
 }

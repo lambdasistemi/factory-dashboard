@@ -18,7 +18,7 @@ The graph combines the two sources without controlling either. Roles and the com
 
 ## Direction and delivery
 
-The [roadmap](docs/roadmap.md) defines the first milestone, its three epics and six ticket drafts. It also records the longer-term destination: communicating back to resolve attention through contextual conversations, and eventually selecting teams and directing the factory from the dashboard.
+The [roadmap](docs/roadmap.md) defines the first milestone, its three epics and six tickets. It also records the longer-term destination: communicating back to resolve attention through contextual conversations, and eventually selecting teams and directing the factory from the dashboard.
 
 Those future capabilities are not part of the first release. The [configuration contract](docs/configuration.md) makes safe source access and limited disclosure a release condition. The [ticket drafts](docs/tickets.md) define the implementation order and observable checks.
 

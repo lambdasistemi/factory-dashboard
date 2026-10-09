@@ -37,7 +37,7 @@
       "pause": 500
     },
     {
-      "text": "Start with the milestone roadmap, then the first milestone's ticket drafts. The configuration and privacy contract defines what must be verified before release. User stories show the present and future experience; product decisions identify what is fixed and what remains open.",
+      "text": "Start with the milestone roadmap, then the first milestone's tickets. The configuration and privacy contract defines what must be verified before release. User stories show the present and future experience; product decisions identify what is fixed and what remains open.",
       "pause": 400
     },
     {
@@ -47,6 +47,6 @@
   ],
   "_source": {
     "file": "index.md",
-    "sha256": "ab6d24ccd2b0f298ba4413deafbb7448ffa6253317f565754457241c0e9adc42"
+    "sha256": "2aae85ff9d78fea74fa05319d5482e19d41ba71c825e7522497bc1ca4a74ec0b"
   }
 }

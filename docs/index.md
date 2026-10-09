@@ -24,6 +24,6 @@ The first release reads GitHub and approved local files only. It makes no extern
 
 ## Read the product record
 
-Start with the [milestone roadmap](roadmap.md), then the [first milestone's ticket drafts](tickets.md). The [configuration and privacy contract](configuration.md) defines what must be verified before release. [User stories](stories.md) show the present and future experience; [product decisions](open-questions.md) identify what is fixed and what remains open.
+Start with the [milestone roadmap](roadmap.md), then the [first milestone's tickets](tickets.md). The [configuration and privacy contract](configuration.md) defines what must be verified before release. [User stories](stories.md) show the present and future experience; [product decisions](open-questions.md) identify what is fixed and what remains open.
 
 The repository currently records the intended product and its delivery plan. It does not yet provide a released application or evidence that these runtime boundaries are implemented.

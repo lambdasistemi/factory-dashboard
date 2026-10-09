@@ -1,14 +1,16 @@
-# First milestone ticket drafts
+# First milestone tickets
 
 ## Story: Deliver a small, verifiable first release
 
 As a project contributor, I take one bounded ticket, improve the runnable dashboard, and demonstrate its acceptance criteria without pulling future controls into the first release.
 
-These are drafts for the **Read-only factory graph** milestone in the [roadmap](roadmap.md). They are not filed issues and have no GitHub issue numbers yet. The repository had no issues or milestones when this plan was prepared. Searches for graph work and protocol/configuration work found no duplicates.
+These tickets are filed under the [Read-only factory graph milestone](https://github.com/lambdasistemi/factory-dashboard/milestone/1) in the [roadmap](roadmap.md). GitHub tracks their implementation state, native parent/sub-issue relationships and serial dependencies. Duplicate searches found no existing issues before publication.
 
 Each acceptance checkbox must become a directly observable browser check, contract check, integration check or release receipt. The initial sequence is serial. No implementation team is assigned by this plan. Each ticket extends the same dashboard artifact; intermediate completion does not authorise a product release.
 
 ## Open and explore the complete factory graph
+
+[Track ticket #4](https://github.com/lambdasistemi/factory-dashboard/issues/4).
 
 **Epic:** Explore the factory through one graph. **Label:** feat. **Dependency:** none. This is the first implementation ticket.
 
@@ -37,6 +39,8 @@ Searched: no existing issues matched graph work or protocol/configuration work; 
 
 ## Configure a private, read-only installation
 
+[Track ticket #5](https://github.com/lambdasistemi/factory-dashboard/issues/5).
+
 **Epic:** Run privately and release with evidence. **Labels:** feat, docs. **Dependency:** the graph ticket.
 
 **Goal:** Start a portable installation from an explicit configuration, or refuse it with a useful redacted error.
@@ -63,6 +67,8 @@ Searched: no existing issues matched protocol/configuration work; the repository
 
 ## Read configured GitHub work into the graph
 
+[Track ticket #6](https://github.com/lambdasistemi/factory-dashboard/issues/6).
+
 **Epic:** Read the two supported sources. **Label:** feat. **Dependencies:** graph and private configuration tickets.
 
 **Goal:** Populate the running graph with work records from the repositories explicitly selected by the installation.
@@ -87,6 +93,8 @@ Searched: no existing issues matched protocol/configuration work; the repository
 Searched: no existing issues matched graph work; the repository issue list was empty at planning time.
 
 ## Read local communication records through a public protocol
+
+[Track ticket #7](https://github.com/lambdasistemi/factory-dashboard/issues/7).
 
 **Epic:** Read the two supported sources. **Labels:** feat, docs. **Dependencies:** graph and private configuration tickets. It follows the GitHub integration in the initial serial plan.
 
@@ -116,6 +124,8 @@ Searched: no existing issues matched protocol/configuration work; the repository
 
 ## Derive attention and information from recorded factory state
 
+[Track ticket #8](https://github.com/lambdasistemi/factory-dashboard/issues/8).
+
 **Epic:** Explore the factory through one graph. **Label:** feat. **Dependencies:** graph, configuration and both source tickets.
 
 **Goal:** Extract useful read-only information from the supported graph, communication and local status records so the operator can see what needs attention and act on the machine.
@@ -141,6 +151,8 @@ Searched: no existing issues matched protocol/configuration work; the repository
 Searched: this ticket extends the graph and local protocol scope within the same first milestone; no filed issue is replaced by this planning draft.
 
 ## Verify the first release's privacy and observation boundaries
+
+[Track ticket #9](https://github.com/lambdasistemi/factory-dashboard/issues/9).
 
 **Epic:** Run privately and release with evidence. **Labels:** test, docs. **Dependencies:** all preceding tickets.
 
@@ -168,4 +180,4 @@ Searched: no existing issues matched protocol/configuration work; the repository
 
 ## Publishing this plan
 
-The milestone and three epic issues will carry the corresponding roadmap outcomes, shared privacy constraints, this serial child order and the shared dashboard artifact. After the plan is reviewed, create the milestone and replace title-based references with actual GitHub issue relationships. Keep the future milestones visible without inventing their epics or delivery dates.
+The first milestone and its three epic issues carry the roadmap outcomes, shared privacy constraints, serial child order and shared dashboard artifact. All six tickets are linked to their epic through native GitHub sub-issue relationships. The two future milestones are also published, without speculative epics or delivery dates.

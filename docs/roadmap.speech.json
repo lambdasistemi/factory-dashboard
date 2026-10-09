@@ -13,7 +13,7 @@
       "pause": 400
     },
     {
-      "text": "This is a proposed delivery plan, not a claim that these capabilities are implemented. Only the first milestone has an epic and ticket breakdown. Later milestones describe the destination and remain subject to further design.",
+      "text": "This is the approved delivery plan, now tracked in GitHub; it is not a claim that these capabilities are implemented. Only the first milestone has an epic and ticket breakdown. Later milestones describe the destination and remain subject to further design.",
       "pause": 400
     }
   ],
@@ -21,6 +21,10 @@
     {
       "text": "Milestone: Read-only factory graph.",
       "pause": 500
+    },
+    {
+      "text": "Track this milestone on GitHub.",
+      "pause": 400
     },
     {
       "text": "An operator runs a privately configured dashboard, sees the whole factory as a connected graph, and follows projects, milestones, epics, tickets, pull requests, roles and recorded communication without changing the factory.",
@@ -45,6 +49,10 @@
       "pause": 500
     },
     {
+      "text": "Track epic #10.",
+      "pause": 400
+    },
+    {
       "text": "The first runnable artifact is a graph with synthetic records. This epic also delivers read-only findings and views derived from the integrated sources. Its scope covers the complete work hierarchy and role attachments, with stable selection, expansion and collapse, and contextual inspection. It establishes the browser data contract that the source tickets will consume.",
       "pause": 400
     },
@@ -59,6 +67,10 @@
       "pause": 500
     },
     {
+      "text": "Track epic #11.",
+      "pause": 400
+    },
+    {
       "text": "GitHub and configured local communication files populate that same graph. GitHub reads preserve source identities and relationships. The file reader implements a documented, versioned interpretation of roles, states, events and communication references. It reports unknown, stale, malformed and unavailable input honestly.",
       "pause": 400
     },
@@ -71,6 +83,10 @@
     {
       "text": "Epic: Run privately and release with evidence.",
       "pause": 500
+    },
+    {
+      "text": "Track epic #12.",
+      "pause": 400
     },
     {
       "text": "An installation supplies its own repositories, local input locations, access policy and secrets. The dashboard has no compiled-in installation identity. Its server reads only the approved inputs, emits only the approved data, and performs no outbound application communication except GitHub reads. Startup explains configuration errors without disclosing sensitive values.",
@@ -139,6 +155,10 @@
       "pause": 500
     },
     {
+      "text": "Track this milestone on GitHub.",
+      "pause": 400
+    },
+    {
       "text": "After the read-only milestone is accepted and released, an operator selects an attention finding, work or a role and communicates back through configured local channels: asking a contextual question or answering a pending question so the recipient can address the issue. A reply returns to the same context and identifies the responding role without disclosing the underlying worker implementation.",
       "pause": 400
     },
@@ -155,6 +175,10 @@
     {
       "text": "Milestone: Operate the factory from the dashboard.",
       "pause": 500
+    },
+    {
+      "text": "Track this milestone on GitHub.",
+      "pause": 400
     },
     {
       "text": "An operator selects teams and role assignments, speaks with the appropriate agents, and directs permitted work from graph context. Possible actions include assigning a team, approving a transition, or requesting a pause or resumption.",
@@ -181,6 +205,6 @@
   ],
   "_source": {
     "file": "roadmap.md",
-    "sha256": "99314df14f2ceddf5d3d99584a69da0bcaea35e0bda009636d7a93d4bb79a04e"
+    "sha256": "324d42d849f1058bf64f2d3eb617242d942d6c15fa76cdca794322ab827c3a87"
   }
 }
