@@ -19,3 +19,14 @@ ln -s "$MERMAID_JS" "$mermaid_asset"
 tools/check-asset-versions.sh
 python3 tools/check_presentation.py --front docs/index.md README.md docs
 mkdocs build --strict --site-dir "$site_root/site"
+
+# PureScript toolchain legs: the pinned tools must be on PATH and the
+# committed lock must build from the development shell.
+command -v purs
+command -v spago
+command -v purs-tidy
+command -v esbuild
+command -v node
+purs-tidy check 'src/**/*.purs' 'test/**/*.purs'
+spago build --offline
+printf 'development shell checks passed\n'

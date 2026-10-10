@@ -1,0 +1,39 @@
+package:
+  name: factory-graph
+  dependencies:
+    - prelude
+    - effect
+    - aff
+    - maybe
+    - either
+    - arrays
+    - strings
+    - tuples
+    - integers
+    - partial
+    - nullable
+    - foldable-traversable
+    - ordered-collections
+    - foreign-object
+    - argonaut-core
+    - argonaut
+    - halogen
+    - web-dom
+    - web-events
+    - web-uievents
+    - halogen-subscriptions
+  bundle:
+    module: Main
+    outfile: dist/index.js
+    platform: browser
+    type: app
+  test:
+    main: Test.Main
+    dependencies:
+      - spec
+      - spec-node
+      - console
+
+workspace:
+  packageSet:
+    registry: 72.1.0

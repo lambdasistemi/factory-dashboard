@@ -32,6 +32,9 @@ jobs:
       - name: Check the product record and build the documentation site
         run: nix build --quiet .#docs --out-link result
 
+      - name: Warm the graph app build
+        run: nix build --quiet --no-link .#checks.x86_64-linux.app-build
+
       - name: Prepare the site preview
         if: github.event_name == 'pull_request'
         run: |
@@ -60,6 +63,81 @@ jobs:
 
       - name: Build the site from the development shell
         run: nix develop . --quiet -c tools/docs-shell-check.sh
+
+  app-format:
+    name: Graph format
+    if: github.event.action != 'closed'
+    needs: build-gate
+    runs-on: nixos
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: cachix/cachix-action@v17
+        with:
+          name: paolino
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+
+      - run: nix build --no-link .#checks.x86_64-linux.app-format
+
+  app-static-quality:
+    name: Graph static quality
+    if: github.event.action != 'closed'
+    needs: build-gate
+    runs-on: nixos
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: cachix/cachix-action@v17
+        with:
+          name: paolino
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+
+      - run: nix build --no-link .#checks.x86_64-linux.app-static-quality
+
+  domain-semantics:
+    name: Graph domain semantics
+    if: github.event.action != 'closed'
+    needs: build-gate
+    runs-on: nixos
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: cachix/cachix-action@v17
+        with:
+          name: paolino
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+
+      - run: nix build --no-link .#checks.x86_64-linux.domain-semantics
+
+  browser-journey:
+    name: Graph browser journey
+    if: github.event.action != 'closed'
+    needs: build-gate
+    runs-on: nixos
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: cachix/cachix-action@v17
+        with:
+          name: paolino
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+
+      - run: nix build --no-link .#checks.x86_64-linux.browser-journey
+
+  browser-offline-boundary:
+    name: Graph offline boundary
+    if: github.event.action != 'closed'
+    needs: build-gate
+    runs-on: nixos
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: cachix/cachix-action@v17
+        with:
+          name: paolino
+          authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
+
+      - run: nix build --no-link .#checks.x86_64-linux.browser-offline-boundary
 
   pr-preview-cleanup:
     name: Remove PR Preview
