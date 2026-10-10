@@ -1,0 +1,8 @@
+{
+  "name": "factory-dashboard",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@playwright/test": "1.54.1"
+  }
+}

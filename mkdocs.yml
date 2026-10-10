@@ -15,6 +15,7 @@ nav:
   - Start here:
       - Overview: index.md
       - Milestone roadmap: roadmap.md
+      - Explore the factory graph: graph-guide.md
       - First milestone tickets: tickets.md
       - Graph invariants research: graph-invariants.md
       - Findings and problem prompts: invariant-catalog.md

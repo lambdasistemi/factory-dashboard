@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Factory graph</title>
+    <style>
+      :root {
+        --bg: #10141b;
+        --surface: #171d27;
+        --surface-2: #1d2532;
+        --border: #303b4d;
+        --text: #e6edf3;
+        --muted: #93a1b3;
+        --accent: #6cb2ff;
+        --known: #3fb950;
+        --unknown: #d4a72c;
+        --stale: #f0883e;
+        --missing: #8b949e;
+        --danger: #f85149;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; height: 100%; }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+      .app { display: flex; flex-direction: column; height: 100vh; }
+      .app-header {
+        display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem;
+        padding: 0.6rem 1rem; border-bottom: 1px solid var(--border);
+        background: var(--surface);
+      }
+      .app-header h1 { font-size: 1.05rem; margin: 0; letter-spacing: 0.02em; }
+      .scenario-bar { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+      button {
+        font: inherit; color: var(--text); background: var(--surface-2);
+        border: 1px solid var(--border); border-radius: 6px;
+        padding: 0.28rem 0.7rem; cursor: pointer;
+      }
+      button:hover { border-color: var(--accent); }
+      button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+      button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+      .app-status { color: var(--muted); font-size: 0.88rem; flex: 1 1 12rem; text-align: right; }
+      .app-main { flex: 1 1 auto; display: flex; min-height: 0; }
+      .graph-stage {
+        flex: 1 1 auto; position: relative; min-width: 0; min-height: 0;
+        overflow: hidden; background: var(--bg);
+      }
+      .graph-stage svg.graph {
+        position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+      }
+      .stage-overlay {
+        position: absolute; top: 0.5rem; right: 0.5rem; left: auto;
+        display: flex; flex-direction: column; gap: 0.4rem;
+        align-items: flex-end; max-width: 45%;
+        pointer-events: none;
+      }
+      .view-controls, .legend { pointer-events: auto; }
+      .view-controls { display: flex; flex-wrap: wrap; gap: 0.3rem; }
+      .legend {
+        background: color-mix(in srgb, var(--surface) 88%, transparent);
+        border: 1px solid var(--border); border-radius: 6px;
+        padding: 0.4rem 0.6rem; font-size: 0.8rem; color: var(--muted);
+        display: flex; flex-direction: column; gap: 0.25rem;
+      }
+      .legend span { display: inline-flex; align-items: center; gap: 0.4rem; }
+      .legend svg { width: 34px; height: 8px; }
+      .details {
+        flex: 0 0 21rem; max-width: 40%; overflow-y: auto;
+        border-left: 1px solid var(--border); background: var(--surface);
+        padding: 0.9rem 1rem;
+      }
+      .details h2 { font-size: 1rem; margin: 0 0 0.2rem; }
+      .details .kind { color: var(--muted); font-size: 0.85rem; margin: 0 0 0.6rem; }
+      .details dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 0.25rem 0.7rem; }
+      .details dt { color: var(--muted); }
+      .details dd { margin: 0; overflow-wrap: anywhere; }
+      .quality {
+        display: inline-block; font-size: 0.78rem; border-radius: 5px;
+        padding: 0.05rem 0.45rem; border: 1px solid var(--border);
+      }
+      .quality.known { color: var(--known); border-color: var(--known); }
+      .quality.unknown { color: var(--unknown); border-color: var(--unknown); }
+      .quality.stale { color: var(--stale); border-color: var(--stale); }
+      .quality.missing { color: var(--missing); border-color: var(--missing); }
+      .refusal {
+        border: 1px solid var(--danger); border-radius: 6px;
+        background: color-mix(in srgb, var(--danger) 10%, var(--surface));
+        padding: 0.7rem 0.9rem; color: var(--text);
+      }
+      .refusal h2 { color: var(--danger); font-size: 0.95rem; margin: 0 0 0.4rem; }
+      .refusal ul { margin: 0; padding-left: 1.1rem; }
+      .refusal li { margin: 0.15rem 0; overflow-wrap: anywhere; }
+      .empty-state {
+        position: absolute; inset: 0; display: flex; align-items: center;
+        justify-content: center; color: var(--muted); font-size: 1rem;
+      }
+      svg .node rect, svg .node circle { fill: var(--surface-2); stroke: var(--border); }
+      svg .node.kind-role circle { fill: #233042; }
+      svg .node text { fill: var(--text); font-size: 12px; }
+      svg .node .node-kind { fill: var(--muted); font-size: 10px; }
+      svg .node.selected rect, svg .node.selected circle { stroke: var(--accent); stroke-width: 2.5; }
+      svg .node.collapsed rect, svg .node.collapsed circle { stroke-dasharray: 5 3; }
+      svg .node:focus { outline: none; }
+      svg .node:focus-visible rect, svg .node:focus-visible circle {
+        stroke: var(--accent); stroke-width: 3.5;
+      }
+      svg .edge path, svg.edge path { fill: none; stroke: var(--border); stroke-width: 1.6; }
+      svg .edge.edge-contains path, svg.edge.edge-contains path { stroke-dasharray: none; }
+      svg .edge.edge-attaches path, svg.edge.edge-attaches path { stroke: var(--accent); stroke-dasharray: 7 4; }
+      svg .edge.edge-communication path, svg.edge.edge-communication path { stroke: #56d364; stroke-dasharray: 2 4; }
+      svg .edge path.edge-hit, svg.edge path.edge-hit { stroke: transparent; stroke-width: 20; fill: none; stroke-dasharray: none; }
+      svg .edge.selected path:not(.edge-hit), svg.edge.selected path:not(.edge-hit) { stroke-width: 3; }
+      svg .edge:focus, svg.edge:focus { outline: none; }
+      svg .edge:focus-visible path:not(.edge-hit), svg.edge:focus-visible path:not(.edge-hit) { stroke: var(--accent); stroke-width: 3; }
+      svg .edge text, svg.edge text { fill: var(--muted); font-size: 10px; }
+      svg .ghost rect { fill: none; stroke: var(--missing); stroke-dasharray: 4 3; }
+      svg .ghost text { fill: var(--missing); font-size: 11px; }
+      svg .badge { fill: var(--muted); font-size: 9.5px; }
+      @media (max-width: 700px) {
+        .app-main { flex-direction: column; }
+        .graph-stage { min-height: 55%; }
+        .details {
+          flex: 0 0 auto; max-width: none; border-left: none;
+          border-top: 1px solid var(--border);
+        }
+        .app-status { flex-basis: 100%; text-align: left; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" class="app"></div>
+    <script src="index.js" defer></script>
+  </body>
+</html>

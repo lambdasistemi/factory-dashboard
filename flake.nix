@@ -1,13 +1,36 @@
 {
-  description = "Documentation build for the Factory Dashboard product record";
+  description = "Factory Dashboard product record and synthetic graph app";
 
   inputs.dev-assets.url = "github:paolino/dev-assets/a9d7371c1118de4026ba6ee3a9c3b54614924b82?dir=mkdocs";
 
-  outputs = { self, dev-assets }:
+  inputs.purescript-overlay = {
+    url = "github:paolino/purescript-overlay/fix/remove-nodePackages";
+    inputs.nixpkgs.follows = "dev-assets/nixpkgs";
+  };
+
+  inputs.mkSpagoDerivation = {
+    url = "github:jeslie0/mkSpagoDerivation";
+    inputs.nixpkgs.follows = "dev-assets/nixpkgs";
+  };
+
+  outputs =
+    {
+      self,
+      dev-assets,
+      purescript-overlay,
+      mkSpagoDerivation,
+    }:
     let
       system = "x86_64-linux";
       shared = dev-assets;
-      pkgs = shared.inputs.nixpkgs.legacyPackages.${system};
+      pkgs = import shared.inputs.nixpkgs {
+        inherit system;
+        overlays = [
+          purescript-overlay.overlays.default
+          mkSpagoDerivation.overlays.default
+        ];
+      };
+      repoRoot = ./.;
       terminal = pkgs.python3Packages.buildPythonPackage {
         pname = "mkdocs-terminal";
         version = "4.8.0";
@@ -16,25 +39,37 @@
           url = "https://files.pythonhosted.org/packages/cd/21/7eb37356eeeaa87be873c806ea84794b3b81285e49a6c7c4a250c66729a6/mkdocs_terminal-4.8.0-py3-none-any.whl";
           sha256 = "86af80cc7152aa61e9058db0a84eefae56e769222e81eb5291ad87e89d3f2922";
         };
-        dependencies = with pkgs.python3Packages; [ jinja2 markdown mkdocs pygments pymdown-extensions ];
+        dependencies = with pkgs.python3Packages; [
+          jinja2
+          markdown
+          mkdocs
+          pygments
+          pymdown-extensions
+        ];
       };
-      docsShell = pkgs.mkShell {
-        packages = [ docsPython pkgs.just ];
-        MERMAID_JS = shared.packages.${system}.mermaid-js;
-      };
-      docsPython = pkgs.python3.withPackages (pythonPackages: [
-        pythonPackages.mkdocs
-        pythonPackages.markdown
-        pythonPackages.pymdown-extensions
-        pythonPackages.pyyaml
-        terminal
-      ]);
+      docsPython = pkgs.python3.withPackages (
+        pythonPackages:
+        with pythonPackages;
+        [
+          mkdocs
+          markdown
+          pymdown-extensions
+          pyyaml
+          terminal
+        ]
+      );
+      purescript = import ./nix/purescript.nix { inherit pkgs repoRoot; };
       documentation = pkgs.stdenvNoCC.mkDerivation {
         pname = "factory-dashboard-docs";
         version = (builtins.fromJSON (builtins.readFile ./.release-please-manifest.json)).".";
         src = pkgs.lib.fileset.toSource {
           root = ./.;
-          fileset = pkgs.lib.fileset.unions [ ./docs ./tools ./mkdocs.yml ./README.md ];
+          fileset = pkgs.lib.fileset.unions [
+            ./docs
+            ./tools
+            ./mkdocs.yml
+            ./README.md
+          ];
         };
         nativeBuildInputs = [ docsPython ];
         buildPhase = ''
@@ -46,18 +81,47 @@
         installPhase = ''
           mkdir -p "$out"
           cp -R build-site/. "$out/"
+          mkdir -p "$out/app"
+          cp ${purescript.web-dist}/index.html ${purescript.web-dist}/index.js "$out/app/"
         '';
         dontFixup = true;
       };
+      checks = import ./nix/checks.nix {
+        inherit pkgs repoRoot documentation purescript;
+      };
+      docsPackages = [
+        docsPython
+        pkgs.just
+      ];
+      appShell = pkgs.mkShell {
+        packages =
+          docsPackages
+          ++ [
+            pkgs.purs
+            pkgs.spago-unstable
+            pkgs.purs-tidy-bin.purs-tidy-0_10_0
+            pkgs.esbuild
+            purescript.nodejs
+          ];
+        MERMAID_JS = shared.packages.${system}.mermaid-js;
+      };
+      docsShell = pkgs.mkShell {
+        packages = docsPackages;
+        MERMAID_JS = shared.packages.${system}.mermaid-js;
+      };
     in
     {
-      devShells.${system}.default = docsShell;
+      devShells.${system} = {
+        default = appShell;
+        docs = docsShell;
+      };
 
       packages.${system} = {
         default = documentation;
         docs = documentation;
+        app = purescript.web-dist;
       };
 
-      checks.${system}.docs = documentation;
+      checks.${system} = checks;
     };
 }
