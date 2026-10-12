@@ -3,6 +3,7 @@
 module Factory.Platform
   ( containerSize
   , focusNode
+  , copyTextImpl
   ) where
 
 import Prelude
@@ -25,3 +26,6 @@ containerSize element = toMaybe <$> containerSizeImpl element
 -- | effect when nothing matches; callers own the selector string.
 focusNode :: String -> Effect Unit
 focusNode selector = focusNodeImpl selector
+
+-- | Copy an operator-requested question; report failure without exposing errors.
+foreign import copyTextImpl :: String -> (Boolean -> Effect Unit) -> Effect Unit

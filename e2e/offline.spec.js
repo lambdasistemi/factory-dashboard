@@ -22,12 +22,12 @@ test('the page makes no requests beyond its own static assets', async ({ context
   await page.goto('/app/');
   await page.locator(N('project-1')).click();
   await page.locator('button', { hasText: 'Zoom in' }).click();
-  await page.locator('button', { hasText: 'Fit' }).click();
-  await page.locator('.scenario-button', { hasText: 'Incomplete records' }).click();
+  await page.locator('button', { hasText: 'Show all' }).click();
+  await chooseExample(page, 'Incomplete records');
   await page.locator(N('ticket-2')).click();
-  await page.locator('.scenario-button', { hasText: 'Empty installation' }).click();
-  await page.locator('.scenario-button', { hasText: 'Refused input' }).click();
-  await page.locator('.scenario-button', { hasText: 'Complete installation' }).click();
+  await chooseExample(page, 'Empty installation');
+  await chooseExample(page, 'Refused input');
+  await chooseExample(page, 'Complete installation');
   await page.locator(N('project-1')).click().catch(() => {});
   // post-load quiet window: nothing may phone home after interactions
   await page.waitForTimeout(1200);
@@ -45,7 +45,7 @@ test('no worker scripts or websocket connections are opened', async ({ context, 
   const sockets = [];
   page.on('websocket', (ws) => sockets.push(ws.url()));
   await page.goto('/app/');
-  await page.locator('.scenario-button', { hasText: 'Incomplete records' }).click();
+  await chooseExample(page, 'Incomplete records');
   await page.waitForTimeout(500);
   expect(sockets).toEqual([]);
   expect(page.workers()).toEqual([]);
@@ -63,3 +63,10 @@ test('detector flags a seeded external request on the mutated copy', async ({ co
 });
 
 const N = (key) => `[data-node-id="synthetic:demo-installation/${key}"]`;
+
+async function chooseExample(page, label) {
+  const menu = page.locator('.demo-controls');
+  if (await menu.getAttribute('open') === null) await menu.locator('summary').click();
+  await page.locator('.scenario-button', { hasText: label }).click();
+  await menu.locator('summary').click();
+}

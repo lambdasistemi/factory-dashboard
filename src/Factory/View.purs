@@ -8,16 +8,18 @@ module Factory.View
 
 import Prelude
 
-import Data.Array (filter, find, head, index, length, mapMaybe, null, mapWithIndex, takeWhile, uncons)
+import Data.Array (filter, find, head, index, length, mapMaybe, null, nub, mapWithIndex, takeWhile, uncons)
 import Data.Either (Either(..))
 import Data.Foldable (maximum, minimum)
-import Data.Int (toNumber)
+import Data.Int (toNumber, fromString)
 import Data.Map as Map
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.String (joinWith)
+import Data.String.CodeUnits as CU
 import Data.Tuple (Tuple(..))
 import Effect.Class (liftEffect)
 
+import Effect.Aff (makeAff, nonCanceler)
 import Effect.Aff.Class (class MonadAff)
 import Factory.LayoutEngine as LayoutEngine
 
@@ -53,6 +55,7 @@ import Factory.Domain
   , attachedRoles
   , containmentChildren
   , containmentParent
+  , incidentEdges
   , kindLabel
   , lookupNode
   , nodeIds
@@ -60,7 +63,7 @@ import Factory.Domain
   , relationLabel
   )
 import Factory.Layout (Position, Geometry, layoutInput, nodeKey, edgeKey, titleLines, nodeSize)
-import Factory.Platform (containerSize, focusNode)
+import Factory.Platform (containerSize, focusNode, copyTextImpl)
 import Factory.Scenarios (defaultScenario, scenarios)
 import Factory.ViewState
   ( ContextView(..)
@@ -86,6 +89,7 @@ type State =
   , focused :: Maybe ScopedId
   , geometry :: Maybe Geometry
   , layoutError :: Maybe String
+  , copied :: Maybe Boolean
   , revision :: Int
   , dragging :: Maybe { x :: Number, y :: Number }
   }
@@ -93,6 +97,7 @@ type State =
 data Action
   = Init
   | LayoutFinished Int (Either String Geometry)
+  | CopyQuestion String
   | PickNode String
   | SwitchScenario String
   | SelectNode ScopedId
@@ -137,6 +142,7 @@ component =
     , geometry: Nothing
     , layoutError: Nothing
     , revision: 0
+    , copied: Nothing
     , dragging: Nothing
     }
 
@@ -155,6 +161,12 @@ component =
         Right geometry -> do
           H.modify_ \s -> s { geometry = Just geometry }
           measureAndFit
+
+    CopyQuestion question -> do
+      copied <- H.liftAff $ makeAff \done -> do
+        copyTextImpl question (done <<< Right)
+        pure nonCanceler
+      H.modify_ \st -> st { copied = Just copied }
 
     PickNode key -> do
       st <- H.get
@@ -181,10 +193,10 @@ component =
       requestLayout
 
     SelectNode id ->
-      H.modify_ \s -> s { view = s.view { selection = NodeSelected id } }
+      H.modify_ \s -> s { view = s.view { selection = NodeSelected id }, copied = Nothing }
 
     SelectEdge id ->
-      H.modify_ \s -> s { view = s.view { selection = EdgeSelected id } }
+      H.modify_ \s -> s { view = s.view { selection = EdgeSelected id }, copied = Nothing }
 
     ClearSelection ->
       H.modify_ \s -> s { view = s.view { selection = NoSelection } }
@@ -368,17 +380,20 @@ component =
   render st =
     HH.div [ HP.class_ (H.ClassName "app") ]
       [ HH.header [ HP.class_ (H.ClassName "app-header") ]
-          [ HH.h1_ [ HH.text "Factory graph" ]
-          , HH.nav [ HP.class_ (H.ClassName "scenario-bar") ]
-              (map (scenarioButton st) scenarios)
+          [ HH.h1_ [ HH.text "Factory dashboard" ]
+          , HH.span [ HP.class_ (H.ClassName "demo-label") ] [ HH.text "Example factory" ]
+          , HH.details [ HP.class_ (H.ClassName "demo-controls") ]
+              [ HH.summary_ [ HH.text "Try examples" ]
+              , HH.nav [ HP.class_ (H.ClassName "scenario-bar") ] (map (scenarioButton st) scenarios)
+              ]
           , HH.p [ HP.class_ (H.ClassName "app-status") ] [ HH.text (statusText st) ]
           , HH.button [ HP.id "factory-dashboard-palette-toggle", HP.attr (AttrName "aria-label") "Switch theme", HP.attr (AttrName "hidden") "" ] []
           ]
       , HH.div [ HP.class_ (H.ClassName "record-picker") ]
           [ HH.label_
-              [ HH.text "Go to record "
+              [ HH.text "Find an item "
               , HH.select [ HE.onValueChange PickNode ]
-                  ( [ HH.option [ HP.value "" ] [ HH.text "Choose a record…" ] ] <> case st.doc of
+                  ( [ HH.option [ HP.value "" ] [ HH.text "Choose work or a role…" ] ] <> case st.doc of
                       Left _ -> []
                       Right graph -> mapMaybe (\id -> map (\n -> HH.option [ HP.value (nodeKey id) ] [ HH.text (kindLabel n.kind <> ": " <> n.title) ]) (lookupNode graph id)) (nodeIds graph)
                   )
@@ -427,7 +442,7 @@ component =
           ]
     Left _ ->
       [ HH.div [ HP.class_ (H.ClassName "empty-state") ]
-          [ HH.text "Input refused — the refusal list is shown beside the graph." ]
+          [ HH.text "This example could not be loaded. See the problems in the panel." ]
       ]
 
   overlay =
@@ -435,13 +450,13 @@ component =
       [ HH.div [ HP.class_ (H.ClassName "view-controls") ]
           [ HH.button [ HE.onClick \_ -> Navigate (ZoomBy 1.25) ] [ HH.text "Zoom in" ]
           , HH.button [ HE.onClick \_ -> Navigate (ZoomBy 0.8) ] [ HH.text "Zoom out" ]
-          , HH.button [ HE.onClick \_ -> FitNow ] [ HH.text "Fit" ]
-          , HH.button [ HE.onClick \_ -> Navigate ResetView ] [ HH.text "Reset view" ]
+          , HH.button [ HE.onClick \_ -> FitNow ] [ HH.text "Show all" ]
+          , HH.button [ HE.onClick \_ -> Navigate ResetView ] [ HH.text "Reset zoom" ]
           ]
       , HH.div [ HP.class_ (H.ClassName "legend") ]
-          [ HH.span_ [ legendLine "edge-contains", HH.text " contains → parent to child" ]
-          , HH.span_ [ legendLine "edge-attaches", HH.text " attaches role → responsibility" ]
-          , HH.span_ [ legendLine "edge-communication", HH.text " recorded communication → about work" ]
+          [ HH.span_ [ legendLine "edge-contains", HH.text " Part of" ]
+          , HH.span_ [ legendLine "edge-attaches", HH.text " Responsible role" ]
+          , HH.span_ [ legendLine "edge-communication", HH.text " Message about work" ]
           ]
       ]
 
@@ -665,10 +680,26 @@ component =
       ]
     Right graph -> case resolveContext graph st.view.expansion st.view.selection of
       NoContext ->
-        [ HH.h2_ [ HH.text "Nothing selected" ]
+        [ HH.h2_ [ HH.text "Your factory at a glance" ]
         , HH.p_
             [ HH.text
-                "Select a record or connection to inspect its context. Every node and connection is reachable with Tab and the arrow keys; Enter selects, c collapses, f fits."
+                "Choose work on the graph to see its progress, who is responsible and the messages connected to it."
+            ]
+        , HH.section [ HP.class_ (H.ClassName "overview-updates") ]
+            [ HH.h3_ [ HH.text "Updates to check" ]
+            , HH.p_ [ HH.text "These items have old or missing information." ]
+            , HH.div [ HP.class_ (H.ClassName "related-items") ]
+                ( map (itemButton graph)
+                    ( filter
+                        ( \id -> case lookupNode graph id of
+                            Just node -> case node.quality of
+                              Known _ -> false
+                              _ -> true
+                            Nothing -> false
+                        )
+                        (nodeIds graph)
+                    )
+                )
             ]
         ]
       UnavailableContext message ->
@@ -683,7 +714,7 @@ component =
                     <> info.behindLabel
                     <> "; "
                     <> show info.hiddenCount
-                    <> " records are hidden with it."
+                    <> " items are hidden with it."
                 )
             ]
         , HH.p_
@@ -695,55 +726,87 @@ component =
             ]
         ]
       EdgeContext info ->
-        [ HH.h2_ [ HH.text info.kindName ]
+        [ HH.p [ HP.class_ (H.ClassName "eyebrow") ] [ HH.text "Connection" ]
+        , HH.h2_
+            [ HH.text
+                ( case info.edge.kind of
+                    Contains -> "Part of the same work"
+                    AttachesRole -> "Who is responsible"
+                    RecordsCommunication -> "Message about this work"
+                )
+            ]
         , HH.p_
             [ HH.text
                 ( case info.edge.kind of
-                    Contains -> "Recorded membership: parent work item to child. This is not an execution dependency."
-                    AttachesRole -> "A recorded responsibility associated with this work. The role is not a worker identity."
-                    RecordsCommunication -> "This role has a recorded communication about the work item. This does not establish a wait or message recipient."
+                    Contains -> endpointText info.toName <> " belongs to " <> endpointText info.fromName <> "."
+                    AttachesRole -> endpointText info.toName <> " has a responsibility for " <> endpointText info.fromName <> "."
+                    RecordsCommunication -> endpointText info.fromName <> " has communicated about " <> endpointText info.toName <> "."
                 )
             ]
-        , HH.dl_
-            [ HH.dt_ [ HH.text "From" ]
-            , HH.dd_ [ HH.text (endpointText info.fromName) ]
-            , HH.dt_ [ HH.text "To" ]
-            , HH.dd_ [ HH.text (endpointText info.toName) ]
-            , HH.dt_ [ HH.text "Reference" ]
-            , HH.dd_ [ HH.text (edgeString info.edge.id) ]
+        , HH.div [ HP.class_ (H.ClassName "related-items") ]
+            [ itemButton graph info.edge.from, itemButton graph info.edge.to ]
+        , HH.details [ HP.class_ (H.ClassName "technical") ]
+            [ HH.summary_ [ HH.text "Source details" ]
+            , HH.p_ [ HH.text info.kindName, HH.text (" · " <> edgeString info.edge.id) ]
             ]
         ]
       NodeContext info ->
-        [ HH.h2_ [ HH.text info.node.title ]
-        , HH.p [ HP.class_ (H.ClassName "kind") ] [ HH.text (kindLabel info.node.kind) ]
-        , HH.dl_
-            [ HH.dt_ [ HH.text "Status" ]
-            , HH.dd_ [ HH.text info.node.status ]
-            , HH.dt_ [ HH.text "Summary" ]
-            , HH.dd_ [ HH.text info.node.summary ]
-            , HH.dt_ [ HH.text "Source" ]
-            , HH.dd_ [ HH.text (fromMaybe "none recorded" info.node.sourceRef) ]
-            , HH.dt_ [ HH.text "Observation" ]
-            , HH.dd_
-                [ HH.span
-                    [ HP.class_ (H.ClassName ("quality " <> qualityClass info.node.quality)) ]
-                    [ HH.text (qualityLabel info.node.quality) ]
-                , HH.text (qualityDetail info.node.quality)
+        [ HH.section [ HP.class_ (H.ClassName "work-summary") ]
+            [ HH.p [ HP.class_ (H.ClassName "eyebrow") ] [ HH.text (kindLabel info.node.kind) ]
+            , HH.h2_ [ HH.text info.node.title ]
+            , HH.p [ HP.class_ (H.ClassName "work-status") ] [ HH.text info.node.status ]
+            , HH.p_ [ HH.text info.node.summary ]
+            , HH.p [ HP.class_ (H.ClassName ("quality " <> qualityClass info.node.quality)) ] [ HH.text (readerQuality info.node.quality) ]
+            ]
+        , HH.section [ HP.class_ (H.ClassName "answer-panel") ]
+            [ HH.h3_ [ HH.text "Who can answer" ]
+            , case info.roles of
+                [] -> HH.p_ [ HH.text (if info.node.kind == Role then "This role's work is shown by its connections." else "No responsible role is listed yet.") ]
+                roles -> HH.div [ HP.class_ (H.ClassName "related-items") ] (map (\role -> itemButton graph role.id) roles)
+            , HH.details [ HP.class_ (H.ClassName "question") ]
+                [ HH.summary_ [ HH.text "Ask about this" ]
+                , HH.p_ [ HH.text "Copy this question into a worker's session." ]
+                , HH.textarea [ HP.value (questionFor info.node.title info.node.summary info.node.status (if info.node.kind == Role then [ info.node.title ] else map (_.title) info.roles)), HP.readOnly true, HP.rows 4, HP.attr (AttrName "aria-label") "Question about selected work" ]
+                , HH.button [ HE.onClick \_ -> CopyQuestion (questionFor info.node.title info.node.summary info.node.status (if info.node.kind == Role then [ info.node.title ] else map (_.title) info.roles)) ] [ HH.text "Copy question" ]
+                , HH.p [ HP.attr (AttrName "role") "status" ]
+                    [ HH.text
+                        ( case st.copied of
+                            Just true -> "Copied. Paste it into your worker's session."
+                            Just false -> "Select and copy the question above."
+                            Nothing -> ""
+                        )
+                    ]
                 ]
-            , HH.dt_ [ HH.text "Parent" ]
-            , HH.dd_ [ HH.text (fromMaybe "no parent recorded" info.parentLabel) ]
-            , HH.dt_ [ HH.text "Attached roles" ]
-            , HH.dd_
-                [ HH.text
-                    ( case info.roles of
-                        [] -> "no attachment recorded"
-                        roles -> joinWith ", " (map (_.title) roles)
+            ]
+        , HH.section [ HP.class_ (H.ClassName "connections-panel") ]
+            [ HH.h3_ [ HH.text "Connected work" ]
+            , HH.div [ HP.class_ (H.ClassName "related-items") ]
+                ( map (itemButton graph)
+                    ( filter
+                        ( \id -> case lookupNode graph id of
+                            Just node -> node.kind /= Role
+                            Nothing -> true
+                        )
+                        (nub (map (\edge -> if edge.from == info.node.id then edge.to else edge.from) (incidentEdges graph info.node.id)))
                     )
+                )
+            , HH.p_ [ HH.text (show (length info.communications) <> (if length info.communications == 1 then " message about this item" else " messages about this item")) ]
+            , HH.details [ HP.class_ (H.ClassName "technical") ]
+                [ HH.summary_ [ HH.text "Source details" ]
+                , HH.p_ [ HH.text (fromMaybe "No source listed" info.node.sourceRef) ]
+                , HH.p_ [ HH.text (qualityLabel info.node.quality <> qualityDetail info.node.quality) ]
                 ]
-            , HH.dt_ [ HH.text "Recorded communications" ]
-            , HH.dd_ [ HH.text (show (length info.communications)) ]
             ]
         ]
+
+  itemButton graph id = HH.button
+    [ HE.onClick \_ -> SelectNode id ]
+    [ HH.text
+        ( case lookupNode graph id of
+            Just node -> node.title
+            Nothing -> "Item not available"
+        )
+    ]
 
   -- ------------------------------------------------------------ helpers
 
@@ -752,25 +815,19 @@ component =
     Right graph ->
       let
         visible = deriveVisible graph st.view.expansion
-        label = case find (\s -> s.key == st.scenarioKey) scenarios of
-          Just s -> s.label
-          Nothing -> ""
       in
-        if length visible.nodes == 0 then label <> ": no records yet"
+        if length visible.nodes == 0 then "No work to show"
         else if visible.hiddenCount > 0 then
-          label
-            <> ": "
-            <> show (length visible.nodes)
-            <> " records, "
+          show (length visible.nodes)
+            <> " items · "
             <> show (length visible.edges)
-            <> " connections, "
+            <> " connections · "
             <> show visible.hiddenCount
             <> " hidden"
         else
-          label
-            <> ": "
+          ""
             <> show (length visible.nodes)
-            <> " records, "
+            <> " items · "
             <> show (length visible.edges)
             <> " connections"
 
@@ -880,3 +937,32 @@ idIn id arr = length (filter (_ == id) arr) > 0
 
 unconsOf :: forall a. Array a -> Maybe { head :: a, tail :: Array a }
 unconsOf = uncons
+
+-- Reader-facing language; evidence states retain their domain meaning.
+readerQuality :: Quality -> String
+readerQuality = case _ of
+  Known q -> "Last checked " <> readableDate q.freshness
+  Stale q -> "Needs a fresh update · last checked " <> readableDate q.asOf
+  Unknown -> "Not yet checked"
+  MissingReference -> "Source information is missing"
+
+questionFor :: String -> String -> String -> Array String -> String
+questionFor title summary status roles =
+  "Please explain what is happening with “" <> title <> "” and what should happen next.\n"
+    <> "Current status: "
+    <> status
+    <> ".\n"
+    <> summary
+    <> "\n"
+    <>
+      ( if null roles then "No responsible role is listed in the dashboard. Please help identify who can answer."
+        else "Listed responsibilities: " <> joinWith ", " roles <> "."
+      )
+
+readableDate :: String -> String
+readableDate text = case fromString (CU.slice 5 7 text), fromString (CU.slice 8 10 text) of
+  Just month, Just day | CU.slice 4 5 text == "-" && CU.slice 7 8 text == "-" ->
+    case index [ "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ] (month - 1) of
+      Just name -> show day <> " " <> name <> " " <> CU.take 4 text
+      Nothing -> text
+  _, _ -> text

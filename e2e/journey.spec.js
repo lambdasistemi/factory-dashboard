@@ -53,7 +53,7 @@ test('shows the connected synthetic installation with typed relationships', asyn
   await openGraph(page);
   await expect(page.locator('svg.graph .node')).toHaveCount(10);
   await expect(page.locator('svg.graph .ghost')).toHaveCount(1);
-  for (const label of ['contains', 'attaches role', 'recorded communication']) {
+  for (const label of ['Part of', 'Responsible role', 'Message about work']) {
     await expect(page.locator('.legend')).toContainText(label);
   }
   await expect(page.locator(N('project-1'))).toBeVisible();
@@ -145,13 +145,13 @@ test('pan, zoom, fit and reset the viewport', async ({ page }) => {
   await page.mouse.up();
   const panned = await transform();
   expect(panned).not.toBe(zoomed);
-  await page.locator('button', { hasText: 'Fit' }).click();
+  await page.locator('button', { hasText: 'Show all' }).click();
   const fitted = await transform();
   expect(fitted).not.toBe(panned);
   await expect(page.locator(N('project-1'))).toBeVisible();
-  await page.locator('button', { hasText: 'Reset view' }).click();
+  await page.locator('button', { hasText: 'Reset zoom' }).click();
   await expect.poll(transform, { timeout: 4000 }).toBe('translate(0.0,0.0) scale(1.0)');
-  await page.locator('button', { hasText: 'Fit' }).click();
+  await page.locator('button', { hasText: 'Show all' }).click();
   await expect.poll(transform, { timeout: 4000 }).toBe(fitted);
 });
 
@@ -162,9 +162,9 @@ test('works at a narrow width', async ({ page }) => {
     () => document.scrollingElement.scrollWidth - document.documentElement.clientWidth
   );
   expect(overflow).toBeLessThanOrEqual(0);
-  await page.locator('button', { hasText: 'Fit' }).click();
+  await page.locator('button', { hasText: 'Show all' }).click();
   await expect(page.locator(N('project-1'))).toBeVisible();
-  await page.locator('.scenario-button', { hasText: 'Empty installation' }).click();
+  await chooseExample(page, 'Empty installation');
   await expect(page.locator('.empty-state')).toBeVisible();
   const overflowAfter = await page.evaluate(
     () => document.scrollingElement.scrollWidth - document.documentElement.clientWidth
@@ -174,31 +174,31 @@ test('works at a narrow width', async ({ page }) => {
 
 test('empty installation is explicit', async ({ page }) => {
   await openGraph(page);
-  await page.locator('.scenario-button', { hasText: 'Empty installation' }).click();
+  await chooseExample(page, 'Empty installation');
   await expect(page.locator('.empty-state')).toBeVisible();
-  await expect(page.locator('.app-status')).toContainText('no records');
+  await expect(page.locator('.app-status')).toContainText('No work to show');
   await expect(page.locator('svg.graph .node')).toHaveCount(0);
 });
 
 test('incomplete records stay honestly labelled and distinct', async ({ page }) => {
   await openGraph(page);
-  await page.locator('.scenario-button', { hasText: 'Incomplete records' }).click();
+  await chooseExample(page, 'Incomplete records');
   await expect(page.locator('svg.graph .node')).toHaveCount(4);
   await page.locator(N('milestone-3')).click();
-  await expect(page.locator('.details')).toContainText('no parent recorded');
-  await expect(page.locator('.details .quality')).toContainText('unknown');
+  await expect(page.locator('.details')).toContainText('Connected work');
+  await expect(page.locator('.details .quality')).toContainText('Not yet checked');
   await page.locator(N('role-3')).click();
-  await expect(page.locator('.details')).toContainText('no attachment recorded');
-  await expect(page.locator('.details .quality')).toContainText('missing reference');
+  await expect(page.locator('.details')).toContainText("This role's work is shown by its connections.");
+  await expect(page.locator('.details .quality')).toContainText('Source information is missing');
   await page.locator(N('ticket-2')).click();
-  await expect(page.locator('.details .quality')).toContainText('stale');
+  await expect(page.locator('.details .quality')).toContainText('Needs a fresh update');
   await page.locator(N('project-2')).click();
-  await expect(page.locator('.details .quality')).toContainText('known');
+  await expect(page.locator('.details .quality')).toContainText('Last checked');
 });
 
 test('invalid input is visibly refused with redacted reasons', async ({ page }) => {
   await openGraph(page);
-  await page.locator('.scenario-button', { hasText: 'Refused input' }).click();
+  await chooseExample(page, 'Refused input');
   const refusal = page.locator('.refusal');
   await expect(refusal).toBeVisible();
   await expect(page.locator('.refusal li')).toHaveCount(6);
@@ -423,7 +423,7 @@ test('a late layout cannot replace the selected scenario', async ({ page }) => {
     });
   });
   await page.goto('/app/');
-  await page.getByRole('button', { name: 'Incomplete records', exact: true }).click();
+  await chooseExample(page, 'Incomplete records');
   await expect(page.locator('svg.graph .node')).toHaveCount(4);
   await page.waitForTimeout(900);
   await expect(page.locator('svg.graph .node')).toHaveCount(4);
@@ -476,4 +476,51 @@ test('light graph text contrasts with card and toolbar backgrounds', async ({ pa
     });
   });
   expect(Math.min(...ratios)).toBeGreaterThanOrEqual(4.5);
+});
+
+async function chooseExample(page, label) {
+  const menu = page.locator('.demo-controls');
+  if (await menu.getAttribute('open') === null) await menu.locator('summary').click();
+  await page.locator('.scenario-button', { hasText: label }).click();
+  await menu.locator('summary').click();
+}
+
+test('work summary offers useful next steps without exposing source fields', async ({ page }) => {
+  await openGraph(page);
+  await expect(page.locator('.demo-controls')).not.toHaveAttribute('open', '');
+  await expect(page.locator('.details')).toContainText('Updates to check');
+  await page.locator(N('ticket-1')).click();
+  await expect(page.locator('.details')).toContainText('Who can answer');
+  await expect(page.locator('.details')).toContainText('Graph Maintainer');
+  await expect(page.getByText('records/ticket-1', { exact: true })).not.toBeVisible();
+  await page.locator('.details').getByRole('button', { name: 'Graph Maintainer', exact: true }).click();
+  await expect(page.locator('.details h2')).toHaveText('Graph Maintainer');
+  await expect(page.locator('svg.graph .node')).toHaveCount(10);
+});
+
+test('the question copies selected work and responsibility without sending it', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await openGraph(page);
+  await page.locator(N('ticket-1')).click();
+  await page.locator('.question summary').click();
+  await page.getByRole('button', { name: 'Copy question', exact: true }).click();
+  await expect(page.locator('.question [role="status"]')).toContainText('Copied');
+  const question = await page.evaluate(() => navigator.clipboard.readText());
+  expect(question).toContain('Synthetic graph ticket');
+  expect(question).toContain('Graph Maintainer');
+  expect(question).toContain('in progress');
+  await page.locator(N('project-1')).click();
+  await page.locator('.question summary').click();
+  await expect(page.locator('.question textarea')).toHaveValue(/Factory Demo/);
+  await expect(page.locator('.question [role="status"]')).toBeEmpty();
+});
+
+test('a browser without clipboard access still offers a usable question', async ({ page }) => {
+  await page.addInitScript(() => Object.defineProperty(navigator, 'clipboard', { value: undefined }));
+  await openGraph(page);
+  await page.locator(N('ticket-1')).click();
+  await page.locator('.question summary').click();
+  await page.getByRole('button', { name: 'Copy question', exact: true }).click();
+  await expect(page.locator('.question [role="status"]')).toContainText('Select and copy');
+  await expect(page.locator('.question textarea')).toHaveValue(/Synthetic graph ticket/);
 });

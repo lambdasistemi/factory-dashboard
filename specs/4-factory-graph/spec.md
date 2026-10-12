@@ -28,3 +28,11 @@ Open the synthetic fixture; follow project to milestone, epic issue, ticket issu
 ## Record ceiling
 
 This specification is limited to 100 lines and 10 KiB. Requirements above are acceptance-blocking by explicit ticket contract, including privacy and usable navigation; no financial execution is involved.
+
+## Operator review: surrounding interface
+
+The operator accepted the ELK graph quality and rejected the surrounding interface as technical and unusable. The control-room prototype remains the reference for the product experience: selections explain the situation and lead to a useful next step while the global graph remains available.
+
+The primary panel shows the work summary, status, named role responsibilities and connected work. Source identities, provenance and raw timestamps belong in a closed technical disclosure. Examples belong in a secondary menu. Labels use the operator's language. Old or missing information can be shown directly, but must not be presented as an inferred decision or invariant violation.
+
+Every selected work item can prepare a question carrying its title, summary, status and recorded responsibilities. The operator copies that question into an existing worker session; the dashboard sends no message and fabricates no answer. Missing responsibility remains explicit. Live conversations retain their later-milestone scope.

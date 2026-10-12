@@ -23,3 +23,8 @@ export function containerSizeImpl(element) {
     return { width: rect.width, height: rect.height };
   };
 }
+
+export const copyTextImpl = text => done => () => {
+  if (!navigator.clipboard) { done(false)(); return; }
+  navigator.clipboard.writeText(text).then(() => done(true)(), () => done(false)());
+};

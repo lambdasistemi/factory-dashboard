@@ -18,9 +18,9 @@ graph TD
     role -.->|recorded communication| ticket
 ```
 
-## Scenarios
+## Try examples
 
-The app ships four synthetic scenarios you can switch between at any time.
+Open **Try examples** to switch between four sample factories.
 
 | Scenario | What it shows |
 | --- | --- |
@@ -36,9 +36,13 @@ The app ships four synthetic scenarios you can switch between at any time.
 - **Enter** or **Space** selects the focused record or connection.
 - **c** collapses or expands the focused record's branch.
 - **f** fits the graph into view; **+** and **-** zoom; **0** resets the viewport; **Escape** clears the selection.
-- The toolbar buttons do the same for pointer users; dragging the graph with a mouse or one finger pans it. **Go to record** selects and centres a card at readable size, especially useful on a narrow screen.
+- The toolbar buttons do the same for pointer users; dragging the graph with a mouse or one finger pans it. **Find an item** selects and centres a card at readable size, especially useful on a narrow screen.
 
 A collapsed branch keeps its visible handle. If the selected record ends up inside a collapsed branch, the context panel says exactly what it is behind and offers an Expand button — the selection never silently disappears.
+
+## Ask about selected work
+
+Select work to see its summary and status. **Who can answer** shows the associated roles; their buttons and **Connected work** let you follow the graph. **Ask about this** prepares a question containing your selection. Copy it into a worker’s session. The dashboard does not send it. **Source details** contains identifiers and full timestamps when you need them. The overview lists items with old or missing information under **Updates to check**; it does not infer that they need an operator decision.
 
 ## The input contract
 
