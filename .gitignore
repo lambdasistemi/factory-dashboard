@@ -8,3 +8,12 @@ site/
 
 # Mermaid bundle linked in by tools/docs-shell-check.sh
 docs/javascripts/mermaid.min.js
+
+# PureScript build output
+output/
+.spago/
+dist/index.js
+staging/
+node_modules/
+.spec-results/
+test-results/

@@ -53,6 +53,8 @@ An installation supplies its own repositories, local input locations, access pol
 
 Its child tickets are **Configure a private, read-only installation** and **Verify the first release's privacy and observation boundaries**. The latter verifies the integrated product and records the operator's release approval; passing a build alone does not permit release.
 
+Before real-source integration, the [system boundaries](system-boundaries.md) and [protocol contracts](protocols.md) must be agreed and translated into versioned schemas and conformance fixtures. The same artifact must work in a second factory with configuration changes only.
+
 ### Ticket order and dependencies
 
 | Order | Ticket | Depends on | Runnable result |

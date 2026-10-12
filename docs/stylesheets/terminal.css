@@ -29,3 +29,17 @@ body { padding-top: 1.5rem; }
   .terminal-nav { align-items: flex-start; }
   .terminal-menu ul { flex-direction: row; align-items: center; }
 }
+
+/* Explicit light colours keep links, navigation and secondary text readable. */
+:root[data-factory-dashboard-palette="light"] {
+  --background-color: #ffffff;
+  --font-color: #17212b;
+  --invert-font-color: #ffffff;
+  --primary-color: #0756a3;
+  --secondary-color: #424b57;
+  --tertiary-color: #424b57;
+  --error-color: #b42318;
+  --code-bg-color: #f1f4f8;
+  --progress-bar-background: #d8dee8;
+  --progress-bar-fill: #0756a3;
+}

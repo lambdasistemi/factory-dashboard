@@ -1,0 +1,11 @@
+{
+  "name": "factory-dashboard",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@playwright/test": "1.54.1"
+  },
+  "dependencies": {
+    "elkjs": "0.12.0"
+  }
+}

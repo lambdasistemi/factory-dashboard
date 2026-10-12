@@ -1,0 +1,95 @@
+# Explore the factory graph
+
+## Who this is for and what you can do
+
+As a factory operator, you open one connected graph of the synthetic factory installation and explore its work structure without losing the global view: projects contain milestones, milestones contain epics and tickets, tickets contain pull requests, roles attach to work as recorded responsibilities, and recorded communications connect roles to the work they discussed.
+
+You can select any record or connection to read its permitted context in the details pane beside the graph, collapse a branch you are done with and expand it later, pan and zoom, fit everything back into view, and do all of it with the keyboard alone. The installation can also be explored on a narrow screen. When the record is honest about its own gaps, the graph shows that too: unknown observations, stale observations and missing references each carry their own visible label, and nothing is invented to fill a gap.
+
+The graph below is the shape of the model the app renders. Containment is a work-membership relation; role attachment and recorded communication are their own distinct relations and never implied by proximity.
+
+```mermaid
+graph TD
+    project[Project] -->|contains| milestone[Milestone]
+    milestone -->|contains| epic[Epic issue]
+    epic -->|contains| ticket[Ticket issue]
+    ticket -->|contains| pr[Pull request]
+    ticket -.->|attaches role| role[Role]
+    role -.->|recorded communication| ticket
+```
+
+## Try examples
+
+Open **Try examples** to switch between four sample factories.
+
+| Scenario | What it shows |
+| --- | --- |
+| Complete installation | The full synthetic factory: every kind, every relation, one unresolved external reference, and a pull-request title that contains markup-looking text rendered as plain text. |
+| Empty installation | An installation with no records yet. The empty state is explicit; nothing is invented. |
+| Incomplete records | An orphan milestone with no parent, an unattached role, a stale ticket and an unknown milestone — each labelled honestly. |
+| Refused input | A document that breaks the input contract in several ways at once. The app refuses it visibly and lists every categorical reason without echoing any record value. |
+
+## Keyboard and controls
+
+- **Tab** reaches every record, missing-reference marker and connection in the graph.
+- **Arrow keys** move focus along the work chain: up to the parent, down to the first child or attached role, left and right between siblings.
+- **Enter** or **Space** selects the focused record or connection.
+- **c** collapses or expands the focused record's branch.
+- **f** fits the graph into view; **+** and **-** zoom; **0** resets the viewport; **Escape** clears the selection.
+- The toolbar buttons do the same for pointer users; dragging the graph with a mouse or one finger pans it. The lane selector narrows the graph to one epic. Epics and Workers toggle work and recorded roles; at least one stays on.
+
+A collapsed branch keeps its visible handle. If the selected record ends up inside a collapsed branch, the context panel says exactly what it is behind and offers an Expand button — the selection never silently disappears.
+
+## Ask about selected work
+
+Select work to see its summary and status. **Who can answer** shows the associated roles; their buttons and **Connected work** let you follow the graph. **Ask about this** prepares a question containing your selection. Copy it into a worker’s session. The dashboard does not send it. **Source details** contains identifiers and full timestamps when you need them. The overview lists items with old or missing information under **What needs attention**; it does not infer that they need an operator decision.
+
+## The input contract
+
+The synthetic installation is a JSON document. The decoder accepts only the fields listed here; anything else is refused with a categorical reason. Refusal messages name the field and its location, never the value, so a rejected document cannot leak its contents through the refusal.
+
+Every document starts with the schema marker `"factory-graph/1"` and two arrays, `nodes` and `edges`.
+
+A node carries:
+
+- `identity` — an object with a non-empty `namespace` and `key`. The pair is the record's stable identity everywhere in the app.
+- `kind` — one of `project`, `milestone`, `epic-issue`, `ticket-issue`, `pull-request`, `role`.
+- `title`, `summary`, `status` — approved display text.
+- `sourceRef` — a source reference, or `null` when none exists. Roles must use `null`: role records carry no implementation identity, and a role that tries to carry one is refused.
+- `quality` — the observation state:
+  - `{ "state": "known", "provenance": …, "freshness": … }`
+  - `{ "state": "unknown" }`
+  - `{ "state": "stale", "provenance": …, "asOf": … }`
+  - `{ "state": "missing-reference" }`
+
+An edge carries an `identity` (non-empty `source` and `key`), a `kind`, and the two endpoint identities `from` and `to`. The three relationship kinds and their endpoint rules are:
+
+- `contains` — work membership; the parent must sit strictly above the child in the project → milestone → epic → ticket → pull-request chain.
+- `attaches-role` — from a work record to a role.
+- `records-communication` — from a role to a work record.
+
+Edge endpoints must be distinct. A reference to a well-formed identity that is not present in the document is preserved, not rejected: it appears in the graph as an explicit missing-reference marker.
+
+## Try the app
+
+The runnable synthetic graph is published next to this guide on the site: [open the app](../app/). Everything it loads comes from the same static instance — the page makes no requests beyond its own assets, starts no worker, and writes no factory files. It stores only your theme preference in this browser.
+
+## Layout and meaning
+
+The actual application uses ELK Layered with orthogonal routing. Arrowheads show the recorded direction. Cards state their kind explicitly; purple role cards represent responsibilities, not private worker identities. Contains means membership, not an execution dependency. Role attachment does not imply exclusive ownership, and a communication edge records discussion about work, not a wait or its recipient. Select a connection to read its meaning.
+
+Layout uses only scoped identifiers, card dimensions and connections. ELK 0.12.0 is pinned and bundled locally, with no CDN or browser worker. Engine output is validated before rendering; late results from a previous scenario are ignored. Collapsing a branch keeps the remaining card positions and viewport stable. Long titles are bounded on cards and remain available in the tooltip and context panel.
+
+## Theme
+
+Use the sun/moon button at the top right of the graph or documentation to switch between light and dark. Both pages share the same saved preference in this browser and follow the device preference until you choose. The choice survives reloads and later visits when browser storage is available.
+
+## Check the factory and prepare a repair prompt
+
+The interface follows the JavaScript factory control room: summary tiles, Epics/Workers toggles, a lane selector, running/attention filters, stable branch highlighting, and a graph/details split. Drag the divider or use its arrow keys to resize it. On a narrow screen the panes stack.
+
+**Rules** shows results and the evidence each rule requires. A missing endpoint is a broken reference. Stale or unknown observations are coverage findings, not proof of worker inactivity. Click a finding to inspect its graph context; **Copy prompt** includes the evidence, recorded candidate recipients, request and green condition. Clipboard failure leaves the prompt available for manual copying. A prompt never clears a finding: only changed recorded evidence can do that.
+
+The current synthetic graph does not carry claims, blocking obligations, exact question identities or pause intent. A–H remain **Cannot check** until those facts are provided. The example is not a live factory census. The long-term goal is all applicable protocol invariants with actionable prompts before direct dashboard-to-worker communication.
+
+Developer fixture switching is available only at the explicit test URL `?examples=1`; it is absent from the ordinary operator interface.
