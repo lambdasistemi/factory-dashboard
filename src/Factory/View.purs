@@ -63,7 +63,9 @@ import Factory.Domain
   , relationLabel
   )
 import Factory.Layout (Position, Geometry, layoutInput, nodeKey, edgeKey, titleLines, nodeSize)
-import Factory.Platform (containerSize, focusNode, copyTextImpl)
+import Factory.Platform (containerSize, focusNode, copyTextImpl, resetDetailsScroll, compactScreen, keyboardFocus, shortcutAllowed, developerExamples, installDivider)
+import Factory.Desk as Desk
+import Factory.Checks as Checks
 import Factory.Scenarios (defaultScenario, scenarios)
 import Factory.ViewState
   ( ContextView(..)
@@ -91,12 +93,27 @@ type State =
   , layoutError :: Maybe String
   , copied :: Maybe Boolean
   , revision :: Int
+  , showEpics :: Boolean
+  , showWorkers :: Boolean
+  , highlight :: Boolean
+  , filterMode :: String
+  , branch :: String
+  , rulesOpen :: Boolean
+  , examples :: Boolean
   , dragging :: Maybe { x :: Number, y :: Number }
   }
 
 data Action
   = Init
   | LayoutFinished Int (Either String Geometry)
+  | ShowRules Boolean
+  | CopyFinding ScopedId
+  | OpenFinding ScopedId
+  | ToggleEpics
+  | ToggleWorkers
+  | Highlight Boolean
+  | FilterMode String
+  | Branch String
   | CopyQuestion String
   | PickNode String
   | SwitchScenario String
@@ -143,6 +160,13 @@ component =
     , layoutError: Nothing
     , revision: 0
     , copied: Nothing
+    , showEpics: true
+    , showWorkers: true
+    , highlight: true
+    , filterMode: "all"
+    , branch: ""
+    , rulesOpen: false
+    , examples: false
     , dragging: Nothing
     }
 
@@ -150,6 +174,9 @@ component =
 
   handleAction = case _ of
     Init -> do
+      examples <- liftEffect developerExamples
+      H.modify_ \s -> s { examples = examples }
+      liftEffect installDivider
       subscribeKeys
       requestLayout
 
@@ -161,6 +188,31 @@ component =
         Right geometry -> do
           H.modify_ \s -> s { geometry = Just geometry }
           measureAndFit
+
+    ShowRules open -> H.modify_ \s -> s { rulesOpen = open }
+
+    CopyFinding id -> do
+      st <- H.get
+      case st.doc of
+        Left _ -> pure unit
+        Right graph -> do
+          handleAction (OpenFinding id)
+          handleAction (CopyQuestion (Checks.promptFor graph id))
+
+    OpenFinding id -> do
+      H.modify_ \s -> s { rulesOpen = false, branch = "", showEpics = true, showWorkers = true, filterMode = "attention" }
+      handleAction (SelectNode id)
+      revealNode id
+
+    ToggleEpics -> H.modify_ \s -> s { showEpics = if s.showWorkers then not s.showEpics else true }
+
+    ToggleWorkers -> H.modify_ \s -> s { showWorkers = if s.showEpics then not s.showWorkers else true }
+
+    Highlight on -> H.modify_ \s -> s { highlight = on }
+
+    FilterMode mode -> H.modify_ \s -> s { filterMode = mode }
+
+    Branch key -> H.modify_ \s -> s { branch = key, view = s.view { selection = NoSelection } }
 
     CopyQuestion question -> do
       copied <- H.liftAff $ makeAff \done -> do
@@ -184,6 +236,9 @@ component =
         s
           { scenarioKey = key
           , doc = decodeGraph scenario.raw
+          , branch = ""
+          , filterMode = "all"
+          , copied = Nothing
           , view = initialViewState
           , focused = Nothing
           , geometry = Nothing
@@ -192,10 +247,12 @@ component =
           }
       requestLayout
 
-    SelectNode id ->
+    SelectNode id -> do
+      liftEffect resetDetailsScroll
       H.modify_ \s -> s { view = s.view { selection = NodeSelected id }, copied = Nothing }
 
-    SelectEdge id ->
+    SelectEdge id -> do
+      liftEffect resetDetailsScroll
       H.modify_ \s -> s { view = s.view { selection = EdgeSelected id }, copied = Nothing }
 
     ClearSelection ->
@@ -223,15 +280,15 @@ component =
           }
 
     FitNow -> do
+      measureAndFit
       st <- H.get
       H.modify_ \s -> s { view = s.view { viewport = fitViewport (contentBounds st) st.dims st.view.viewport } }
 
     FocusNode id -> do
       H.modify_ \s -> s { focused = Just id }
-      st <- H.get
-      case st.dims of
-        Dim dims | dims.width < 700.0 -> revealNode id
-        _ -> pure unit
+      compact <- liftEffect compactScreen
+      keyboard <- liftEffect keyboardFocus
+      if compact && keyboard then revealNode id else pure unit
 
     FocusEdge _ -> pure unit
 
@@ -269,7 +326,9 @@ component =
     doc <- liftEffect (map toDocument (window >>= document))
     let
       onKey ev = case KE.fromEvent ev of
-        Just ke -> HS.notify listener (GlobalKey (KE.key ke))
+        Just ke -> do
+          allowed <- shortcutAllowed
+          if (allowed || KE.key ke == "Escape") && not (KE.ctrlKey ke || KE.metaKey ke || KE.altKey ke) then HS.notify listener (GlobalKey (KE.key ke)) else pure unit
         Nothing -> pure unit
     keyListener <- liftEffect (eventListener onKey)
     liftEffect (addEventListener (EventType "keydown") keyListener false (toEventTarget doc))
@@ -279,7 +338,7 @@ component =
   handleGlobalKey key = do
     st <- H.get
     case key of
-      "Escape" -> handleAction ClearSelection
+      "Escape" -> if st.rulesOpen then handleAction (ShowRules false) else handleAction ClearSelection
       "f" -> handleAction FitNow
       "+" -> handleAction (Navigate (ZoomBy 1.25))
       "-" -> handleAction (Navigate (ZoomBy 0.8))
@@ -360,6 +419,7 @@ component =
     case mel of
       Nothing -> pure unit
       Just el -> do
+        compact <- liftEffect compactScreen
         msize <- liftEffect (containerSize (toElement (el :: HTMLElement)))
         let
           dims = case msize of
@@ -370,7 +430,7 @@ component =
             { dims = dims
             , view = st.view
                 { viewport = case dims of
-                    Dim size | size.width < 700.0 -> { scale: 1.0, tx: 16.0, ty: 16.0 }
+                    Dim _ | compact -> { scale: 1.0, tx: 16.0, ty: 16.0 }
                     _ -> fitViewport (contentBounds st) dims st.view.viewport
                 }
             }
@@ -382,21 +442,37 @@ component =
       [ HH.header [ HP.class_ (H.ClassName "app-header") ]
           [ HH.h1_ [ HH.text "Factory dashboard" ]
           , HH.span [ HP.class_ (H.ClassName "demo-label") ] [ HH.text "Example factory" ]
-          , HH.details [ HP.class_ (H.ClassName "demo-controls") ]
-              [ HH.summary_ [ HH.text "Try examples" ]
-              , HH.nav [ HP.class_ (H.ClassName "scenario-bar") ] (map (scenarioButton st) scenarios)
-              ]
+          , ( if st.examples then HH.details [ HP.class_ (H.ClassName "demo-controls") ]
+                [ HH.summary_ [ HH.text "Try examples" ]
+                , HH.nav [ HP.class_ (H.ClassName "scenario-bar") ] (map (scenarioButton st) scenarios)
+                ]
+              else HH.text ""
+            )
+          , HH.button [ HE.onClick \_ -> ShowRules true ] [ HH.text "Rules" ]
           , HH.p [ HP.class_ (H.ClassName "app-status") ] [ HH.text (statusText st) ]
           , HH.button [ HP.id "factory-dashboard-palette-toggle", HP.attr (AttrName "aria-label") "Switch theme", HP.attr (AttrName "hidden") "" ] []
           ]
-      , HH.div [ HP.class_ (H.ClassName "record-picker") ]
-          [ HH.label_
-              [ HH.text "Find an item "
-              , HH.select [ HE.onValueChange PickNode ]
-                  ( [ HH.option [ HP.value "" ] [ HH.text "Choose work or a role…" ] ] <> case st.doc of
-                      Left _ -> []
-                      Right graph -> mapMaybe (\id -> map (\n -> HH.option [ HP.value (nodeKey id) ] [ HH.text (kindLabel n.kind <> ": " <> n.title) ]) (lookupNode graph id)) (nodeIds graph)
-                  )
+      , rulesDialog st
+      , summaryStrip st
+      , HH.nav [ HP.class_ (H.ClassName "tabs"), HP.attr (AttrName "aria-label") "What to show" ]
+          [ HH.button [ HP.attr (AttrName "aria-pressed") (show st.showEpics), HE.onClick \_ -> ToggleEpics ] [ HH.text "Epics" ]
+          , HH.button [ HP.attr (AttrName "aria-pressed") (show st.showWorkers), HE.onClick \_ -> ToggleWorkers ] [ HH.text "Workers" ]
+          , HH.span [ HP.class_ (H.ClassName "when") ] [ HH.text "Both on shows work and the roles responsible for it." ]
+          ]
+      , HH.div [ HP.class_ (H.ClassName "tools") ]
+          [ HH.select [ HP.attr (AttrName "aria-label") "Lane", HP.value st.branch, HE.onValueChange Branch ]
+              ( [ HH.option [ HP.value "" ] [ HH.text "All lanes" ] ] <> case st.doc of
+                  Left _ -> []
+                  Right graph -> map (\n -> HH.option [ HP.value (nodeKey n.id) ] [ HH.text n.title ]) (Desk.lanes graph)
+              )
+          , HH.select [ HP.attr (AttrName "aria-label") "What to show", HP.value st.filterMode, HE.onValueChange FilterMode ]
+              [ HH.option [ HP.value "all" ] [ HH.text "Everything" ]
+              , HH.option [ HP.value "running" ] [ HH.text "What is running" ]
+              , HH.option [ HP.value "attention" ] [ HH.text "What needs attention" ]
+              ]
+          , HH.label [ HP.class_ (H.ClassName "when") ]
+              [ HH.input [ HP.type_ HP.InputCheckbox, HP.checked st.highlight, HE.onChecked Highlight ]
+              , HH.text " Highlight the selected branch"
               ]
           ]
       , overlay
@@ -414,9 +490,63 @@ component =
               , HE.onTouchCancel \_ -> DragEnd
               ]
               (stageContent st)
+          , HH.div [ HP.id "divider", HP.class_ (H.ClassName "divider"), HP.attr (AttrName "role") "separator", HP.attr (AttrName "aria-orientation") "vertical", HP.attr (AttrName "aria-label") "Resize the panes", HP.tabIndex 0 ] []
           , HH.aside [ HP.class_ (H.ClassName "details") ] (detailsContent st)
           ]
       ]
+
+  rulesDialog st =
+    if not st.rulesOpen then HH.text ""
+    else
+      HH.div [ HP.class_ (H.ClassName "rules-backdrop") ]
+        [ HH.section [ HP.class_ (H.ClassName "rules-dialog"), HP.attr (AttrName "role") "dialog", HP.attr (AttrName "aria-modal") "true", HP.attr (AttrName "aria-label") "Factory rules" ]
+            ( [ HH.h2_ [ HH.text "Rules about the factory" ]
+              , HH.button [ HE.onClick \_ -> ShowRules false ] [ HH.text "Close" ]
+              , HH.p_ [ HH.text "A finding clears only when new recorded evidence meets its green condition. Missing evidence cannot pass a rule." ]
+              ] <> case st.doc of
+                Left _ -> [ HH.p_ [ HH.text "Cannot check: input was refused." ] ]
+                Right graph ->
+                  [ HH.table_
+                      [ HH.thead_ [ HH.tr_ (map (\label -> HH.th_ [ HH.text label ]) [ "Rule", "Live result", "Evidence needed" ]) ]
+                      , HH.tbody_
+                          ( map
+                              ( \rule -> HH.tr_
+                                  [ HH.td_ [ HH.text rule.name ]
+                                  , HH.td_ [ HH.text rule.result ]
+                                  , HH.td_ [ HH.text rule.requires ]
+                                  ]
+                              )
+                              (Checks.rules graph)
+                          )
+                      ]
+                  , HH.h3_ [ HH.text "What needs attention" ]
+                  , HH.div_ (map (findingRow graph) (Checks.findings graph))
+                  ]
+            )
+        ]
+
+  findingRow graph finding = HH.div [ HP.class_ (H.ClassName "finding") ]
+    [ HH.button [ HE.onClick \_ -> OpenFinding finding.subject ] [ HH.text (titleOfGraph graph finding.subject) ]
+    , HH.p_ [ HH.text finding.evidence ]
+    , HH.p_ [ HH.text ("Green when: " <> finding.green) ]
+    , HH.button [ HE.onClick \_ -> CopyFinding finding.subject ] [ HH.text "Copy prompt" ]
+    ]
+
+  titleOfGraph graph id = case lookupNode graph id of
+    Just node -> node.title
+    Nothing -> nodeKey id
+
+  summaryStrip st = case st.doc of
+    Left _ -> HH.text ""
+    Right graph -> HH.section [ HP.class_ (H.ClassName "tiles") ]
+      ( map
+          ( \tile -> HH.div [ HP.class_ (H.ClassName "tile"), HE.onClick \_ -> if tile.label == "Rules broken" then ShowRules true else ClearSelection ]
+              [ HH.div [ HP.class_ (H.ClassName "lbl") ] [ HH.text tile.label ]
+              , HH.div [ HP.class_ (H.ClassName "big") ] [ HH.text tile.value ]
+              ]
+          )
+          (Desk.summary graph <> [ { label: "Rules broken", value: show (length (filter _.broken (Checks.findings graph))) <> " · " <> show (length (filter (not <<< _.broken) (Checks.findings graph))) <> " to check" } ])
+      )
 
   scenarioButton st scenario =
     HH.button
@@ -475,7 +605,7 @@ component =
 
   svgGraph st graph =
     let
-      visible = deriveVisible graph st.view.expansion
+      visible = Desk.filterVisible graph st (deriveVisible graph st.view.expansion)
       geometry = fromMaybe { nodes: [], edges: [] } st.geometry
       positions = Map.fromFoldable (map (\p -> Tuple p.id { x: p.x, y: p.y }) geometry.nodes)
       ids = nodeIds graph <> distinctEndpoints visible.unresolved
@@ -506,6 +636,7 @@ component =
 
   renderNode st positionMap node =
     let
+      graphForDesk = st.doc
       pos = fromMaybe { x: 0.0, y: 0.0 } (Map.lookup node.id positionMap)
       selected = st.view.selection == NodeSelected node.id
       collapsed = isCollapsed node.id st.view.expansion
@@ -523,6 +654,7 @@ component =
         [ svgClass
             ( "node kind-" <> kindClass node.kind
                 <> (if selected then " selected" else "")
+                <> (if Desk.dimNode graphForDesk st node.id then " dimmed" else "")
                 <> (if collapsed then " collapsed" else "")
             )
         , HP.attr (AttrName "data-node-id") (idString node.id)
@@ -605,7 +737,7 @@ component =
     in
       svgEl "g"
         [ svgClass
-            ("edge edge-" <> relationClass edge.kind <> (if selected then " selected" else ""))
+            ("edge edge-" <> relationClass edge.kind <> (if selected then " selected" else "") <> (if Desk.dimNode st.doc st edge.from || Desk.dimNode st.doc st edge.to then " dimmed" else ""))
         , HP.attr (AttrName "data-edge-id") (edgeString edge.id)
         , HP.attr (AttrName "tabindex") "0"
         , HP.attr (AttrName "role") "button"
@@ -680,26 +812,16 @@ component =
       ]
     Right graph -> case resolveContext graph st.view.expansion st.view.selection of
       NoContext ->
-        [ HH.h2_ [ HH.text "Your factory at a glance" ]
+        [ HH.h2_ [ HH.text "Select a node or a link" ]
         , HH.p_
             [ HH.text
-                "Choose work on the graph to see its progress, who is responsible and the messages connected to it."
+                "Click a node for its status and responsible roles. Click a link to see what connects them. Highlighting keeps the layout in place."
             ]
         , HH.section [ HP.class_ (H.ClassName "overview-updates") ]
-            [ HH.h3_ [ HH.text "Updates to check" ]
-            , HH.p_ [ HH.text "These items have old or missing information." ]
-            , HH.div [ HP.class_ (H.ClassName "related-items") ]
-                ( map (itemButton graph)
-                    ( filter
-                        ( \id -> case lookupNode graph id of
-                            Just node -> case node.quality of
-                              Known _ -> false
-                              _ -> true
-                            Nothing -> false
-                        )
-                        (nodeIds graph)
-                    )
-                )
+            [ HH.h3_ [ HH.text "What needs attention" ]
+            , HH.p_ [ HH.text "Inspect the evidence, copy the prompt, then re-check after the source changes." ]
+            , HH.div_ (map (findingRow graph) (Checks.findings graph))
+            , HH.p_ [ HH.text "Question, wait and claim rules cannot be checked until those protocol facts are supplied." ]
             ]
         ]
       UnavailableContext message ->
@@ -758,16 +880,18 @@ component =
             , HH.p_ [ HH.text info.node.summary ]
             , HH.p [ HP.class_ (H.ClassName ("quality " <> qualityClass info.node.quality)) ] [ HH.text (readerQuality info.node.quality) ]
             ]
+        , HH.section [ HP.class_ (H.ClassName "findings-panel") ]
+            (map (findingRow graph) (filter (\f -> f.subject == info.node.id) (Checks.findings graph)))
         , HH.section [ HP.class_ (H.ClassName "answer-panel") ]
             [ HH.h3_ [ HH.text "Who can answer" ]
             , case info.roles of
                 [] -> HH.p_ [ HH.text (if info.node.kind == Role then "This role's work is shown by its connections." else "No responsible role is listed yet.") ]
                 roles -> HH.div [ HP.class_ (H.ClassName "related-items") ] (map (\role -> itemButton graph role.id) roles)
-            , HH.details [ HP.class_ (H.ClassName "question") ]
+            , HH.details [ HP.class_ (H.ClassName "question"), HP.attr (AttrName "open") "" ]
                 [ HH.summary_ [ HH.text "Ask about this" ]
                 , HH.p_ [ HH.text "Copy this question into a worker's session." ]
-                , HH.textarea [ HP.value (questionFor info.node.title info.node.summary info.node.status (if info.node.kind == Role then [ info.node.title ] else map (_.title) info.roles)), HP.readOnly true, HP.rows 4, HP.attr (AttrName "aria-label") "Question about selected work" ]
-                , HH.button [ HE.onClick \_ -> CopyQuestion (questionFor info.node.title info.node.summary info.node.status (if info.node.kind == Role then [ info.node.title ] else map (_.title) info.roles)) ] [ HH.text "Copy question" ]
+                , HH.textarea [ HP.value (selectedPrompt graph info.node), HP.readOnly true, HP.rows 4, HP.attr (AttrName "aria-label") "Question about selected work" ]
+                , HH.button [ HE.onClick \_ -> CopyQuestion (selectedPrompt graph info.node) ] [ HH.text "Copy question" ]
                 , HH.p [ HP.attr (AttrName "role") "status" ]
                     [ HH.text
                         ( case st.copied of
@@ -799,6 +923,11 @@ component =
             ]
         ]
 
+  selectedPrompt graph node =
+    if null (filter (\f -> f.subject == node.id) (Checks.findings graph)) then
+      questionFor node.title node.summary node.status (if node.kind == Role then [ node.title ] else map _.title (attachedRoles graph node.id))
+    else Checks.promptFor graph node.id
+
   itemButton graph id = HH.button
     [ HE.onClick \_ -> SelectNode id ]
     [ HH.text
@@ -814,7 +943,7 @@ component =
     Left failures -> "Input refused — " <> show (length failures) <> " problems"
     Right graph ->
       let
-        visible = deriveVisible graph st.view.expansion
+        visible = Desk.filterVisible graph st (deriveVisible graph st.view.expansion)
       in
         if length visible.nodes == 0 then "No work to show"
         else if visible.hiddenCount > 0 then

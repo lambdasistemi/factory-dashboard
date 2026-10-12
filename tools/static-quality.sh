@@ -30,6 +30,8 @@ layer_rules=(
   'src/Factory/Scenarios.purs|^(Prelude|Data\.|Factory\.Fixtures)'
   'src/Factory/LayoutEngine.purs|^(Prelude|Data\.|Effect|Factory\.Layout)'
   'src/Factory/Platform.purs|^(Prelude|Data\.|Effect|Web\.)'
+  'src/Factory/Checks.purs|^(Prelude|Data\.|Factory\.Domain)'
+  'src/Factory/Desk.purs|^(Prelude|Data\.|Factory\.(Domain|Checks|Layout|ViewState))'
   'src/Factory/View.purs|^(Prelude|Data\.|Control\.|Effect|Halogen|Web\.|Factory\.)'
   'src/Main.purs|^(Prelude|Data\.|Effect|Halogen|Web\.|Factory\.)'
 )

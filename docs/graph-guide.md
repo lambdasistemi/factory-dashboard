@@ -4,7 +4,7 @@
 
 As a factory operator, you open one connected graph of the synthetic factory installation and explore its work structure without losing the global view: projects contain milestones, milestones contain epics and tickets, tickets contain pull requests, roles attach to work as recorded responsibilities, and recorded communications connect roles to the work they discussed.
 
-You can select any record or connection to read its permitted context in the context panel below the graph, collapse a branch you are done with and expand it later, pan and zoom, fit everything back into view, and do all of it with the keyboard alone. The installation can also be explored on a narrow screen. When the record is honest about its own gaps, the graph shows that too: unknown observations, stale observations and missing references each carry their own visible label, and nothing is invented to fill a gap.
+You can select any record or connection to read its permitted context in the details pane beside the graph, collapse a branch you are done with and expand it later, pan and zoom, fit everything back into view, and do all of it with the keyboard alone. The installation can also be explored on a narrow screen. When the record is honest about its own gaps, the graph shows that too: unknown observations, stale observations and missing references each carry their own visible label, and nothing is invented to fill a gap.
 
 The graph below is the shape of the model the app renders. Containment is a work-membership relation; role attachment and recorded communication are their own distinct relations and never implied by proximity.
 
@@ -36,13 +36,13 @@ Open **Try examples** to switch between four sample factories.
 - **Enter** or **Space** selects the focused record or connection.
 - **c** collapses or expands the focused record's branch.
 - **f** fits the graph into view; **+** and **-** zoom; **0** resets the viewport; **Escape** clears the selection.
-- The toolbar buttons do the same for pointer users; dragging the graph with a mouse or one finger pans it. **Find an item** selects and centres a card at readable size, especially useful on a narrow screen.
+- The toolbar buttons do the same for pointer users; dragging the graph with a mouse or one finger pans it. The lane selector narrows the graph to one epic. Epics and Workers toggle work and recorded roles; at least one stays on.
 
 A collapsed branch keeps its visible handle. If the selected record ends up inside a collapsed branch, the context panel says exactly what it is behind and offers an Expand button — the selection never silently disappears.
 
 ## Ask about selected work
 
-Select work to see its summary and status. **Who can answer** shows the associated roles; their buttons and **Connected work** let you follow the graph. **Ask about this** prepares a question containing your selection. Copy it into a worker’s session. The dashboard does not send it. **Source details** contains identifiers and full timestamps when you need them. The overview lists items with old or missing information under **Updates to check**; it does not infer that they need an operator decision.
+Select work to see its summary and status. **Who can answer** shows the associated roles; their buttons and **Connected work** let you follow the graph. **Ask about this** prepares a question containing your selection. Copy it into a worker’s session. The dashboard does not send it. **Source details** contains identifiers and full timestamps when you need them. The overview lists items with old or missing information under **What needs attention**; it does not infer that they need an operator decision.
 
 ## The input contract
 
@@ -83,3 +83,13 @@ Layout uses only scoped identifiers, card dimensions and connections. ELK 0.12.0
 ## Theme
 
 Use the sun/moon button at the top right of the graph or documentation to switch between light and dark. Both pages share the same saved preference in this browser and follow the device preference until you choose. The choice survives reloads and later visits when browser storage is available.
+
+## Check the factory and prepare a repair prompt
+
+The interface follows the JavaScript factory control room: summary tiles, Epics/Workers toggles, a lane selector, running/attention filters, stable branch highlighting, and a graph/details split. Drag the divider or use its arrow keys to resize it. On a narrow screen the panes stack.
+
+**Rules** shows results and the evidence each rule requires. A missing endpoint is a broken reference. Stale or unknown observations are coverage findings, not proof of worker inactivity. Click a finding to inspect its graph context; **Copy prompt** includes the evidence, recorded candidate recipients, request and green condition. Clipboard failure leaves the prompt available for manual copying. A prompt never clears a finding: only changed recorded evidence can do that.
+
+The current synthetic graph does not carry claims, blocking obligations, exact question identities or pause intent. A–H remain **Cannot check** until those facts are provided. The example is not a live factory census. The long-term goal is all applicable protocol invariants with actionable prompts before direct dashboard-to-worker communication.
+
+Developer fixture switching is available only at the explicit test URL `?examples=1`; it is absent from the ordinary operator interface.

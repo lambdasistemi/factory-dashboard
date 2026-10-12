@@ -9,7 +9,7 @@ import { test } from '@playwright/test';
 // rendering of source-like text.
 
 async function openGraph(page) {
-  await page.goto('/app/');
+  await page.goto('/app/?examples=1');
   await expect(page.locator('svg.graph .node')).toHaveCount(10);
 }
 
@@ -392,14 +392,14 @@ test('selection and collapse preserve the spatial context', async ({ page }) => 
   expect(await page.locator('#viewport').getAttribute('transform')).toBe(viewport);
 });
 
-test('mobile starts readable and the record navigator brings distant cards into view', async ({ page }) => {
+test('mobile starts readable and a finding brings its branch into view', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await openGraph(page);
   const font = await page.locator('.node-title').first().evaluate(t => parseFloat(getComputedStyle(t).fontSize) * t.getScreenCTM().a);
   expect(font).toBeGreaterThanOrEqual(12);
-  await page.locator('.record-picker select').selectOption({ label: 'pull request: Add the synthetic graph' });
-  await expect(page.locator('.details')).toContainText('Add the synthetic graph');
-  const card = await page.locator(`${N('pr-1')} rect`).boundingBox();
+  await page.locator('.overview-updates').getByRole('button', { name: 'Attention epic', exact: true }).first().click();
+  await expect(page.locator('.details')).toContainText('Attention epic');
+  const card = await page.locator(`${N('epic-2')} rect`).boundingBox();
   const stage = await page.locator('svg.graph').boundingBox();
   expect(card.x).toBeGreaterThanOrEqual(stage.x);
   expect(card.x + card.width).toBeLessThanOrEqual(stage.x + stage.width);
@@ -422,7 +422,7 @@ test('a late layout cannot replace the selected scenario', async ({ page }) => {
       }
     });
   });
-  await page.goto('/app/');
+  await page.goto('/app/?examples=1');
   await chooseExample(page, 'Incomplete records');
   await expect(page.locator('svg.graph .node')).toHaveCount(4);
   await page.waitForTimeout(900);
@@ -438,7 +438,7 @@ test('malformed layout output is refused without exposing engine errors', async 
       }, configurable: true }); }
     });
   });
-  await page.goto('/app/');
+  await page.goto('/app/?examples=1');
   await expect(page.locator('.empty-state')).toContainText('could not be calculated');
   await expect(page.locator('body')).not.toContainText('private-engine-diagnostic');
   await expect(page.locator('svg.graph')).toHaveCount(0);
@@ -488,7 +488,7 @@ async function chooseExample(page, label) {
 test('work summary offers useful next steps without exposing source fields', async ({ page }) => {
   await openGraph(page);
   await expect(page.locator('.demo-controls')).not.toHaveAttribute('open', '');
-  await expect(page.locator('.details')).toContainText('Updates to check');
+  await expect(page.locator('.details')).toContainText('What needs attention');
   await page.locator(N('ticket-1')).click();
   await expect(page.locator('.details')).toContainText('Who can answer');
   await expect(page.locator('.details')).toContainText('Graph Maintainer');
@@ -502,7 +502,6 @@ test('the question copies selected work and responsibility without sending it', 
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await openGraph(page);
   await page.locator(N('ticket-1')).click();
-  await page.locator('.question summary').click();
   await page.getByRole('button', { name: 'Copy question', exact: true }).click();
   await expect(page.locator('.question [role="status"]')).toContainText('Copied');
   const question = await page.evaluate(() => navigator.clipboard.readText());
@@ -510,7 +509,6 @@ test('the question copies selected work and responsibility without sending it', 
   expect(question).toContain('Graph Maintainer');
   expect(question).toContain('in progress');
   await page.locator(N('project-1')).click();
-  await page.locator('.question summary').click();
   await expect(page.locator('.question textarea')).toHaveValue(/Factory Demo/);
   await expect(page.locator('.question [role="status"]')).toBeEmpty();
 });
@@ -519,8 +517,45 @@ test('a browser without clipboard access still offers a usable question', async 
   await page.addInitScript(() => Object.defineProperty(navigator, 'clipboard', { value: undefined }));
   await openGraph(page);
   await page.locator(N('ticket-1')).click();
-  await page.locator('.question summary').click();
   await page.getByRole('button', { name: 'Copy question', exact: true }).click();
   await expect(page.locator('.question [role="status"]')).toContainText('Select and copy');
   await expect(page.locator('.question textarea')).toHaveValue(/Synthetic graph ticket/);
+});
+
+test('ordinary operator desk copies the prototype split without developer commands', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/app/');
+  await expect(page.locator('svg.graph .node')).toHaveCount(10);
+  await expect(page.locator('.demo-controls')).toHaveCount(0);
+  const graph = await page.locator('.graph-stage').boundingBox();
+  const details = await page.locator('.details').boundingBox();
+  expect(details.x).toBeGreaterThan(graph.x + graph.width);
+  await page.getByRole('button', { name: 'Workers', exact: true }).click();
+  await expect(page.locator('svg.graph .kind-role')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Epics', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Epics', exact: true })).toHaveAttribute('aria-pressed', 'true');
+  await page.getByRole('button', { name: 'Workers', exact: true }).click();
+  await page.locator(N('ticket-1')).click();
+  await expect(page.locator('svg.graph .dimmed').first()).toBeVisible();
+  const before = await page.locator('.graph-stage').boundingBox();
+  await page.getByRole('separator').focus();
+  await page.keyboard.press('ArrowLeft');
+  const after = await page.locator('.graph-stage').boundingBox();
+  expect(after.width).toBeLessThan(before.width);
+});
+
+test('rules show unknown protocol evidence and copy a finding with its green condition', async ({ page, context }) => {
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  await openGraph(page);
+  await page.getByRole('button', { name: 'Rules', exact: true }).click();
+  const dialog = page.getByRole('dialog', { name: 'Factory rules' });
+  await expect(dialog).toContainText('Cannot check');
+  await expect(dialog).toContainText('WORKING claims are fresh');
+  await dialog.getByRole('button', { name: 'Copy prompt', exact: true }).first().click();
+  await expect(dialog).toHaveCount(0);
+  const copied = await page.evaluate(() => navigator.clipboard.readText());
+  expect(copied).toContain('external-ref-404');
+  expect(copied).toContain('Green when:');
+  await expect(page.locator('.question textarea')).toHaveValue(/external-ref-404/);
+  await expect(page.locator('.tile').filter({ hasText: 'Rules broken' })).toContainText('1');
 });

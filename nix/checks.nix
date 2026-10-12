@@ -32,7 +32,7 @@ let
         cp ${purescript.web-dist}/index.html ${purescript.web-dist}/index.js staging/app/
         cp staging/app/index.html staging/mutated/index.html
         chmod u+w staging/app/index.html staging/app/index.js staging/mutated/index.html
-        sed -i 's|src="index.js"|src="../app/index.js"|' staging/mutated/index.html
+        sed -i 's|src="index.js|src="../app/index.js|' staging/mutated/index.html
         printf '<script>fetch("https://example.invalid/beacon").catch(function(){})</script>' >> staging/mutated/index.html
         export HOME=$(mktemp -d)
         export PLAYWRIGHT_BROWSERS_PATH="${pkgs.playwright-driver.browsers}"

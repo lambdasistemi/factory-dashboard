@@ -19,7 +19,7 @@ function tracker(context) {
 
 test('the page makes no requests beyond its own static assets', async ({ context, page }) => {
   const requests = tracker(context);
-  await page.goto('/app/');
+  await page.goto('/app/?examples=1');
   await page.locator(N('project-1')).click();
   await page.locator('button', { hasText: 'Zoom in' }).click();
   await page.locator('button', { hasText: 'Show all' }).click();
@@ -44,7 +44,7 @@ test('the page makes no requests beyond its own static assets', async ({ context
 test('no worker scripts or websocket connections are opened', async ({ context, page }) => {
   const sockets = [];
   page.on('websocket', (ws) => sockets.push(ws.url()));
-  await page.goto('/app/');
+  await page.goto('/app/?examples=1');
   await chooseExample(page, 'Incomplete records');
   await page.waitForTimeout(500);
   expect(sockets).toEqual([]);

@@ -3,6 +3,12 @@
 module Factory.Platform
   ( containerSize
   , focusNode
+  , resetDetailsScroll
+  , keyboardFocus
+  , compactScreen
+  , shortcutAllowed
+  , developerExamples
+  , installDivider
   , copyTextImpl
   ) where
 
@@ -29,3 +35,13 @@ focusNode selector = focusNodeImpl selector
 
 -- | Copy an operator-requested question; report failure without exposing errors.
 foreign import copyTextImpl :: String -> (Boolean -> Effect Unit) -> Effect Unit
+
+foreign import developerExamples :: Effect Boolean
+foreign import installDivider :: Effect Unit
+
+foreign import resetDetailsScroll :: Effect Unit
+foreign import shortcutAllowed :: Effect Boolean
+
+foreign import compactScreen :: Effect Boolean
+
+foreign import keyboardFocus :: Effect Boolean

@@ -43,6 +43,8 @@ let
     installPhase = ''
       mkdir -p $out
       cp dist/index.html dist/index.js $out/
+      assetHash=$(sha256sum $out/index.js | cut -d ' ' -f1)
+      sed -i "s|src=\"index.js\"|src=\"index.js?v=$assetHash\"|" $out/index.html
       cp build.log $out/
       test -s $out/index.js || { echo "bundle is empty" >&2; exit 1; }
     '';

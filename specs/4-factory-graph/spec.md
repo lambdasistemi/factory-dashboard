@@ -33,6 +33,12 @@ This specification is limited to 100 lines and 10 KiB. Requirements above are ac
 
 The operator accepted the ELK graph quality and rejected the surrounding interface as technical and unusable. The control-room prototype remains the reference for the product experience: selections explain the situation and lead to a useful next step while the global graph remains available.
 
-The primary panel shows the work summary, status, named role responsibilities and connected work. Source identities, provenance and raw timestamps belong in a closed technical disclosure. Examples belong in a secondary menu. Labels use the operator's language. Old or missing information can be shown directly, but must not be presented as an inferred decision or invariant violation.
+The primary panel shows the work summary, status, named role responsibilities and connected work. Source identities, provenance and raw timestamps belong in a closed technical disclosure. Developer examples are absent from the ordinary interface and are enabled only by the explicit test URL. Labels use the operator's language. Old or missing information can be shown directly, but must not be presented as an inferred decision or invariant violation.
 
 Every selected work item can prepare a question carrying its title, summary, status and recorded responsibilities. The operator copies that question into an existing worker session; the dashboard sends no message and fabricates no answer. Missing responsibility remains explicit. Live conversations retain their later-milestone scope.
+
+### Control-room correction
+
+The operator named the JavaScript factory dashboard as the implementation reference. Copy its split panes, summary strip, Epics/Workers toggles, lane and attention filters, and stable branch highlighting; preserve the approved ELK geometry. Findings are the central operator outcome, with concrete evidence, candidate recipient, manual prompt and green condition. No fabricated progress or inferred wait dependency is allowed.
+
+This graph-only input supports reference checks and observation-gap findings. The A–H protocol catalog must remain unavailable until its required facts are supplied. This slice does not claim live factory diagnosis or substitute status strings for fresh claims.
