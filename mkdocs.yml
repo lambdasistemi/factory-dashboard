@@ -40,7 +40,7 @@ extra_javascript:
   - javascripts/mermaid-init.js?v=94f9bed71da69206
 
 extra_css:
-  - stylesheets/terminal.css?v=b545662909a78737
+  - stylesheets/terminal.css?v=19f9ab61a3f1c56e
 
 validation:
   links:
