@@ -4,6 +4,8 @@
 
 As an installation operator, I supply the locations and credentials needed to read my factory and see exactly what the dashboard can access, so I can run the public project without exposing my workers or sensitive material.
 
+The [system boundaries](system-boundaries.md) define product ownership and permitted capabilities. The [protocol contracts](protocols.md) define what a compatible factory must supply.
+
 This page defines required behavior for the first milestone. The runtime and its configuration schema are not implemented yet. These requirements must become enforced checks; this document alone does not make an installation safe.
 
 ## What is public and what is private
