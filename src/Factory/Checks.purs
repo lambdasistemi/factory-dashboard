@@ -1,5 +1,5 @@
 -- | Evidence-backed checks. A missing prerequisite is unknown, never green.
-module Factory.Checks (Finding, Rule, findings, rules, promptFor) where
+module Factory.Checks (Finding, Rule, findings, rules, promptFor, recipients) where
 
 import Prelude
 import Data.Array (filter, length, mapMaybe, nub)
@@ -19,6 +19,7 @@ findings graph =
           case lookupNode graph edge.from, lookupNode graph edge.to of
             Just _, Nothing -> Just { rule: "References resolve", subject: edge.from, evidence: "A connection from this item points to missing " <> recordName edge.to <> ".", green: "The referenced record is observed, or an authorised correction of the reference is recorded.", broken: true }
             Nothing, Just _ -> Just { rule: "References resolve", subject: edge.to, evidence: "A connection to this item starts at missing " <> recordName edge.from <> ".", green: "The referenced record is observed, or an authorised correction of the reference is recorded.", broken: true }
+            Nothing, Nothing -> Just { rule: "References resolve", subject: edge.from, evidence: "A recorded connection has two missing endpoints: " <> recordName edge.from <> " and " <> recordName edge.to <> ".", green: "Both endpoints are observed, or an authorised correction of the reference is recorded.", broken: true }
             _, _ -> Nothing
       )
       (edgeIds graph)

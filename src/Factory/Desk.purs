@@ -39,28 +39,30 @@ branchIds graph root =
   descend id = [ id ] <> (containmentChildren graph id >>= descend)
 
 filterVisible :: forall r. Graph -> { showEpics :: Boolean, showWorkers :: Boolean, branch :: String, filterMode :: String | r } -> VisibleGraph -> VisibleGraph
-filterVisible graph controls visible =
-  let
-    roots = filter (\id -> nodeKey id == controls.branch) (nodeIds graph)
-    branch = roots >>= branchIds graph
-    matches n = (if n.kind == Role then controls.showWorkers else controls.showEpics)
-      && (controls.branch == "" || elem n.id branch)
-      &&
-        ( case controls.filterMode of
-            "running" -> elem n.status [ "working", "WORKING", "active", "in progress" ]
-            "attention" -> any (\f -> f.subject == n.id) (Checks.findings graph)
-            _ -> true
-        )
-    seeds = filter matches visible.nodes
-    -- Keep ancestors so an attention/running branch retains its context.
-    kept = if controls.filterMode == "all" then seeds else filter (\n -> (if n.kind == Role then controls.showWorkers else controls.showEpics) && (controls.branch == "" || elem n.id branch) && (matches n || any (\seed -> elem seed.id (branchIds graph n.id)) seeds)) visible.nodes
-    ids = map _.id kept
-  in
-    visible
-      { nodes = kept
-      , edges = filter (\e -> (elem e.from ids && (elem e.to ids || isNothing (lookupNode graph e.to))) || (elem e.to ids && isNothing (lookupNode graph e.from))) visible.edges
-      , unresolved = filter (\e -> elem e.edge.from ids || elem e.edge.to ids) visible.unresolved
-      }
+filterVisible graph controls visible
+  | controls.showEpics && controls.showWorkers && controls.branch == "" && controls.filterMode == "all" = visible
+  | otherwise =
+      let
+        roots = filter (\id -> nodeKey id == controls.branch) (nodeIds graph)
+        branch = roots >>= branchIds graph
+        matches n = (if n.kind == Role then controls.showWorkers else controls.showEpics)
+          && (controls.branch == "" || elem n.id branch)
+          &&
+            ( case controls.filterMode of
+                "running" -> elem n.status [ "working", "WORKING", "active", "in progress" ]
+                "attention" -> any (\f -> f.subject == n.id) (Checks.findings graph)
+                _ -> true
+            )
+        seeds = filter matches visible.nodes
+        -- Keep ancestors so an attention/running branch retains its context.
+        kept = if controls.filterMode == "all" then seeds else filter (\n -> (if n.kind == Role then controls.showWorkers else controls.showEpics) && (controls.branch == "" || elem n.id branch) && (matches n || any (\seed -> elem seed.id (branchIds graph n.id)) seeds)) visible.nodes
+        ids = map _.id kept
+      in
+        visible
+          { nodes = kept
+          , edges = filter (\e -> (elem e.from ids && (elem e.to ids || isNothing (lookupNode graph e.to))) || (elem e.to ids && isNothing (lookupNode graph e.from))) visible.edges
+          , unresolved = filter (\e -> elem e.edge.from ids || elem e.edge.to ids) visible.unresolved
+          }
 
 dimNode :: forall failure e r. Either failure Graph -> { highlight :: Boolean, view :: { selection :: Selection | r } | e } -> ScopedId -> Boolean
 dimNode doc controls id = case doc of

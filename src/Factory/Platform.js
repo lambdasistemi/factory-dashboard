@@ -65,3 +65,5 @@ export const shortcutAllowed = () => !document.activeElement?.matches('input,sel
 export const compactScreen = () => matchMedia("(max-width: 62rem)").matches;
 
 export const keyboardFocus = () => Boolean(document.activeElement?.matches(":focus-visible"));
+
+export const revealQuestion = () => requestAnimationFrame(() => document.querySelector(".question textarea, .manual-prompt")?.scrollIntoView({block:"nearest"}));

@@ -63,7 +63,7 @@ import Factory.Domain
   , relationLabel
   )
 import Factory.Layout (Position, Geometry, layoutInput, nodeKey, edgeKey, titleLines, nodeSize)
-import Factory.Platform (containerSize, focusNode, copyTextImpl, resetDetailsScroll, compactScreen, keyboardFocus, shortcutAllowed, developerExamples, installDivider)
+import Factory.Platform (containerSize, focusNode, copyTextImpl, revealQuestion, resetDetailsScroll, compactScreen, keyboardFocus, shortcutAllowed, developerExamples, installDivider)
 import Factory.Desk as Desk
 import Factory.Checks as Checks
 import Factory.Scenarios (defaultScenario, scenarios)
@@ -91,6 +91,7 @@ type State =
   , focused :: Maybe ScopedId
   , geometry :: Maybe Geometry
   , layoutError :: Maybe String
+  , copiedText :: String
   , copied :: Maybe Boolean
   , revision :: Int
   , showEpics :: Boolean
@@ -159,6 +160,7 @@ component =
     , geometry: Nothing
     , layoutError: Nothing
     , revision: 0
+    , copiedText: ""
     , copied: Nothing
     , showEpics: true
     , showWorkers: true
@@ -218,7 +220,8 @@ component =
       copied <- H.liftAff $ makeAff \done -> do
         copyTextImpl question (done <<< Right)
         pure nonCanceler
-      H.modify_ \st -> st { copied = Just copied }
+      H.modify_ \st -> st { copied = Just copied, copiedText = question }
+      if copied then pure unit else liftEffect revealQuestion
 
     PickNode key -> do
       st <- H.get
@@ -491,7 +494,7 @@ component =
               ]
               (stageContent st)
           , HH.div [ HP.id "divider", HP.class_ (H.ClassName "divider"), HP.attr (AttrName "role") "separator", HP.attr (AttrName "aria-orientation") "vertical", HP.attr (AttrName "aria-label") "Resize the panes", HP.tabIndex 0 ] []
-          , HH.aside [ HP.class_ (H.ClassName "details") ] (detailsContent st)
+          , HH.aside [ HP.class_ (H.ClassName "details") ] (detailsContent st <> manualFallback st)
           ]
       ]
 
@@ -884,7 +887,7 @@ component =
             (map (findingRow graph) (filter (\f -> f.subject == info.node.id) (Checks.findings graph)))
         , HH.section [ HP.class_ (H.ClassName "answer-panel") ]
             [ HH.h3_ [ HH.text "Who can answer" ]
-            , case info.roles of
+            , case (if info.node.kind == Role then [] else Checks.recipients graph info.node.id) of
                 [] -> HH.p_ [ HH.text (if info.node.kind == Role then "This role's work is shown by its connections." else "No responsible role is listed yet.") ]
                 roles -> HH.div [ HP.class_ (H.ClassName "related-items") ] (map (\role -> itemButton graph role.id) roles)
             , HH.details [ HP.class_ (H.ClassName "question"), HP.attr (AttrName "open") "" ]
@@ -925,8 +928,14 @@ component =
 
   selectedPrompt graph node =
     if null (filter (\f -> f.subject == node.id) (Checks.findings graph)) then
-      questionFor node.title node.summary node.status (if node.kind == Role then [ node.title ] else map _.title (attachedRoles graph node.id))
+      questionFor node.title node.summary node.status (if node.kind == Role then [ node.title ] else map _.title (Checks.recipients graph node.id))
     else Checks.promptFor graph node.id
+
+  manualFallback st = case st.copied, st.doc, st.view.selection of
+    Just false, Right graph, NodeSelected id -> case lookupNode graph id of
+      Nothing -> [ HH.p_ [ HH.text "Select and copy this repair prompt:" ], HH.textarea [ HP.class_ (H.ClassName "manual-prompt"), HP.value st.copiedText, HP.readOnly true, HP.rows 8, HP.attr (AttrName "aria-label") "Repair prompt" ] ]
+      _ -> []
+    _, _, _ -> []
 
   itemButton graph id = HH.button
     [ HE.onClick \_ -> SelectNode id ]

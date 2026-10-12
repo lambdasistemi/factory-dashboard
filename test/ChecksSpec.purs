@@ -35,3 +35,11 @@ spec = describe "factory rule evidence" do
         length (filter _.broken (Checks.findings graph)) `shouldEqual` 0
         any (\r -> r.name == "C · WORKING claims are fresh" && r.result == "Cannot check") (Checks.rules graph) `shouldEqual` true
       Left _ -> fail "role fixture must decode"
+
+  it "does not pass a recorded connection when both endpoints are absent" do
+    let
+      node = { id: scopedId "test" "p", kind: Project, title: "Project", summary: "", status: "active", sourceRef: Nothing, quality: Known { provenance: "test", freshness: "now" } }
+      edge = { id: EdgeId { source: "test", key: "missing" }, from: scopedId "test" "a", to: scopedId "test" "b", kind: Contains }
+    case mkGraph [ node ] [ edge ] of
+      Right graph -> length (filter _.broken (Checks.findings graph)) `shouldEqual` 1
+      Left _ -> fail "unresolved endpoints must be retained"

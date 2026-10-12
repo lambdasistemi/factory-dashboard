@@ -3,6 +3,7 @@
 module Factory.Platform
   ( containerSize
   , focusNode
+  , revealQuestion
   , resetDetailsScroll
   , keyboardFocus
   , compactScreen
@@ -45,3 +46,5 @@ foreign import shortcutAllowed :: Effect Boolean
 foreign import compactScreen :: Effect Boolean
 
 foreign import keyboardFocus :: Effect Boolean
+
+foreign import revealQuestion :: Effect Unit
