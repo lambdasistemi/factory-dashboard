@@ -23,3 +23,7 @@ No new dependencies or runtime services beyond the scope justified by this graph
 ## Record ceiling
 
 80 lines, 8 KiB. Runtime briefs, gate versions, private receipts and staffing records stay outside Git.
+
+## Graph layout revision
+
+Replace the hand-placed grid with bundled elkjs 0.12.0 (the single justified runtime npm dependency). PureScript owns the graph, geometry request, view state and interaction. A typed asynchronous FFI adapter invokes ELK Layered with orthogonal routing and validates its geometry; bootstrap only installs the bundled engine. No remote assets or worker services. Preserve missing-reference markers, stable selection/collapse, and explicit relation meanings. Browser regression coverage checks card/label bounds, routed edges, fresh mobile navigation, stale async results and malformed engine output.

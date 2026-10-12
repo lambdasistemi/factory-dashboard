@@ -36,6 +36,8 @@ let
         printf '<script>fetch("https://example.invalid/beacon").catch(function(){})</script>' >> staging/mutated/index.html
         export HOME=$(mktemp -d)
         export PLAYWRIGHT_BROWSERS_PATH="${pkgs.playwright-driver.browsers}"
+        # Supply real fonts inside the isolated renderer, independent of host fonts.
+        export FONTCONFIG_FILE="${pkgs.makeFontsConf { fontDirectories = [ pkgs.dejavu_fonts ]; }}"
         export PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
         ./node_modules/.bin/playwright test -c e2e/playwright.config.js ${specFile} --reporter=list
         mkdir -p $out

@@ -1,23 +1,25 @@
 -- | The graph application: Halogen component rendering the SVG graph,
 -- | scenario controls, viewport controls and the permitted context of the
--- | current selection. All transitions live in the pure domain, view-state
--- | and layout modules; browser effects stay behind the platform FFI.
+-- | current selection. Pure graph/view-state transitions are separate from
+-- | browser effects and the asynchronous geometry engine.
 module Factory.View
   ( component
   ) where
 
 import Prelude
 
-import Data.Array (filter, find, head, index, length, mapMaybe, null, takeWhile, uncons)
+import Data.Array (filter, find, head, index, length, mapMaybe, null, mapWithIndex, takeWhile, uncons)
 import Data.Either (Either(..))
 import Data.Foldable (maximum, minimum)
 import Data.Int (toNumber)
-import Data.Map (Map)
 import Data.Map as Map
 import Data.Maybe (Maybe(..), fromMaybe)
 import Data.String (joinWith)
 import Data.Tuple (Tuple(..))
-import Effect.Class (class MonadEffect, liftEffect)
+import Effect.Class (liftEffect)
+
+import Effect.Aff.Class (class MonadAff)
+import Factory.LayoutEngine as LayoutEngine
 
 import Halogen as H
 import Halogen.HTML as HH
@@ -33,6 +35,9 @@ import Web.HTML (window)
 import Web.HTML.Window (document)
 import Web.HTML.HTMLDocument (toDocument)
 import Web.HTML.HTMLElement (HTMLElement, toElement)
+import Web.TouchEvent.TouchEvent as TE
+import Web.TouchEvent.TouchList as TL
+import Web.TouchEvent.Touch as Touch
 import Web.UIEvent.KeyboardEvent as KE
 import Web.UIEvent.MouseEvent as ME
 
@@ -54,7 +59,7 @@ import Factory.Domain
   , qualityLabel
   , relationLabel
   )
-import Factory.Layout (Position, layoutGraph, nodeSize)
+import Factory.Layout (Position, Geometry, layoutInput, nodeKey, edgeKey, titleLines, nodeSize)
 import Factory.Platform (containerSize, focusNode)
 import Factory.Scenarios (defaultScenario, scenarios)
 import Factory.ViewState
@@ -79,11 +84,16 @@ type State =
   , view :: ViewState
   , dims :: Dimensions
   , focused :: Maybe ScopedId
+  , geometry :: Maybe Geometry
+  , layoutError :: Maybe String
+  , revision :: Int
   , dragging :: Maybe { x :: Number, y :: Number }
   }
 
 data Action
   = Init
+  | LayoutFinished Int (Either String Geometry)
+  | PickNode String
   | SwitchScenario String
   | SelectNode ScopedId
   | SelectEdge EdgeId
@@ -107,7 +117,7 @@ svgNamespace = Namespace "http://www.w3.org/2000/svg"
 stageRef :: H.RefLabel
 stageRef = H.RefLabel "stage"
 
-component :: forall q i o m. MonadEffect m => H.Component q i o m
+component :: forall q i o m. MonadAff m => H.Component q i o m
 component =
   H.mkComponent
     { initialState: initialState
@@ -124,6 +134,9 @@ component =
     , view: initialViewState
     , dims: Unavailable
     , focused: Nothing
+    , geometry: Nothing
+    , layoutError: Nothing
+    , revision: 0
     , dragging: Nothing
     }
 
@@ -132,7 +145,26 @@ component =
   handleAction = case _ of
     Init -> do
       subscribeKeys
-      measureAndFit
+      requestLayout
+
+    LayoutFinished revision result -> do
+      st <- H.get
+      if st.revision /= revision then pure unit
+      else case result of
+        Left message -> H.modify_ \s -> s { layoutError = Just message }
+        Right geometry -> do
+          H.modify_ \s -> s { geometry = Just geometry }
+          measureAndFit
+
+    PickNode key -> do
+      st <- H.get
+      case st.doc of
+        Left _ -> pure unit
+        Right graph -> case find (\id -> nodeKey id == key) (nodeIds graph) of
+          Nothing -> pure unit
+          Just id -> do
+            handleAction (SelectNode id)
+            revealNode id
 
     SwitchScenario key -> do
       let scenario = fromMaybe defaultScenario (find (\s -> s.key == key) scenarios)
@@ -142,8 +174,11 @@ component =
           , doc = decodeGraph scenario.raw
           , view = initialViewState
           , focused = Nothing
+          , geometry = Nothing
+          , layoutError = Nothing
+          , revision = s.revision + 1
           }
-      measureAndFit
+      requestLayout
 
     SelectNode id ->
       H.modify_ \s -> s { view = s.view { selection = NodeSelected id } }
@@ -161,12 +196,10 @@ component =
           if isCollapsed id st.view.expansion then VS.expand id st.view.expansion
           else VS.collapse id st.view.expansion
       H.modify_ \s -> s { view = s.view { expansion = expansion' } }
-      measureAndFit
 
     ExpandRoute id -> do
       st <- H.get
       H.modify_ \s -> s { view = s.view { expansion = VS.expand id st.view.expansion } }
-      measureAndFit
 
     Navigate navigation ->
       H.modify_ \st ->
@@ -177,9 +210,16 @@ component =
               }
           }
 
-    FitNow -> measureAndFit
+    FitNow -> do
+      st <- H.get
+      H.modify_ \s -> s { view = s.view { viewport = fitViewport (contentBounds st) st.dims st.view.viewport } }
 
-    FocusNode id -> H.modify_ \s -> s { focused = Just id }
+    FocusNode id -> do
+      H.modify_ \s -> s { focused = Just id }
+      st <- H.get
+      case st.dims of
+        Dim dims | dims.width < 700.0 -> revealNode id
+        _ -> pure unit
 
     FocusEdge _ -> pure unit
 
@@ -189,7 +229,6 @@ component =
 
     NodeKey id k
       | k == "Enter" || k == " " -> handleAction (SelectNode id)
-      | k == "c" -> handleAction (ToggleCollapse id)
       | otherwise -> pure unit
 
     DragStart x y -> H.modify_ \s -> s { dragging = Just { x, y } }
@@ -276,6 +315,32 @@ component =
             Nothing -> pure unit
       Left _ -> pure unit
 
+  requestLayout = do
+    st <- H.get
+    case st.doc of
+      Left _ -> pure unit
+      Right graph -> do
+        _ <- H.fork do
+          result <- H.liftAff (LayoutEngine.calculate (layoutInput graph))
+          handleAction (LayoutFinished st.revision result)
+        pure unit
+
+  revealNode id = do
+    st <- H.get
+    case st.geometry, st.dims of
+      Just geometry, Dim dims -> case find (\p -> p.id == nodeKey id) geometry.nodes of
+        Just p -> H.modify_ \s -> s
+          { view = s.view
+              { viewport =
+                  { scale: 1.0
+                  , tx: dims.width / 2.0 - p.x - nodeSize.width / 2.0
+                  , ty: dims.height / 2.0 - p.y - nodeSize.height / 2.0
+                  }
+              }
+          }
+        Nothing -> pure unit
+      _, _ -> pure unit
+
   -- ------------------------------------------------------------ measure
 
   measureAndFit = do
@@ -292,7 +357,10 @@ component =
           st
             { dims = dims
             , view = st.view
-                { viewport = fitViewport (contentBounds st) dims st.view.viewport }
+                { viewport = case dims of
+                    Dim size | size.width < 700.0 -> { scale: 1.0, tx: 16.0, ty: 16.0 }
+                    _ -> fitViewport (contentBounds st) dims st.view.viewport
+                }
             }
 
   -- ------------------------------------------------------------ render
@@ -305,7 +373,18 @@ component =
               (map (scenarioButton st) scenarios)
           , HH.p [ HP.class_ (H.ClassName "app-status") ] [ HH.text (statusText st) ]
           ]
-      , HH.main [ HP.class_ (H.ClassName "app-main") ]
+      , HH.div [ HP.class_ (H.ClassName "record-picker") ]
+          [ HH.label_
+              [ HH.text "Go to record "
+              , HH.select [ HE.onValueChange PickNode ]
+                  ( [ HH.option [ HP.value "" ] [ HH.text "Choose a record…" ] ] <> case st.doc of
+                      Left _ -> []
+                      Right graph -> mapMaybe (\id -> map (\n -> HH.option [ HP.value (nodeKey id) ] [ HH.text (kindLabel n.kind <> ": " <> n.title) ]) (lookupNode graph id)) (nodeIds graph)
+                  )
+              ]
+          ]
+      , overlay
+      , HH.main [ HP.class_ (H.ClassName ("app-main" <> (if st.view.selection == NoSelection then " unselected" else ""))) ]
           [ HH.section
               [ HP.class_ (H.ClassName "graph-stage")
               , HP.ref stageRef
@@ -313,6 +392,10 @@ component =
               , HE.onMouseMove (mouseAction DragMove)
               , HE.onMouseUp \_ -> DragEnd
               , HE.onMouseLeave \_ -> DragEnd
+              , HE.onTouchStart (touchAction DragStart)
+              , HE.onTouchMove (touchAction DragMove)
+              , HE.onTouchEnd \_ -> DragEnd
+              , HE.onTouchCancel \_ -> DragEnd
               ]
               (stageContent st)
           , HH.aside [ HP.class_ (H.ClassName "details") ] (detailsContent st)
@@ -328,13 +411,18 @@ component =
       ]
       [ HH.text scenario.label ]
 
-  stageContent st = case st.doc of
+  stageContent st = case st.layoutError of
+    Just message -> [ HH.p [ HP.class_ (H.ClassName "empty-state") ] [ HH.text message ] ]
+    Nothing -> graphContent st
+
+  graphContent st = case st.doc of
     Right graph
-      | length (nodeIds graph) > 0 -> [ svgGraph st graph, overlay ]
+      | length (nodeIds graph) > 0 -> case st.geometry of
+          Nothing -> [ HH.p [ HP.class_ (H.ClassName "empty-state") ] [ HH.text "Arranging graph…" ] ]
+          Just _ -> [ svgGraph st graph ]
       | otherwise ->
           [ HH.div [ HP.class_ (H.ClassName "empty-state") ]
               [ HH.text "This installation has no records yet." ]
-          , overlay
           ]
     Left _ ->
       [ HH.div [ HP.class_ (H.ClassName "empty-state") ]
@@ -350,9 +438,9 @@ component =
           , HH.button [ HE.onClick \_ -> Navigate ResetView ] [ HH.text "Reset view" ]
           ]
       , HH.div [ HP.class_ (H.ClassName "legend") ]
-          [ HH.span_ [ legendLine "edge-contains", HH.text " contains" ]
-          , HH.span_ [ legendLine "edge-attaches", HH.text " attaches role" ]
-          , HH.span_ [ legendLine "edge-communication", HH.text " recorded communication" ]
+          [ HH.span_ [ legendLine "edge-contains", HH.text " contains → parent to child" ]
+          , HH.span_ [ legendLine "edge-attaches", HH.text " attaches role → responsibility" ]
+          , HH.span_ [ legendLine "edge-communication", HH.text " recorded communication → about work" ]
           ]
       ]
 
@@ -372,9 +460,11 @@ component =
   svgGraph st graph =
     let
       visible = deriveVisible graph st.view.expansion
-      laid = layoutGraph graph
-      positionMap = Map.fromFoldable (map (\e -> Tuple e.id e.pos) laid.nodes)
-      ghostMap = Map.fromFoldable (map (\e -> Tuple e.id e.pos) laid.ghosts)
+      geometry = fromMaybe { nodes: [], edges: [] } st.geometry
+      positions = Map.fromFoldable (map (\p -> Tuple p.id { x: p.x, y: p.y }) geometry.nodes)
+      ids = nodeIds graph <> distinctEndpoints visible.unresolved
+      positionMap = Map.fromFoldable (mapMaybe (\id -> map (Tuple id) (Map.lookup (nodeKey id) positions)) ids)
+      ghostMap = positionMap
       viewport = st.view.viewport
     in
       svgEl "svg"
@@ -382,7 +472,8 @@ component =
         , HP.attr (AttrName "role") "group"
         , HP.attr (AttrName "aria-label") "Factory graph"
         ]
-        [ svgEl "g"
+        [ svgEl "defs" [] (map arrowMarker [ "contains", "attaches", "communication" ])
+        , svgEl "g"
             [ HP.attr (AttrName "id") "viewport"
             , HP.attr (AttrName "transform")
                 ( "translate(" <> show viewport.tx <> "," <> show viewport.ty
@@ -436,50 +527,33 @@ component =
             <> (if hasChildren then [ collapseToggle node collapsed ] else [])
         )
 
-  nodeShape node = case node.kind of
-    Role ->
-      [ svgEl "circle"
-          [ HP.attr (AttrName "cx") (show (nodeSize.width / 2.0))
-          , HP.attr (AttrName "cy") "22"
-          , HP.attr (AttrName "r") "22"
-          ]
-          []
-      , svgEl "text"
-          [ HP.attr (AttrName "x") (show (nodeSize.width / 2.0))
-          , HP.attr (AttrName "y") "58"
-          , HP.attr (AttrName "text-anchor") "middle"
-          ]
-          [ HH.text node.title ]
-      ]
-    _ ->
-      [ svgEl "rect"
-          [ HP.attr (AttrName "width") (show nodeSize.width)
-          , HP.attr (AttrName "height") (show nodeSize.height)
-          , HP.attr (AttrName "rx") "6"
-          ]
-          []
-      , svgEl "text"
-          [ HP.attr (AttrName "x") "10"
-          , HP.attr (AttrName "y") "18"
-          ]
-          [ HH.text node.title ]
-      , svgEl "text"
-          [ svgClass "node-kind"
-          , HP.attr (AttrName "x") "10"
-          , HP.attr (AttrName "y") "33"
-          ]
-          [ HH.text (kindLabel node.kind) ]
-      ]
+  nodeShape node =
+    [ svgEl "title" [] [ HH.text node.title ]
+    , svgEl "rect"
+        [ HP.attr (AttrName "width") (show nodeSize.width)
+        , HP.attr (AttrName "height") (show nodeSize.height)
+        , HP.attr (AttrName "rx") "10"
+        ]
+        []
+    , svgEl "text"
+        [ svgClass "node-kind", HP.attr (AttrName "x") "16", HP.attr (AttrName "y") "23" ]
+        [ HH.text (kindLabel node.kind) ]
+    ] <> mapWithIndex
+      ( \i line -> svgEl "text"
+          [ svgClass "node-title", HP.attr (AttrName "x") "16", HP.attr (AttrName "y") (show (49 + i * 20)) ]
+          [ HH.text line ]
+      )
+      (titleLines node.title)
 
   qualityBadge node = case node.quality of
-    Known _ -> []
+    Known _ -> [ svgEl "text" [ svgClass "badge", HP.attr (AttrName "x") "16", HP.attr (AttrName "y") "108" ] [ HH.text (fromMaybe "" (head (titleLines (node.status <> " · observed")))) ] ]
     _ ->
       [ svgEl "text"
           [ svgClass "badge"
-          , HP.attr (AttrName "x") "10"
-          , HP.attr (AttrName "y") "-6"
+          , HP.attr (AttrName "x") "16"
+          , HP.attr (AttrName "y") "108"
           ]
-          [ HH.text (qualityLabel node.quality) ]
+          [ HH.text (qualityLabel node.quality <> " observation") ]
       ]
 
   collapseToggle node collapsed =
@@ -492,26 +566,23 @@ component =
       , HE.onClick \_ -> ToggleCollapse node.id
       ]
       [ svgEl "circle"
-          [ HP.attr (AttrName "cx") (show (nodeSize.width + 8.0))
+          [ HP.attr (AttrName "cx") (show (nodeSize.width - 16.0))
           , HP.attr (AttrName "cy") "22"
           , HP.attr (AttrName "r") "9"
           ]
           []
       , svgEl "text"
-          [ HP.attr (AttrName "x") (show (nodeSize.width + 8.0))
+          [ HP.attr (AttrName "x") (show (nodeSize.width - 16.0))
           , HP.attr (AttrName "y") "26"
           , HP.attr (AttrName "text-anchor") "middle"
           ]
           [ HH.text (if collapsed then "+" else "-") ]
       ]
 
-  renderEdge st positionMap ghostMap edge =
+  renderEdge st _ _ edge =
     let
-      fromPos = endpointPos positionMap ghostMap edge.from
-      toPos = endpointPos positionMap ghostMap edge.to
-      fromRole = isRoleNode st edge.from
-      toRole = isRoleNode st edge.to
-      d = pathBetween fromRole toRole fromPos toPos edge.kind
+      geometry = fromMaybe { nodes: [], edges: [] } st.geometry
+      d = fromMaybe "" (map _.path (find (\e -> e.id == edgeKey edge.id) geometry.edges))
       selected = st.view.selection == EdgeSelected edge.id
       fromTitle = titleOf st edge.from
       toTitle = titleOf st edge.to
@@ -525,6 +596,7 @@ component =
         , HP.attr (AttrName "aria-label")
             (relationLabel edge.kind <> ": " <> fromTitle <> " to " <> toTitle)
         , HE.onClick \_ -> SelectEdge edge.id
+        , HE.onKeyDown \ke -> if KE.key ke == "Enter" || KE.key ke == " " then SelectEdge edge.id else FocusEdge edge.id
         , HE.onFocus \_ -> FocusEdge edge.id
         , HE.onBlur \_ -> BlurGraph
         ]
@@ -535,8 +607,20 @@ component =
             , HP.attr (AttrName "pointer-events") "all"
             ]
             []
-        , svgEl "path" [ HP.attr (AttrName "d") d ] []
+        , svgEl "path" [ HP.attr (AttrName "d") d, HP.attr (AttrName "marker-end") ("url(#arrow-" <> relationClass edge.kind <> ")") ] []
         ]
+
+  arrowMarker name = svgEl "marker"
+    [ HP.attr (AttrName "id") ("arrow-" <> name)
+    , HP.attr (AttrName "viewBox") "0 0 10 10"
+    , HP.attr (AttrName "refX") "9"
+    , HP.attr (AttrName "refY") "5"
+    , HP.attr (AttrName "markerWidth") "9"
+    , HP.attr (AttrName "markerHeight") "9"
+    , HP.attr (AttrName "markerUnits") "userSpaceOnUse"
+    , HP.attr (AttrName "orient") "auto"
+    ]
+    [ svgEl "path" [ svgClass ("arrow arrow-" <> name), HP.attr (AttrName "d") "M1 1 L9 5 L1 9" ] [] ]
 
   renderGhost ghostMap endpoint =
     let
@@ -550,25 +634,24 @@ component =
         , HP.attr (AttrName "tabindex") "0"
         , HP.attr (AttrName "role") "button"
         , HP.attr (AttrName "aria-label") ("missing reference: " <> r.key)
+        , HE.onClick \_ -> SelectNode endpoint
+        , HE.onKeyDown \ke -> if KE.key ke == "Enter" then SelectNode endpoint else FocusNode endpoint
         ]
-        [ svgEl "rect"
-            [ HP.attr (AttrName "width") (show nodeSize.width)
-            , HP.attr (AttrName "height") (show nodeSize.height)
-            , HP.attr (AttrName "rx") "6"
-            ]
-            []
-        , svgEl "text"
-            [ HP.attr (AttrName "x") "10"
-            , HP.attr (AttrName "y") "18"
-            ]
-            [ HH.text ("missing: " <> r.key) ]
-        , svgEl "text"
-            [ svgClass "node-kind"
-            , HP.attr (AttrName "x") "10"
-            , HP.attr (AttrName "y") "33"
-            ]
-            [ HH.text "external reference" ]
-        ]
+        ( [ svgEl "rect"
+              [ HP.attr (AttrName "width") (show nodeSize.width)
+              , HP.attr (AttrName "height") (show nodeSize.height)
+              , HP.attr (AttrName "rx") "6"
+              ]
+              []
+          , svgEl "title" [] [ HH.text r.key ]
+          , svgEl "text" [ svgClass "node-kind", HP.attr (AttrName "x") "16", HP.attr (AttrName "y") "23" ] [ HH.text "missing reference" ]
+          ] <> mapWithIndex
+            ( \i line -> svgEl "text"
+                [ svgClass "node-title", HP.attr (AttrName "x") "16", HP.attr (AttrName "y") (show (49 + i * 20)) ]
+                [ HH.text line ]
+            )
+            (titleLines r.key)
+        )
 
   -- ------------------------------------------------------------ details
 
@@ -612,6 +695,14 @@ component =
         ]
       EdgeContext info ->
         [ HH.h2_ [ HH.text info.kindName ]
+        , HH.p_
+            [ HH.text
+                ( case info.edge.kind of
+                    Contains -> "Recorded membership: parent work item to child. This is not an execution dependency."
+                    AttachesRole -> "A recorded responsibility associated with this work. The role is not a worker identity."
+                    RecordsCommunication -> "This role has a recorded communication about the work item. This does not establish a wait or message recipient."
+                )
+            ]
         , HH.dl_
             [ HH.dt_ [ HH.text "From" ]
             , HH.dd_ [ HH.text (endpointText info.fromName) ]
@@ -682,25 +773,24 @@ component =
             <> show (length visible.edges)
             <> " connections"
 
-  contentBounds st = case st.doc of
-    Right graph ->
+  contentBounds st = case st.geometry of
+    Nothing -> Nothing
+    Just geometry ->
       let
-        visible = deriveVisible graph st.view.expansion
-        laid = layoutGraph graph
-        positionMap = Map.fromFoldable (map (\e -> Tuple e.id e.pos) laid.nodes)
-        positions = mapMaybe (\n -> Map.lookup n.id positionMap) visible.nodes
-        xs = map (_.x) positions <> map (\g -> g.pos.x) laid.ghosts
-        ys = map (_.y) positions <> map (\g -> g.pos.y) laid.ghosts
+        xs = map _.x geometry.nodes
+        ys = map _.y geometry.nodes
       in
-        if null positions && null laid.ghosts then Nothing
-        else
-          Just
-            { minX: fromMaybe 0.0 (minimum xs)
-            , minY: fromMaybe 0.0 (minimum ys)
-            , maxX: fromMaybe 0.0 (maximum xs) + nodeSize.width
-            , maxY: fromMaybe 0.0 (maximum ys) + nodeSize.height
-            }
-    Left _ -> Nothing
+        if null geometry.nodes then Nothing
+        else Just
+          { minX: fromMaybe 0.0 (minimum xs) - 24.0
+          , minY: fromMaybe 0.0 (minimum ys) - 24.0
+          , maxX: fromMaybe 0.0 (maximum xs) + nodeSize.width + 24.0
+          , maxY: fromMaybe 0.0 (maximum ys) + nodeSize.height + 24.0
+          }
+
+  touchAction mk ev = case TL.item 0 (TE.touches ev) of
+    Nothing -> DragEnd
+    Just touch -> mk (toNumber (Touch.clientX touch)) (toNumber (Touch.clientY touch))
 
   mouseAction mk me = mk (toNumber (ME.clientX me)) (toNumber (ME.clientY me))
 
@@ -767,52 +857,6 @@ titleOf st id = case st.doc of
     Nothing -> "missing reference"
   Left _ -> "missing reference"
 
-endpointPos :: Map ScopedId Position -> Map ScopedId Position -> ScopedId -> Position
-endpointPos positionMap ghostMap id = case Map.lookup id positionMap of
-  Just p -> p
-  Nothing -> case Map.lookup id ghostMap of
-    Just p -> p
-    Nothing -> { x: 0.0, y: 0.0 }
-
-pathBetween :: Boolean -> Boolean -> Position -> Position -> RelationshipKind -> String
-pathBetween fromRole toRole from to kind =
-  let
-    circleR = 22.0
-    circleCx p = p.x + nodeSize.width / 2.0
-    circleCy = nodeSize.height / 2.0
-    x1 =
-      if fromRole then
-        (if to.x >= from.x then circleCx from + circleR else circleCx from - circleR)
-      else if to.x >= from.x then from.x + nodeSize.width
-      else from.x
-    y1 = if fromRole then from.y + circleCy else from.y + nodeSize.height / 2.0
-    x2 =
-      if toRole then
-        (if from.x <= to.x then circleCx to - circleR else circleCx to + circleR)
-      else if from.x <= to.x then to.x
-      else to.x + nodeSize.width
-    y2 = if toRole then to.y + circleCy else to.y + nodeSize.height / 2.0
-  in
-    case kind of
-      Contains ->
-        "M" <> show x1 <> " " <> show y1 <> " L" <> show x2 <> " " <> show y2
-      _ ->
-        let
-          mx = (x1 + x2) / 2.0
-          lift = case kind of
-            RecordsCommunication -> -60.0
-            _ -> 60.0
-        in
-          "M" <> show x1 <> " " <> show y1
-            <> " Q"
-            <> show mx
-            <> " "
-            <> show (min y1 y2 + lift)
-            <> " "
-            <> show x2
-            <> " "
-            <> show y2
-
 translateOf :: Position -> String
 translateOf pos = "translate(" <> show pos.x <> "," <> show pos.y <> ")"
 
@@ -835,10 +879,3 @@ idIn id arr = length (filter (_ == id) arr) > 0
 
 unconsOf :: forall a. Array a -> Maybe { head :: a, tail :: Array a }
 unconsOf = uncons
-
-isRoleNode :: State -> ScopedId -> Boolean
-isRoleNode st id = case st.doc of
-  Right graph -> case lookupNode graph id of
-    Just node -> node.kind == Role
-    Nothing -> false
-  Left _ -> false

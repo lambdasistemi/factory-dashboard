@@ -8,6 +8,11 @@ import { test } from '@playwright/test';
 // narrow-screen use, honest empty/incomplete/refused states, and safe
 // rendering of source-like text.
 
+async function openGraph(page) {
+  await page.goto('/app/');
+  await expect(page.locator('svg.graph .node')).toHaveCount(10);
+}
+
 const N = (key) => `[data-node-id="synthetic:demo-installation/${key}"]`;
 const E = (key) => `[data-edge-id="synthetic:demo-installation/${key}"]`;
 
@@ -45,7 +50,7 @@ async function clickEdgeMidpoint(page, selector) {
 }
 
 test('shows the connected synthetic installation with typed relationships', async ({ page }) => {
-  await page.goto('/app/');
+  await openGraph(page);
   await expect(page.locator('svg.graph .node')).toHaveCount(10);
   await expect(page.locator('svg.graph .ghost')).toHaveCount(1);
   for (const label of ['contains', 'attaches role', 'recorded communication']) {
@@ -56,7 +61,7 @@ test('shows the connected synthetic installation with typed relationships', asyn
 });
 
 test('selecting a node shows its permitted context while the graph stays global', async ({ page }) => {
-  await page.goto('/app/');
+  await openGraph(page);
   await page.locator(N('project-1')).click();
   const details = page.locator('.details');
   await expect(details).toContainText('Factory Demo');
@@ -68,7 +73,7 @@ test('selecting a node shows its permitted context while the graph stays global'
 });
 
 test('follows the work chain from project to pull request by keyboard', async ({ page }) => {
-  await page.goto('/app/');
+  await openGraph(page);
   await page.locator(N('project-1')).click();
   await expect(page.locator('.details')).toContainText('Factory Demo');
   const chain = ['milestone-1', 'epic-1', 'ticket-1', 'pr-1'];
@@ -85,7 +90,7 @@ test('follows the work chain from project to pull request by keyboard', async ({
 });
 
 test('inspects a recorded communication edge', async ({ page }) => {
-  await page.goto('/app/');
+  await openGraph(page);
   await clickEdgeMidpoint(page, E('comm-1'));
   const details = page.locator('.details');
   await expect(details).toContainText('recorded communication');
@@ -94,7 +99,7 @@ test('inspects a recorded communication edge', async ({ page }) => {
 });
 
 test('keyboard reaches every node, ghost and edge without a pointer', async ({ page }) => {
-  await page.goto('/app/');
+  await openGraph(page);
   const graphFocusables = await page.locator('svg.graph [tabindex="0"]').count();
   expect(graphFocusables).toBe(23); // 10 nodes + 1 ghost + 12 edges
   // walk the whole tab ring inside the document and confirm the graph
@@ -109,7 +114,7 @@ test('keyboard reaches every node, ghost and edge without a pointer', async ({ p
 });
 
 test('collapse hides the subtree, explains a collapsed selection, and expands back', async ({ page }) => {
-  await page.goto('/app/');
+  await openGraph(page);
   // select a leaf first
   await page.locator(N('pr-1')).click();
   await expect(page.locator('.details')).toContainText('Add the synthetic graph');
@@ -126,7 +131,7 @@ test('collapse hides the subtree, explains a collapsed selection, and expands ba
 });
 
 test('pan, zoom, fit and reset the viewport', async ({ page }) => {
-  await page.goto('/app/');
+  await openGraph(page);
   const transform = () =>
     page.evaluate(() => document.querySelector('#viewport')?.getAttribute('transform') ?? '');
   await page.locator('button', { hasText: 'Zoom in' }).click();
@@ -152,7 +157,7 @@ test('pan, zoom, fit and reset the viewport', async ({ page }) => {
 
 test('works at a narrow width', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto('/app/');
+  await openGraph(page);
   const overflow = await page.evaluate(
     () => document.scrollingElement.scrollWidth - document.documentElement.clientWidth
   );
@@ -168,7 +173,7 @@ test('works at a narrow width', async ({ page }) => {
 });
 
 test('empty installation is explicit', async ({ page }) => {
-  await page.goto('/app/');
+  await openGraph(page);
   await page.locator('.scenario-button', { hasText: 'Empty installation' }).click();
   await expect(page.locator('.empty-state')).toBeVisible();
   await expect(page.locator('.app-status')).toContainText('no records');
@@ -176,7 +181,7 @@ test('empty installation is explicit', async ({ page }) => {
 });
 
 test('incomplete records stay honestly labelled and distinct', async ({ page }) => {
-  await page.goto('/app/');
+  await openGraph(page);
   await page.locator('.scenario-button', { hasText: 'Incomplete records' }).click();
   await expect(page.locator('svg.graph .node')).toHaveCount(4);
   await page.locator(N('milestone-3')).click();
@@ -192,7 +197,7 @@ test('incomplete records stay honestly labelled and distinct', async ({ page }) 
 });
 
 test('invalid input is visibly refused with redacted reasons', async ({ page }) => {
-  await page.goto('/app/');
+  await openGraph(page);
   await page.locator('.scenario-button', { hasText: 'Refused input' }).click();
   const refusal = page.locator('.refusal');
   await expect(refusal).toBeVisible();
@@ -207,7 +212,7 @@ test('invalid input is visibly refused with redacted reasons', async ({ page }) 
 });
 
 test('renders source-like titles as text, never as markup', async ({ page }) => {
-  await page.goto('/app/');
+  await openGraph(page);
   const hostile = page.locator(N('pr-2'));
   await expect(hostile).toContainText('Review note <img src=x onerror=window.__xss=1>');
   const leaked = await page.evaluate(() => window.__xss);
@@ -216,8 +221,8 @@ test('renders source-like titles as text, never as markup', async ({ page }) => 
   expect(injected).toBe(0);
 });
 
-test('role curves terminate on the role circle', async ({ page }) => {
-  await page.goto('/app/');
+test('routed edges terminate on their role cards', async ({ page }) => {
+  await openGraph(page);
   await page.locator('svg.graph').waitFor();
   await page.waitForTimeout(300);
   const report = await page.evaluate(() => {
@@ -226,17 +231,17 @@ test('role curves terminate on the role circle', async ({ page }) => {
     for (const node of document.querySelectorAll('svg .node')) {
       const bb = node.getBoundingClientRect();
       if (node.classList.contains('kind-role')) {
-        const circle = node.querySelector('circle');
+        const circle = node.querySelector('rect');
         const cb = circle ? circle.getBoundingClientRect() : null;
         if (cb) {
-          roleCircles.push({ cx: cb.x + cb.width / 2, cy: cb.y + cb.height / 2, r: cb.width / 2 });
+          roleCircles.push({ x: cb.x, y: cb.y, w: cb.width, h: cb.height });
         }
       } else {
         nodeBoxes.push({ x: bb.x, y: bb.y, w: bb.width, h: bb.height });
       }
     }
     const covered = (x, y) =>
-      roleCircles.some((c) => Math.hypot(x - c.cx, y - c.cy) <= c.r + 4) ||
+      roleCircles.some((c) => x >= c.x - 2 && x <= c.x + c.w + 2 && y >= c.y - 2 && y <= c.y + c.h + 2) ||
       nodeBoxes.some((b) => x >= b.x - 1 && x <= b.x + b.w + 1 && y >= b.y - 1 && y <= b.y + b.h + 1);
     const misses = [];
     for (const edge of document.querySelectorAll('svg .edge')) {
@@ -259,7 +264,7 @@ test('role curves terminate on the role circle', async ({ page }) => {
 });
 
 test('legend samples are distinct and match the graph line styles', async ({ page }) => {
-  await page.goto('/app/');
+  await openGraph(page);
   await page.locator('svg.graph').waitFor();
   const styles = await page.evaluate(() => {
     const get = (sel) => {
@@ -288,7 +293,7 @@ test('legend samples are distinct and match the graph line styles', async ({ pag
 });
 
 test('edge hit target is a continuous wide band, stable under selection and focus', async ({ page }) => {
-  await page.goto('/app/');
+  await openGraph(page);
   await page.locator('svg.graph').waitFor();
   const info = await page.evaluate(() => {
     const edge = document.querySelector('svg.graph .edge');
@@ -347,4 +352,94 @@ test('edge hit target is a continuous wide band, stable under selection and focu
   expect(after.dash).toBe('none');
   expect(parseFloat(after.width)).toBeGreaterThanOrEqual(20);
   expect(after.stroke).toBe('rgba(0, 0, 0, 0)');
+});
+
+test('ELK cards have readable bounded labels and non-overlapping geometry', async ({ page }) => {
+  await openGraph(page);
+  const report = await page.evaluate(() => {
+    const nodes = [...document.querySelectorAll('svg.graph .node, svg.graph .ghost')];
+    const overlaps = [], overflow = [];
+    for (const [i, node] of nodes.entries()) {
+      const rect = node.querySelector('rect');
+      const a = rect.getBoundingClientRect();
+      for (const other of nodes.slice(i + 1)) {
+        const b = other.querySelector('rect').getBoundingClientRect();
+        if (a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top) overlaps.push(node.textContent);
+      }
+      for (const text of node.querySelectorAll('.node-body text, :scope > text')) {
+        const b = text.getBoundingClientRect();
+        if (b.left < a.left || b.right > a.right || b.top < a.top || b.bottom > a.bottom) overflow.push(text.textContent);
+      }
+    }
+    return { overlaps, overflow, roles: [...document.querySelectorAll('.kind-role .node-kind')].map(n => n.textContent) };
+  });
+  expect(report.overlaps).toEqual([]);
+  expect(report.overflow).toEqual([]);
+  expect(report.roles).toEqual(['role', 'role']);
+  for (const edge of await page.locator('svg.graph .edge path:not(.edge-hit)').all()) {
+    expect(await edge.getAttribute('d')).not.toMatch(/[CQ]/);
+    expect(await edge.getAttribute('marker-end')).toMatch(/^url\(#arrow-/);
+  }
+});
+
+test('selection and collapse preserve the spatial context', async ({ page }) => {
+  await openGraph(page);
+  const before = await page.locator(N('epic-2')).getAttribute('transform');
+  const viewport = await page.locator('#viewport').getAttribute('transform');
+  await page.locator(N('pr-1')).click();
+  await page.locator(`${N('ticket-1')} .collapse-toggle`).click();
+  expect(await page.locator(N('epic-2')).getAttribute('transform')).toBe(before);
+  expect(await page.locator('#viewport').getAttribute('transform')).toBe(viewport);
+});
+
+test('mobile starts readable and the record navigator brings distant cards into view', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await openGraph(page);
+  const font = await page.locator('.node-title').first().evaluate(t => parseFloat(getComputedStyle(t).fontSize) * t.getScreenCTM().a);
+  expect(font).toBeGreaterThanOrEqual(12);
+  await page.locator('.record-picker select').selectOption({ label: 'pull request: Add the synthetic graph' });
+  await expect(page.locator('.details')).toContainText('Add the synthetic graph');
+  const card = await page.locator(`${N('pr-1')} rect`).boundingBox();
+  const stage = await page.locator('svg.graph').boundingBox();
+  expect(card.x).toBeGreaterThanOrEqual(stage.x);
+  expect(card.x + card.width).toBeLessThanOrEqual(stage.x + stage.width);
+  expect(card.y).toBeGreaterThanOrEqual(stage.y);
+  expect(card.y + card.height).toBeLessThanOrEqual(stage.y + stage.height);
+});
+
+test('a late layout cannot replace the selected scenario', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(globalThis, 'factoryLayoutEngine', { configurable: true,
+      set(engine) {
+        const original = engine.layout.bind(engine); let first = true;
+        engine.layout = async input => {
+          const delay = first; first = false;
+          const result = await original(input);
+          if (delay) await new Promise(resolve => setTimeout(resolve, 700));
+          return result;
+        };
+        Object.defineProperty(globalThis, 'factoryLayoutEngine', { value: engine, configurable: true });
+      }
+    });
+  });
+  await page.goto('/app/');
+  await page.getByRole('button', { name: 'Incomplete records', exact: true }).click();
+  await expect(page.locator('svg.graph .node')).toHaveCount(4);
+  await page.waitForTimeout(900);
+  await expect(page.locator('svg.graph .node')).toHaveCount(4);
+  await expect(page.locator(N('milestone-3'))).toBeVisible();
+});
+
+test('malformed layout output is refused without exposing engine errors', async ({ page }) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(globalThis, 'factoryLayoutEngine', { configurable: true,
+      set() { Object.defineProperty(globalThis, 'factoryLayoutEngine', { value: {
+        layout: async () => ({ children: [{ id: 'private-engine-diagnostic', x: NaN, y: 0 }], edges: [] })
+      }, configurable: true }); }
+    });
+  });
+  await page.goto('/app/');
+  await expect(page.locator('.empty-state')).toContainText('could not be calculated');
+  await expect(page.locator('body')).not.toContainText('private-engine-diagnostic');
+  await expect(page.locator('svg.graph')).toHaveCount(0);
 });

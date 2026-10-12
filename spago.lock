@@ -25,6 +25,7 @@
             "tuples",
             "web-dom",
             "web-events",
+            "web-touchevents",
             "web-uievents"
           ]
         },

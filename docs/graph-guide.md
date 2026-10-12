@@ -2,9 +2,9 @@
 
 ## Who this is for and what you can do
 
-As a factory operator, you open one connected graph of the synthetic factory installation and explore its work structure without losing the global view: projects contain milestones, milestones contain epics and tickets, tickets contain pull requests, roles attach to the work they own, and recorded communications connect roles to the work they discussed.
+As a factory operator, you open one connected graph of the synthetic factory installation and explore its work structure without losing the global view: projects contain milestones, milestones contain epics and tickets, tickets contain pull requests, roles attach to work as recorded responsibilities, and recorded communications connect roles to the work they discussed.
 
-You can select any record or connection to read its permitted context in the side panel, collapse a branch you are done with and expand it later, pan and zoom, fit everything back into view, and do all of it with the keyboard alone. The installation can also be explored on a narrow screen. When the record is honest about its own gaps, the graph shows that too: unknown observations, stale observations and missing references each carry their own visible label, and nothing is invented to fill a gap.
+You can select any record or connection to read its permitted context in the context panel below the graph, collapse a branch you are done with and expand it later, pan and zoom, fit everything back into view, and do all of it with the keyboard alone. The installation can also be explored on a narrow screen. When the record is honest about its own gaps, the graph shows that too: unknown observations, stale observations and missing references each carry their own visible label, and nothing is invented to fill a gap.
 
 The graph below is the shape of the model the app renders. Containment is a work-membership relation; role attachment and recorded communication are their own distinct relations and never implied by proximity.
 
@@ -36,7 +36,7 @@ The app ships four synthetic scenarios you can switch between at any time.
 - **Enter** or **Space** selects the focused record or connection.
 - **c** collapses or expands the focused record's branch.
 - **f** fits the graph into view; **+** and **-** zoom; **0** resets the viewport; **Escape** clears the selection.
-- The buttons in the graph area do the same for pointer users; dragging the graph pans it.
+- The toolbar buttons do the same for pointer users; dragging the graph with a mouse or one finger pans it. **Go to record** selects and centres a card at readable size, especially useful on a narrow screen.
 
 A collapsed branch keeps its visible handle. If the selected record ends up inside a collapsed branch, the context panel says exactly what it is behind and offers an Expand button — the selection never silently disappears.
 
@@ -69,3 +69,9 @@ Edge endpoints must be distinct. A reference to a well-formed identity that is n
 ## Try the app
 
 The runnable synthetic graph is published next to this guide on the site: [open the app](../app/). Everything it loads comes from the same static instance — the page makes no requests beyond its own assets, starts no worker, and writes nothing anywhere.
+
+## Layout and meaning
+
+The actual application uses ELK Layered with orthogonal routing. Arrowheads show the recorded direction. Cards state their kind explicitly; purple role cards represent responsibilities, not private worker identities. Contains means membership, not an execution dependency. Role attachment does not imply exclusive ownership, and a communication edge records discussion about work, not a wait or its recipient. Select a connection to read its meaning.
+
+Layout uses only scoped identifiers, card dimensions and connections. ELK 0.12.0 is pinned and bundled locally, with no CDN or browser worker. Engine output is validated before rendering; late results from a previous scenario are ignored. Collapsing a branch keeps the remaining card positions and viewport stable. Long titles are bounded on cards and remain available in the tooltip and context panel.

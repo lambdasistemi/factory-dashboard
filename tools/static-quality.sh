@@ -28,6 +28,7 @@ layer_rules=(
   'src/Factory/ViewState.purs|^(Prelude|Data\.|Control\.|Factory\.Domain)'
   'src/Factory/Layout.purs|^(Prelude|Data\.|Control\.|Factory\.Domain)'
   'src/Factory/Scenarios.purs|^(Prelude|Data\.|Factory\.Fixtures)'
+  'src/Factory/LayoutEngine.purs|^(Prelude|Data\.|Effect|Factory\.Layout)'
   'src/Factory/Platform.purs|^(Prelude|Data\.|Effect|Web\.)'
   'src/Factory/View.purs|^(Prelude|Data\.|Control\.|Effect|Halogen|Web\.|Factory\.)'
   'src/Main.purs|^(Prelude|Data\.|Effect|Halogen|Web\.|Factory\.)'
@@ -46,7 +47,7 @@ done
 echo "layer direction: ok"
 
 # --- typed FFI inventory: pairs, exports, bounded count -------------------
-js_count=$(find src -name '*.js' -type f | wc -l)
+js_count=$(find src -name '*.js' ! -name 'bootstrap.js' -type f | wc -l)
 if [ "$js_count" -lt 1 ]; then fail "no FFI files found; fixture loading needs its pair"; fi
 if [ "$js_count" -gt 4 ]; then fail "FFI surface grew to $js_count files; keep it minimal"; fi
 while IFS= read -r js; do
@@ -56,19 +57,21 @@ while IFS= read -r js; do
     grep -qE "export (const|function) $name" "$js" \
       || fail "$purs foreign-imports $name but $js does not export it"
   done < <(grep -E '^foreign import ' "$purs" | awk '{print $3}' || true)
-done < <(find src -name '*.js' -type f)
+done < <(find src -name '*.js' ! -name 'bootstrap.js' -type f)
 echo "ffi inventory: $js_count file(s), all typed and paired"
 
 # --- dependency inventory --------------------------------------------------
 command -v jq >/dev/null || fail "jq missing"
 runtime_deps=$(jq '.dependencies // {} | length' package.json)
-[ "$runtime_deps" -eq 0 ] || fail "runtime npm budget is zero; found $runtime_deps"
+[ "$runtime_deps" -eq 1 ] || fail "runtime npm budget is one geometry engine; found $runtime_deps"
+jq -e ' .dependencies.elkjs == "0.12.0" ' package.json >/dev/null || fail "ELK must be pinned"
+jq -e '[.packages | to_entries[] | select(.key != "" and (.value.dev != true)) | .key] == ["node_modules/elkjs"]' package-lock.json >/dev/null || fail "runtime transitive dependency budget exceeded"
 dev_count=$(jq '.devDependencies | length' package.json)
 [ "$dev_count" -eq 1 ] || fail "exactly one pinned dev dependency is expected"
 jq -e '.devDependencies."@playwright/test" == "1.54.1"' package.json >/dev/null \
   || fail "Playwright runner must stay pinned to the nixpkgs browser build"
 test -f spago.lock || fail "spago.lock must be committed"
-allowed_deps='prelude effect aff maybe either arrays strings tuples integers partial nullable foldable-traversable ordered-collections foreign-object argonaut-core argonaut halogen web-dom web-events web-uievents halogen-subscriptions spec spec-node console'
+allowed_deps='prelude effect aff maybe either arrays strings tuples integers partial nullable foldable-traversable ordered-collections foreign-object argonaut-core argonaut halogen web-dom web-touchevents web-events web-uievents halogen-subscriptions spec spec-node console'
 while IFS= read -r dep; do
   [ -z "$dep" ] && continue
   case " $allowed_deps " in

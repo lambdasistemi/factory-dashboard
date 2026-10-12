@@ -2,37 +2,12 @@
 
 let
   nodejs = pkgs.nodejs_22;
-  packageJson = builtins.fromJSON (builtins.readFile (repoRoot + "/package.json"));
-  packageLock = builtins.fromJSON (builtins.readFile (repoRoot + "/package-lock.json"));
 
-  # Zero runtime npm dependencies: only the pinned Playwright runner is
-  # installed, and only for the browser checks.
-  playwrightPackage = {
-    name = packageJson.name;
-    private = true;
-    type = packageJson.type;
-    dependencies = {
-      "@playwright/test" = packageJson.devDependencies."@playwright/test";
-    };
-  };
-  playwrightPackageLock = packageLock // {
-    packages = packageLock.packages // {
-      "" = {
-        name = packageLock.packages."".name;
-        dependencies = {
-          "@playwright/test" = packageLock.packages."".devDependencies."@playwright/test";
-        };
-      };
-    };
-  };
+  # One runtime geometry dependency; all npm packages are hash-locked.
   playwrightNodeModules = pkgs.importNpmLock.buildNodeModules {
     inherit nodejs;
     npmRoot = repoRoot;
-    package = playwrightPackage;
-    packageLock = playwrightPackageLock;
-    derivationArgs = {
-      PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1";
-    };
+    derivationArgs = { PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD = "1"; };
   };
 
   commonArgs = {
@@ -55,7 +30,11 @@ let
     pname = "factory-graph-web";
     buildPhase = ''
       set -o pipefail
+      ln -s ${playwrightNodeModules}/node_modules node_modules
+      esbuild src/bootstrap.js --bundle --platform=browser --format=iife --minify --legal-comments=inline --outfile=bootstrap.js
       spago bundle --offline --module Main 2>&1 | tee build.log
+      cat bootstrap.js dist/index.js > combined.js
+      mv combined.js dist/index.js
       if grep -E '^\[WARNING' build.log; then
         echo "strict warning policy: compiler warnings are not allowed" >&2
         exit 1

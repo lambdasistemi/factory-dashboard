@@ -1,5 +1,5 @@
--- | The whole typed FFI surface of the app: reading the graph container's
--- | size and moving keyboard focus. Everything else is PureScript.
+-- | Browser measurement and focus FFI. The geometry adapter lives separately
+-- | in Factory.LayoutEngine.
 module Factory.Platform
   ( containerSize
   , focusNode

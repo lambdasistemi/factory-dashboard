@@ -1,168 +1,37 @@
--- | Deterministic layout for the synthetic graph: containment defines
--- | depth, roles sit in the row of the record they attach to, and
--- | unresolved external endpoints get their own column so a missing
--- | reference is visible in the graph itself. Layout is pure: same graph,
--- | same positions.
-module Factory.Layout
-  ( Position
-  , nodeSize
-  , layoutGraph
-  ) where
+-- | Pure geometry input. No source text or private records cross the layout boundary.
+module Factory.Layout (Position, Geometry, LayoutInput, nodeSize, nodeKey, edgeKey, layoutInput, titleLines) where
 
 import Prelude
+import Data.Array (mapMaybe, nub, sort)
+import Data.String.CodeUnits as CU
+import Factory.Domain (Graph, ScopedId(..), EdgeId(..), nodeIds, edgeIds, lookupEdge)
 
-import Data.Array
-  ( filter
-  , head
-  , length
-  , mapMaybe
-  , mapWithIndex
-  , nub
-  , snoc
-  , uncons
-  , sort
-  )
-import Data.Foldable (maximum)
-import Data.Int (toNumber)
-import Data.Map (Map)
-import Data.Map as Map
-import Data.Maybe (Maybe(..), fromMaybe, isJust)
-import Data.Set as Set
+type Position = { x :: Number, y :: Number }
+type Geometry = { nodes :: Array { id :: String, x :: Number, y :: Number }, edges :: Array { id :: String, path :: String } }
+type LayoutInput = { nodes :: Array { id :: String, width :: Number, height :: Number }, edges :: Array { id :: String, sources :: Array String, targets :: Array String } }
 
-import Factory.Domain
-  ( Edge
-  , Graph
-  , Node
-  , NodeKind(..)
-  , RelationshipKind(..)
-  , ScopedId
-  , containmentParent
-  , edgeIds
-  , lookupEdge
-  , lookupNode
-  , nodeIds
-  )
-
-type Position =
-  { x :: Number
-  , y :: Number
-  }
-
--- | Fixed node box size shared by layout and rendering.
 nodeSize :: { width :: Number, height :: Number }
-nodeSize = { width: 150.0, height: 44.0 }
+nodeSize = { width: 244.0, height: 126.0 }
 
-columnStep :: Number
-columnStep = nodeSize.width + 70.0
+nodeKey :: ScopedId -> String
+nodeKey (ScopedId r) = show (CU.length r.namespace) <> ":" <> r.namespace <> r.key
 
-rowStep :: Number
-rowStep = nodeSize.height + 92.0
+edgeKey :: EdgeId -> String
+edgeKey (EdgeId r) = show (CU.length r.source) <> ":" <> r.source <> r.key
 
-allEdges :: Graph -> Array Edge
-allEdges graph = mapMaybe (\id -> lookupEdge graph id) (edgeIds graph)
-
-nodePresent :: Graph -> ScopedId -> Boolean
-nodePresent graph id = isJust (lookupNode graph id)
-
-depthOf :: Graph -> ScopedId -> Int
-depthOf graph = walk Set.empty 0
-  where
-  walk visited acc id = case containmentParent graph id of
-    Nothing -> acc
-    Just parent
-      | parent `Set.member` visited -> acc
-      | otherwise -> walk (Set.insert parent visited) (acc + 1) parent
-
--- | The row of a node: containment depth for work records, the depth of
--- | the attached work record for roles, zero for orphans and unattached
--- | roles.
-rowOf :: Graph -> Node -> Int
-rowOf graph node = case node.kind of
-  Role -> case head (filter attachesThis (allEdges graph)) of
-    Just e -> depthOf graph e.from
-    Nothing -> 0
-  _ -> depthOf graph node.id
-  where
-  attachesThis e = e.kind == AttachesRole && e.to == node.id
-
--- | Assign a position to every node identity in the graph, plus one ghost
--- | column position per distinct unresolved external endpoint. Ordering is
--- | derived from record order and identity, so the layout is stable across
--- | renders.
-layoutGraph
-  :: Graph
-  -> { nodes :: Array { id :: ScopedId, pos :: Position }
-     , ghosts :: Array { id :: ScopedId, pos :: Position }
-     }
-layoutGraph graph =
+layoutInput :: Graph -> LayoutInput
+layoutInput graph =
   let
-    nodesInOrder = mapMaybe (lookupNode graph) (nodeIds graph)
-    rows = buildRows graph Map.empty nodesInOrder
-    rowNumbers = Set.toUnfoldable (Map.keys rows) :: Array Int
-    widths = map (\r -> length (rowNodes r rows)) rowNumbers
-    widest = fromMaybe 0 (maximum widths)
-    placed = placeRows rows rowNumbers
-    ghosts = placeGhosts graph ((toNumber widest + 1.0) * columnStep)
+    edges = mapMaybe (lookupEdge graph) (sort (edgeIds graph))
+    ids = sort (nub (nodeIds graph <> (edges >>= \e -> [ e.from, e.to ])))
   in
-    { nodes: placed, ghosts }
-
-type Rows = Map Int (Array Node)
-
-rowNodes :: Int -> Rows -> Array Node
-rowNodes r rows = fromMaybe [] (Map.lookup r rows)
-
-buildRows :: Graph -> Rows -> Array Node -> Rows
-buildRows graph rows nodes = case unconsOf nodes of
-  Nothing -> rows
-  Just { head: node, tail } ->
-    buildRows graph (Map.alter (appendNode node) (rowOf graph node) rows) tail
-  where
-  appendNode node Nothing = Just [ node ]
-  appendNode node (Just arr) = Just (snoc arr node)
-
-unconsOf :: forall a. Array a -> Maybe { head :: a, tail :: Array a }
-unconsOf = uncons
-
-placeRows :: Rows -> Array Int -> Array { id :: ScopedId, pos :: Position }
-placeRows rows rowNumbers = case unconsOf rowNumbers of
-  Nothing -> []
-  Just { head: r, tail } ->
-    placeRows rows tail
-      <> mapWithIndex
-        ( \i node ->
-            { id: node.id
-            , pos: { x: toNumber i * columnStep, y: toNumber r * rowStep }
-            }
-        )
-        (rowNodes r rows)
-
-placeGhosts :: Graph -> Number -> Array { id :: ScopedId, pos :: Position }
-placeGhosts graph ghostX =
-  mapWithIndex place absentEndpoints
-  where
-  absentEndpoints =
-    sort
-      ( nub
-          ( mapMaybe
-              ( \e ->
-                  if not (nodePresent graph e.to) then Just e.to
-                  else if not (nodePresent graph e.from) then Just e.from
-                  else Nothing
-              )
-              (allEdges graph)
-          )
-      )
-
-  place idx endpoint =
-    { id: endpoint
-    , pos:
-        { x: ghostX
-        , y: toNumber (referenceDepth endpoint) * rowStep + toNumber idx * 56.0
-        }
+    { nodes: map (\id -> { id: nodeKey id, width: nodeSize.width, height: nodeSize.height }) ids
+    , edges: map (\e -> { id: edgeKey e.id, sources: [ nodeKey e.from ], targets: [ nodeKey e.to ] }) edges
     }
 
-  referenceDepth endpoint = case head (filter references (allEdges graph)) of
-    Just e -> depthOf graph (if e.to == endpoint then e.from else e.to)
-    Nothing -> 0
-    where
-    references e = e.to == endpoint || e.from == endpoint
+-- | Bounded monospace lines: full original text remains in the inspector and title.
+titleLines :: String -> Array String
+titleLines text
+  | CU.length text <= 26 = [ text ]
+  | CU.length text <= 52 = [ CU.take 26 text, CU.drop 26 text ]
+  | otherwise = [ CU.take 26 text, CU.take 25 (CU.drop 26 text) <> "…" ]
