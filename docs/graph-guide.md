@@ -68,10 +68,14 @@ Edge endpoints must be distinct. A reference to a well-formed identity that is n
 
 ## Try the app
 
-The runnable synthetic graph is published next to this guide on the site: [open the app](../app/). Everything it loads comes from the same static instance — the page makes no requests beyond its own assets, starts no worker, and writes nothing anywhere.
+The runnable synthetic graph is published next to this guide on the site: [open the app](../app/). Everything it loads comes from the same static instance — the page makes no requests beyond its own assets, starts no worker, and writes no factory files. It stores only your theme preference in this browser.
 
 ## Layout and meaning
 
 The actual application uses ELK Layered with orthogonal routing. Arrowheads show the recorded direction. Cards state their kind explicitly; purple role cards represent responsibilities, not private worker identities. Contains means membership, not an execution dependency. Role attachment does not imply exclusive ownership, and a communication edge records discussion about work, not a wait or its recipient. Select a connection to read its meaning.
 
 Layout uses only scoped identifiers, card dimensions and connections. ELK 0.12.0 is pinned and bundled locally, with no CDN or browser worker. Engine output is validated before rendering; late results from a previous scenario are ignored. Collapsing a branch keeps the remaining card positions and viewport stable. Long titles are bounded on cards and remain available in the tooltip and context panel.
+
+## Theme
+
+Use the sun/moon button at the top right of the graph or documentation to switch between light and dark. Both pages share the same saved preference in this browser and follow the device preference until you choose. The choice survives reloads and later visits when browser storage is available.

@@ -443,3 +443,37 @@ test('malformed layout output is refused without exposing engine errors', async 
   await expect(page.locator('body')).not.toContainText('private-engine-diagnostic');
   await expect(page.locator('svg.graph')).toHaveCount(0);
 });
+
+test('theme follows the device then remembers the reader choice across visits', async ({ page, context }) => {
+  await page.emulateMedia({ colorScheme: 'dark' });
+  await openGraph(page);
+  await page.getByRole('button', { name: 'Switch to light mode' }).click();
+  await expect(page.locator('html')).toHaveAttribute('data-factory-dashboard-palette', 'light');
+  expect(await page.evaluate(() => localStorage.getItem('factory-dashboard-palette'))).toBe('light');
+  await page.reload();
+  await expect(page.getByRole('button', { name: 'Switch to dark mode' })).toBeVisible();
+  const second = await context.newPage();
+  await second.goto('/app/');
+  await expect(second.locator('html')).toHaveAttribute('data-factory-dashboard-palette', 'light');
+  await second.close();
+  await page.getByRole('button', { name: 'Switch to dark mode' }).click();
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('data-factory-dashboard-palette', 'dark');
+});
+
+test('light graph text contrasts with card and toolbar backgrounds', async ({ page }) => {
+  await page.emulateMedia({ colorScheme: 'light' });
+  await openGraph(page);
+  await expect(page.getByRole('button', { name: 'Switch to dark mode' })).toBeVisible();
+  const ratios = await page.evaluate(() => {
+    const luminance = value => value.match(/[\d.]+/g).slice(0, 3).map(Number).map(n => {
+      n /= 255; return n <= .04045 ? n / 12.92 : ((n + .055) / 1.055) ** 2.4;
+    }).reduce((sum, n, i) => sum + n * [.2126, .7152, .0722][i], 0);
+    const contrast = (a, b) => (Math.max(a, b) + .05) / (Math.min(a, b) + .05);
+    return [...document.querySelectorAll('.node .node-title,.node .node-kind,.node .badge')].map(text => {
+      const background = text.closest('.node').querySelector('rect');
+      return contrast(luminance(getComputedStyle(text).fill), luminance(getComputedStyle(background).fill));
+    });
+  });
+  expect(Math.min(...ratios)).toBeGreaterThanOrEqual(4.5);
+});

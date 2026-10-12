@@ -372,6 +372,7 @@ component =
           , HH.nav [ HP.class_ (H.ClassName "scenario-bar") ]
               (map (scenarioButton st) scenarios)
           , HH.p [ HP.class_ (H.ClassName "app-status") ] [ HH.text (statusText st) ]
+          , HH.button [ HP.id "factory-dashboard-palette-toggle", HP.attr (AttrName "aria-label") "Switch theme", HP.attr (AttrName "hidden") "" ] []
           ]
       , HH.div [ HP.class_ (H.ClassName "record-picker") ]
           [ HH.label_
